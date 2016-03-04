@@ -1,1 +1,161 @@
-hello world
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="GPU Top - GPU profiling tool">
+    <link rel="icon" href="favicon.ico">
+    <title>GPU Top</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" type="text/css" href="css/gputop.css">
+    <link rel="stylesheet" type="text/css" href="css/custom.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-slider.min.css">
+
+    <script src="long.min.js"></script>
+    <script src="bytebuffer.min.js"></script>
+    <script src="protobuf.min.js"></script>
+
+  </head>
+
+  <body class="bb-js">
+<script>
+function gputop_help() {
+    alert("WIP Version");
+}
+function gputop_wip_error() {
+    alert("Not implemented yet!");
+}
+
+function gputop_reconnect() {
+    gputop.connect();
+}
+
+function gputop_load_metric_set(metric_set) {
+    gputop.load_fake_metrics(metric_set);
+}
+
+</script>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header ">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <img class="navbar-brand" src="/assets/gputop_logo_44.png" alt="Gputop Logo" >
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul id="gputop-entries" class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-haspopup="true" aria-expanded="true">Inspect metric set</a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                  <li><a href="#" onclick="gputop_reconnect()">Connect to GPUTOP</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#" onclick="gputop_load_metric_set('hsw')">Haswell</a></li>
+                  <li><a href="#" onclick="gputop_load_metric_set('skl')">Skylake</a></li>
+                  <li><a href="#" onclick="gputop_load_metric_set('bdw')">Broadwell</a></li>
+                  <li><a href="#" onclick="gputop_load_metric_set('chv')">Cherryview</a></li>
+                </ul>
+            </li>
+            <li>
+              <a data-toggle="modal" data-target="#myModal" href="ajax/installation.html" >Installation</a>
+            </li>
+            <li><a href="#" onclick="gputop_wip_error()">Load session</a></li>
+            <li><a href="#" onclick="gputop_wip_error()">Settings</a></li>
+            <li><a href="#" onclick="gputop_help()">Help</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade"><div class="modal-dialog"><div class="modal-content"></div></div></div>
+   <!-- /.modal -->
+
+    <div class="container-fluid" >
+      <div class="row" >
+        <div class="col-sm-2 sidebar" style="width:12%; margin-top:25px">
+          <ul class="nav nav-sidebar">
+            <li class="active" id="metrics-tab"><a id="metrics-tab-a" href="#pane2" data-toggle="tab">Metrics</a>
+              <ul class="nav nav-stacked nav-pills navbar-custom" id="sidebar_right" data-toggle="tabs" style="list-style-type:none; padding-top:10px; padding-bottom:10px;">
+              </ul>
+            </li>
+            <li ><a href="#gputop-overview-panel" data-toggle="tab" id="overview-tab-a">Overview</a></li>
+            <li><a href="#log-panel" data-toggle="tab">App logs</a></li>
+            <li role="separator" class="divider"></li>
+            <li id="process-tab"><a id="process-tab-a" data-bb="prompt" href="#process">Process list <i class="glyphicon glyphicon-play"></i></a>
+              <ul class="nav nav-stacked nav-pills navbar-custom" id="sidebar_processes_info" style="list-style-type:none; padding-top:10px; padding-bottom:10px;">
+              </ul>
+            </li>
+
+          </ul>
+        </div>
+         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style = "margin-left: 13%">
+          <div class="tab-content" id="gputop-panels">
+            <div class="tab-pane" id="gputop-overview-panel">
+              <p>Overview didn't load yet</p>
+            </div>
+            <div class="tab-pane active" id="pane2">
+            </div>
+            <div class="tab-pane" id="instructions">
+              <p>Installation FAQ</p>
+            </div>
+            <div class="tab-pane" id="pane4">
+              <p>Pane 4</p>
+            </div>
+            <div class="tab-pane" id="log-panel">
+                <p/>
+                <h2 class="page-header">Gputop log</h2>
+                <div id="editor"></div>
+                <h2 class="page-header">Web log</h2>
+                <textarea id="log" class="container" style="min-height:400px" ></textarea>
+            </div>
+          </div>
+          </p>
+          </div>
+      </div>
+
+      <footer class="footer">
+          <div class="container">
+            <img src="/assets/gputop_logo.png" alt="GPUTOP LOGO" class="img-invert img-responsive center-block" />
+            <p/>
+              <div class="gputop-connecting">
+                  <p><center>
+                  <button class="btn btn-lg btn-warning">
+                      <span class="glyphicon glyphicon-refresh spinning"></span> Loading metrics...
+                  </button>
+                  </center></p>
+              </div>
+          </div>
+        </footer>
+    </div>
+
+    <div class="container navbar-fixed-bottom">
+        <div id = "alert_placeholder"></div>
+    </div>
+
+    <!-- Bootstrap core JavaScript ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <script src="jquery.min.js"></script>
+    <script src="jquery-ui.js"></script>
+    <script src="jquery.flot.js"></script>
+
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap-slider.min.js"></script>
+    <script src="bootstrap-wysiwyg.min.js"></script>
+    <script src="bootbox.min.js"></script>
+
+    <script src="gputop-ui.js"></script>
+    <script src="gputop.js"></script>
+
+  </body>
+</html>
