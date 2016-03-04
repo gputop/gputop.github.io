@@ -17,8 +17,10 @@ var server = http.createServer(function(req, res) {
                 type = "text/javascript";
             }
         } else {
-            file = req.url.substring(1);
-            console.log("Asking "+req.url.substring(1));
+
+            var filename =  req.url.substring(1).split("?")[0];
+            file = filename;
+            console.log("Asking "+filename);
             if (/\.css$/.test(file)) {
                 type = "text/css";
             }
@@ -51,4 +53,3 @@ server.on("error", function(err) {
     console.log("Failed to start server:", err);
     process.exit(1);
 });
-

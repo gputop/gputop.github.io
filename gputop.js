@@ -60,6 +60,7 @@ function Counter () {
     this.updates = [];
     this.graph_data = [];
     this.record_data = false;
+    this.mathml_xml = "";
 }
 
 Counter.prototype.append_counter_data = function (start_timestamp, end_timestamp, delta, d_value, max) {
@@ -270,6 +271,7 @@ Gputop.prototype.read_counter_xml = function() {
         var symbol_name = $cnt.attr("symbol_name");
 
         var counter = new Counter();
+        counter.mathml_xml = ($cnt.find("mathml_equation"));
         counter.xml_ = $cnt;
 
         metric.add_new_counter(emc_guid, symbol_name, counter);
@@ -383,7 +385,7 @@ Gputop.prototype.load_fake_metrics = function(architecture) {
 Gputop.prototype.load_oa_queries = function(architecture) {
     this.config_.architecture = architecture;
     // read counters from xml file and populate the website
-    gputop.xml_file_name_ = "oa-"+ architecture +".xml";
+    gputop.xml_file_name_ = architecture +".xml";
     $.get(gputop.xml_file_name_, this.load_xml_metrics);
 }
 
