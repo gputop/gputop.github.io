@@ -1,9 +1,3 @@
-<p>
-
-<div id = "header-div">
-      <h1 class="page-header">Overview</h1>
-</div>
-
 <div class="gputop-connecting">
     <p><center>
     <button class="btn btn-lg btn-warning">
@@ -11,7 +5,8 @@
     </button>
     </center></p>
 </div>
-<div class="tab-content" id="gputop-features">
+<div class="container" id="gputop-features">
+      <h1 class="page-header">Overview</h1>
 
       <h3>System Info</h3>
       <table class="table table-condensed">
@@ -23,10 +18,6 @@
       <tr>
         <th class="col-md-2">Kernel release</th>
         <td class="col-md-4" id="gputop-kernel-release"></td>
-      </tr>
-      <tr>
-        <th class="col-md-2">Performance query</th>
-        <td class="col-md-4" id="gputop-kernel-performance-query"></td>
       </tr>
       </tbody>
        </table>
@@ -53,35 +44,30 @@
         <td class="col-md-4" ><div id="gputop-gpu"></div><div id="gputop-gen"></div></td>
       </tr>
       <tr>
-        <th class="col-md-2">i915 oa <small>(observational architecture)</small></th>
-        <td class="col-md-4" id="gputop-kernel-performance-i915-oa"></td>
+        <th class="col-md-2">Number of EU slices</th>
+        <td class="col-md-4"><span class="badge" id="gputop-n-eu-slices"></span></td>
       </tr>
       <tr>
-        <th class="col-md-2">Number of eus</th>
+        <th class="col-md-2">Number of EU sub-slices per slice</th>
+        <td class="col-md-4"><span class="badge" id="gputop-n-eu-sub-slices"></span></td>
+      </tr>
+
+      <tr>
+        <th class="col-md-2">Number number of EUs (total)</th>
         <td class="col-md-4"><span class="badge" id="gputop-n-eus"></span></td>
       </tr>
       <tr>
-        <th class="col-md-2">Number of eu slices</th>
-        <td class="col-md-4"><span class="badge" id="gputop-n-eus-slices"></span></td>
-      </tr>
-      <tr>
-        <th class="col-md-2">EU Threads count</th>
+        <th class="col-md-2">EU Threads count (total)</th>
         <td class="col-md-4"><span class="badge" id="gputop-n-eu-threads-count"></span></td>
       </tr>
       <tr>
-        <th class="col-md-2">Raw XML</th>
+        <th class="col-md-2">Timestamp frequency</th>
+        <td class="col-md-4"><span class="badge" id="gputop-timestamp-frequency"></span></td>
+      </tr>
+      <tr>
+        <th class="col-md-2">Raw Observability Metrics XML</th>
         <td class="col-md-4"><a href="#" onclick="window.open(gputop.xml_file_name_,'targetWindow'); return false;">Popup</a></td>
       </tr>
       </tbody>
        </table>
-
-      <h3>GL Queries</h3>
-      <table class="table table-condensed">
-     <tbody>
-      <tr>
-        <th class="col-md-2">Query</th>
-        <td class="col-md-4" id="gputop-gl-query1"></td>
-      </tr>
-     </tbody>
-     </table>
 </div>

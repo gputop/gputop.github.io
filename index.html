@@ -24,18 +24,33 @@
 
   <body class="bb-js">
 <script>
-function gputop_is_website() {
-    console.log(" Location host "+window.location.hostname);
-     
-    if (window.location.hostname == "gputop.github.io" 
-//      || window.location.hostname == "localhost"  
+var getUrlParameter = function(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
+function gputop_is_demo() {
+
+    var demo = getUrlParameter('demo');
+    if (demo == "true" || demo == "1" || window.location.hostname == "gputop.github.io"
+//      || window.location.hostname == "localhost"
     ) {
            return true;
     }
-    
+
     return false;
 }
-  
+
 function gputop_help() {
     alert("WIP Version");
 }
@@ -47,12 +62,7 @@ function gputop_reconnect() {
     gputop.connect();
 }
 
-function gputop_load_metric_set(metric_set) {
-    gputop.load_fake_metrics(metric_set);
-}
-
 </script>
-
     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header ">
@@ -66,23 +76,10 @@ function gputop_load_metric_set(metric_set) {
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul id="gputop-entries" class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-haspopup="true" aria-expanded="true">Inspect metric set</a>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                  <li><a href="#" onclick="gputop_reconnect()">Connect to GPUTOP</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li><a href="#" onclick="gputop_load_metric_set('hsw')">Haswell</a></li>
-                  <li><a href="#" onclick="gputop_load_metric_set('skl')">Skylake</a></li>
-                  <li><a href="#" onclick="gputop_load_metric_set('bdw')">Broadwell</a></li>
-                  <li><a href="#" onclick="gputop_load_metric_set('chv')">Cherryview</a></li>
-                </ul>
-            </li>
-            <li>
-              <a data-toggle="modal" data-target="#myModal" href="ajax/installation.html" >Installation</a>
-            </li>
             <li><a href="#" onclick="gputop_wip_error()">Load session</a></li>
             <li><a href="#" onclick="gputop_wip_error()">Settings</a></li>
-            <li><a href="#" onclick="gputop_help()">Help</a></li>
+            <li id="wiki"><a href="https://github.com/rib/gputop/wiki" target="_blank">Wiki</a></li>
+            <li id="build-instructions" ><a href="https://github.com/rib/gputop/wiki/Build-Instructions" target="_blank">Build Instructions</a></li>
           </ul>
         </div>
       </div>
@@ -96,7 +93,7 @@ function gputop_load_metric_set(metric_set) {
       <div class="row" >
         <div class="col-sm-2 sidebar" style="width:12%; margin-top:25px">
           <ul class="nav nav-sidebar">
-            <li><a href="#gputop-welcome-panel" data-toggle="tab" id="welcome-tab-a">Welcome</a></li>            
+            <li id="welcome"><a href="#gputop-welcome-panel" data-toggle="tab" id="welcome-tab-a">Welcome</a></li>
             <li class="active" id="metrics-tab"><a id="metrics-tab-a" href="#pane2" data-toggle="tab">Metrics</a>
               <ul class="nav nav-stacked nav-pills navbar-custom" id="sidebar_right" data-toggle="tabs" style="list-style-type:none; padding-top:10px; padding-bottom:10px;">
               </ul>
@@ -115,7 +112,7 @@ function gputop_load_metric_set(metric_set) {
           <div class="tab-content" id="gputop-panels">
             <div class="tab-pane" id="gputop-welcome-panel">
               <p>Welcome didn't load yet</p>
-            </div>            
+            </div>
             <div class="tab-pane" id="gputop-overview-panel">
               <p>Overview didn't load yet</p>
             </div>
@@ -173,13 +170,27 @@ function gputop_load_metric_set(metric_set) {
     <script src="gputop-ui.js"></script>
     <script src="gputop.js"></script>
 <script>
-    $( '#gputop-welcome-panel' ).load( "ajax/welcome.html", function() {
-        console.log('Loaded welcome');
-    });        
-  
-    if (gputop_is_website()) {
+    if (gputop_is_demo()) {
+        $( '#gputop-welcome-panel' ).load( "ajax/welcome.html", function() {
+                console.log('Loaded welcome');
+        });
+
         $('#welcome-tab-a').trigger('click');
-        $( ".gputop-connecting" ).hide();        
+        $( ".gputop-connecting" ).hide();
+
+        $('#gputop-entries').prepend('<li class="dropdown" id="metric-menu"></li>');
+        $('#metric-menu').append('<a href="#" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-haspopup="true" aria-expanded="true">Inspect metric set</a>');
+        $('#metric-menu').append('<ul id="demoMenu" class="dropdown-menu" aria-labelledby="dropdownMenu1"></ul>');
+        var arch_map = {"hsw":"Haswell", "skl":"Skylake", "bdw":"Broadwell",
+                        "chv":"Cherryview"};
+        for (k in arch_map)
+        {
+            $("#demoMenu").append('<li><a href="#" onclick="gputop.set_demo_architecture(\'' + k + '\')">'+ arch_map[k] + '</a></li>');
+        }
+    } else {
+        $( "#welcome" ).hide();
+        $( "#build-instructions" ).hide();
+        $( "#wiki" ).hide();
     }
  </script>
   </body>

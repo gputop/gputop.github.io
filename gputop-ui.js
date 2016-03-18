@@ -1,4 +1,6 @@
-//@ sourceURL=gputop-ui.js
+"use strict";
+
+//# sourceURL=gputop-ui.js
 
 /*
  * GPU Top
@@ -39,20 +41,9 @@ function GputopUI () {
                 bottom: 20,
                 left: 20
             },
-            // dont know what this is for?!
-            markings: function(axes) {
-                var markings = [];
-                var xaxis = axes.xaxis;
-                for (var x = Math.floor(xaxis.min); x < xaxis.max; x += xaxis.tickSize * 2) {
-                    markings.push({ xaxis: { from: x, to: x + xaxis.tickSize }, color: "rgba(232, 232, 255, 0.2)" });
-                }
-                return markings;
-            }
         },
         xaxis: {
-            show: true,
-            min: 0,
-            max: 1000
+            show: false,
         },
         yaxis: {
             min: 0,
@@ -62,6 +53,8 @@ function GputopUI () {
             show: true
         }
     };// options
+
+    this.zoom = 10; //seconds
 
     this.series = [{
         lines: {
@@ -73,13 +66,88 @@ function GputopUI () {
     this.start_timestamp = 0;
     this.start_gpu_timestamp = 0;
 
+    this.queue_redraw_ = false;
 }
 
-GputopUI.prototype.update_slider_period = function(period_) {
-    slider.setValue(period_);
+
+function create_default_markings(xaxis) {
+    var markings = [];
+    for (var x = Math.floor(xaxis.min); x < xaxis.max; x += xaxis.tickSize * 2) {
+        markings.push({ xaxis: { from: x, to: x + xaxis.tickSize }, color: "rgba(232, 232, 255, 0.2)" });
+    }
+    return markings;
 }
 
-GputopUI.prototype.display_graph = function(timestamp) {
+
+/* FIXME: this isn't a good place for code relating to fiddly OA exponent details
+ */
+function max_exponent_below(nsec) {
+    for (var i = 0; i < 64; i++) {
+        var period = (1<<i) * 1000000000 / gputop.devinfo.get_timestamp_frequency();
+
+        if (period > nsec)
+            return Math.max(0, i - 1);
+    }
+
+    return i;
+}
+
+
+/* returns true if the exponent changed and therefore the metric
+ * stream needs to be re-opened, else false.
+ */
+function update_metric_period_exponent_for_zoom(metric) {
+    var hack_graph_size_px = 1000;
+
+    /* We want to set an aggregation period such that we get ~1 update per
+     * x-axis-pixel on the trace graph.
+     *
+     * We need to ensure the HW sampling period is low enough to expect two HW
+     * samples per x-axis-pixel.
+     *
+     * FIXME: actually determine how wide the graphs are in pixels instead of
+     * assuming 1000 pixels.
+     */
+
+    var ns_per_pixel = gputop_ui.zoom * 1000000000 / hack_graph_size_px;
+
+    /* XXX: the way we make side-band changes to the metric object while its
+     * still open seems fragile.
+     *
+     * E.g. directly lowering the aggregation period potentially lower than the
+     * HW sampling period won't be meaningful.
+     *
+     * These changes should be done in terms of opening a new stream of metrics
+     * which happens asynchronously after the current stream has closed and the
+     * new, pending configuration shouldn't have any affect on any currently
+     * open stream.
+     */
+    gputop.update_period(global_guid, ns_per_pixel);
+    var exponent = max_exponent_below(ns_per_pixel);
+
+    if (metric.exponent != exponent) {
+        metric.exponent = exponent;
+        return true;
+    } else
+        return false;
+}
+
+
+GputopUI.prototype.set_zoom = function(zoom) {
+    gputop_ui.zoom = zoom;
+
+    var metric = gputop.get_map_metric(global_guid);
+
+    if (update_metric_period_exponent_for_zoom(metric))
+        gputop.open_oa_metric_set({guid:global_guid});
+
+    this.queue_redraw();
+}
+
+
+GputopUI.prototype.update_graphs = function(timestamp) {
+    var metric = gputop.get_map_metric(global_guid);
+
     for (var i = 0; i < this.graph_array.length; ++i) {
         var container = "#" + this.graph_array[i];
         var counter = $(container).data("counter");
@@ -95,21 +163,38 @@ GputopUI.prototype.display_graph = function(timestamp) {
 
         var elapsed = (timestamp - this.start_timestamp) * 1000000; // elapsed time from the very begining
 
-        x_max = this.start_gpu_timestamp + elapsed;
-        x_min = x_max - 10000000000; // 10 seconds time interval
+        var time_range = this.zoom * 1000000000;
+        var margin = time_range * 0.1;
 
-        // remove the older than 10 seconds samples from the graph data
+        x_max = this.start_gpu_timestamp + elapsed;
+        x_min = x_max - time_range;
+
+        // remove the old samples from the graph data
         for (var j = 0; j < counter.graph_data.length &&
-            counter.graph_data[j][0] < (x_min / 100000) - 10000; j++) {}
+            counter.graph_data[j][0] < x_min; j++) {}
         if (j > 0)
             counter.graph_data = counter.graph_data.slice(j);
+
+        // remove old markings from the graph
+        for (var j = 0; j < counter.graph_markings.length &&
+             counter.graph_markings[j].xaxis.from < x_min; j++) {}
+        if (j > 0)
+            counter.graph_markings = counter.graph_markings.slice(j);
 
         var save_index = -1;
         for (var j = 0; j < length; j++) {
             var start = counter.updates[j][0];
             var end = counter.updates[j][1];
-            var val = counter.updates[j][2]; // value
-            counter.graph_data.push([start / 100000, val]);
+            var val = counter.updates[j][2];
+            var max = counter.updates[j][3];
+
+            var mid = start + (end - start) / 2;
+
+            /* FIXME we should stop assuming all counters are a percentage */
+            var percent = 100 * val / max;
+
+            counter.graph_data.push([mid, percent]);
+
             save_index = j;
         }
 
@@ -121,8 +206,13 @@ GputopUI.prototype.display_graph = function(timestamp) {
         }
 
         // adjust the min and max (start and end of the graph)
-        this.graph_options.xaxis.min = (x_min / 100000);
-        this.graph_options.xaxis.max = (x_max / 100000) - (gputop.period * 1.5 / 100000);
+        this.graph_options.xaxis.min = x_min + margin;
+        this.graph_options.xaxis.max = x_max - margin;
+        this.graph_options.xaxis.label = this.zoom + ' seconds';
+
+        var default_markings = create_default_markings(this.graph_options.xaxis);
+        this.graph_options.grid.markings = default_markings.concat(counter.graph_markings);
+
         this.series[0].data = counter.graph_data;
         $.plot(container, this.series, this.graph_options);
 
@@ -132,16 +222,66 @@ GputopUI.prototype.display_graph = function(timestamp) {
 }
 
 
-GputopUI.prototype.display_counter = function(counter) {
-    if (counter.invalidate_ == false)
-        return;
+GputopUI.prototype.update_counter = function(counter) {
+    var bar_value = counter.latest_value;
+    var text_value = counter.latest_value;
+    var max = counter.latest_max;
+    var units = counter.units;
+    var units_suffix = "";
+    var dp = 0;
+    var kilo = 1000;
+    var mega = kilo * 1000;
+    var giga = mega * 1000;
+    var scale = {"bytes":["B", "KB", "MB", "GB"],
+                 "ns":["ns", "μs", "ms", "s"],
+                 "hz":["Hz", "KHz", "MHz", "GHz"],
+                 "texels":[" texels", " K texels", " M texels", " G texels"],
+                 "pixels":[" pixels", " K pixels", " M pixels", " G pixels"],
+                 "cycles":[" cycles", " K cycles", " M cycles", " G cycles"],
+                 "threads":[" threads", " K threads", " M threads", " G threads"]};
+    var duration_dependent = true;
 
-    if (counter.data_.length == 0)
-        return;
+    if (units === "us") {
+        units = "ns";
+        text_value *= 1000;
+    }
 
-    var delta = counter.data_.shift();
-    var d_value = counter.data_.shift();
-    var max = counter.data_.shift();
+    if (units == "mhz") {
+        units = "hz";
+        text_value *= 1000000;
+    }
+
+    if (units === 'hz' || units === 'percent')
+        duration_dependent = false;
+
+    if (duration_dependent) {
+        if (counter.latest_duration) {
+            var per_sec_scale = 1000000000 / counter.latest_duration;
+            text_value *= per_sec_scale;
+        } else
+            text_value = 0;
+    }
+
+    if ((units in scale)) {
+        dp = 2;
+        if (text_value >= giga) {
+            units_suffix = scale[units][3];
+            text_value /= 1000000000;
+        } else if (text_value >= mega) {
+            units_suffix = scale[units][2];
+            text_value /= 1000000;
+        } else if (text_value >= kilo) {
+            units_suffix = scale[units][1];
+            text_value /= 1000;
+        } else
+            units_suffix = scale[units][0];
+    } else if (units === 'percent') {
+        units_suffix = '%';
+        dp = 2;
+    }
+
+    if (duration_dependent)
+        units_suffix += '/s';
 
     if (counter.div_ == undefined)
         counter.div_ = $('#'+counter.div_bar_id_ );
@@ -150,41 +290,50 @@ GputopUI.prototype.display_counter = function(counter) {
         counter.div_txt_ = $('#'+counter.div_txt_id_ );
 
     if (max != 0) {
-        var value = 100 * d_value / max;
-        counter.div_.css("width", value + "%");
-        counter.div_txt_.text(value.toFixed(2));// + " " +counter.samples_);
-
+        counter.div_.css("width", 100 * bar_value / max + "%");
+        counter.div_txt_.text(text_value.toFixed(dp) + units_suffix);
     } else {
-        counter.div_txt_.text(d_value.toFixed(0));// + " " +counter.samples_);
         counter.div_.css("width", "0%");
+        counter.div_txt_.text(text_value.toFixed(dp) + units_suffix);
     }
 }
 
-GputopUI.prototype.render_bars = function() {
-    window.requestAnimationFrame(gputop_ui.window_render_animation_bars);
-    // add support for render graphs as well
-}
-
-GputopUI.prototype.window_render_animation_bars = function(timestamp) {
-    var metric = gputop.query_active_;
+GputopUI.prototype.update = function(timestamp) {
+    var metric = gputop.active_oa_metric_;
     if (metric == undefined)
         return;
 
-    gputop_ui.display_graph(timestamp);
-
-    window.requestAnimationFrame(gputop_ui.window_render_animation_bars);
+    this.update_graphs(timestamp);
 
     for (var i = 0, l = metric.emc_counters_.length; i < l; i++) {
         var counter = metric.emc_counters_[i];
-        gputop_ui.display_counter(counter);
+        this.update_counter(counter);
     }
+
+    /* We want smooth graph panning and bar graph updates while we have
+     * an active stream of metrics, so keep queuing redraws... */
+    this.queue_redraw();
+}
+
+GputopUI.prototype.queue_redraw = function() {
+    if (this.redraw_queued_)
+        return;
+
+    window.requestAnimationFrame(function (timestamp) {
+        gputop_ui.redraw_queued_ = false;
+        gputop_ui.update(timestamp);
+    });
+
+    this.redraw_queued_ = true;
 }
 
 GputopUI.prototype.metric_not_supported = function(metric) {
     alert(" Metric not supported " + metric.title_)
 }
 
-GputopUI.prototype.display_features = function(features) {
+/* XXX: this is essentially the first entry point into GputopUI after
+ * connecting to the server, after Gputop has been initialized */
+GputopUI.prototype.update_features = function(features) {
     if (features.devinfo.get_devid() == 0 ) {
         gputop_ui.show_alert(" No device was detected, is it the functionality on kernel ? ","alert-danger");
     }
@@ -196,15 +345,23 @@ GputopUI.prototype.display_features = function(features) {
     $( "#gputop-kernel-build" ).html( features.get_kernel_build() );
     $( "#gputop-kernel-release" ).html( features.get_kernel_release() );
     $( "#gputop-n-cpus" ).html( features.get_n_cpus() );
-    $( "#gputop-kernel-performance-query" ).html( features.get_has_gl_performance_query() );
-    $( "#gputop-kernel-performance-i915-oa" ).html( features.get_has_i915_oa() );
 
     $( "#gputop-n-eus" ).html( features.devinfo.get_n_eus().toInt() );
-    $( "#gputop-n-eus-slices" ).html( features.devinfo.get_n_eu_slices().toInt()  );
+    $( "#gputop-n-eu-slices" ).html( features.devinfo.get_n_eu_slices().toInt()  );
+    $( "#gputop-n-eu-sub-slices" ).html( features.devinfo.get_n_eu_sub_slices().toInt()  );
     $( "#gputop-n-eu-threads-count" ).html( features.devinfo.get_eu_threads_count().toInt()  );
+    $( "#gputop-timestamp-frequency" ).html( features.devinfo.get_timestamp_frequency().toInt()  );
 
     if (features.get_fake_mode())
         $( "#metrics-tab-a" ).html("Metrics (Fake Mode) ");
+
+    gputop_ui.load_metrics_panel(function() {
+        var metric = gputop.get_map_metric(global_guid);
+
+        update_metric_period_exponent_for_zoom(metric);
+
+        gputop.open_oa_metric_set({guid:global_guid});
+    });
 }
 
 // types of alerts: alert-success alert-info alert-warning alert-danger
@@ -235,11 +392,12 @@ GputopUI.prototype.log = function(log_level, log_message){
 }
 
 GputopUI.prototype.syslog = function(message){
-    log.value += message + "\n";
+    gputop_ui.syslog_.value += message + "\n";
+    console.log(message);
 }
 
 GputopUI.prototype.weblog = function(message){
-    //log.value += message + "\n";
+    //gputop_ui.weblog.value += message + "\n";
 }
 
 GputopUI.prototype.init_interface = function(){
@@ -259,13 +417,13 @@ GputopUI.prototype.load_metrics_panel = function(callback_success) {
 var gputop_ui = new GputopUI();
 
 GputopUI.prototype.btn_close_current_query = function() {
-    var active_query = gputop.query_active_;
-    if (active_query==undefined) {
+    var active_metric = gputop.active_oa_metric_;
+    if (active_metric == undefined) {
         gputop_ui.show_alert(" No Active Query","alert-info");
         return;
     }
 
-    gputop.close_oa_query(active_query.oa_query_id_, function() {
+    gputop.close_oa_metric_set(active_metric, function() {
        gputop_ui.show_alert(" Success closing query","alert-info");
     });
 }
@@ -303,7 +461,7 @@ GputopUI.prototype.btn_get_process_info = function() {
 // jquery code
 $( document ).ready(function() {
     //log = $( "#log" );
-    log = document.getElementById("log");
+    gputop_ui.syslog_ = document.getElementById("log");
 
 /*
     $( "#gputop-entries" ).append( '<li><a id="close_query" href="#" onClick>Close Query</a></li>' );
@@ -317,7 +475,4 @@ $( document ).ready(function() {
 
     // Display tooltips
     $( '[data-toggle="tooltip"]' ).tooltip();
-    
-    if (gputop_is_website())     
-        gputop_load_metric_set('skl');
 });
