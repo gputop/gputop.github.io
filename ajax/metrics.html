@@ -1,13 +1,13 @@
 <!-- Pannel 2 -->
 <div id = "header-div">
-<h2 id="page-header-metrics">Metrics panel loading</h2>
+    <h1 id="page-header-metrics">Metrics panel loading</h1>
 </div>
 <script type="text/javascript" src="MathJax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script type="text/javascript" src="MathJax/extensions/TeX/action.js"></script>
 
 <!-- Options bar -->
 <div class="well" id="options_bar" style="display: table">
-    <div style="display: table-cell; vertical-align: middle;" data-toggle="tooltip" title="Pause the capturing of data">
+    <div style="display: table-cell; vertical-align: middle;">
     <label><b>Stop query</b></label>
     <button type="button" id="button_stop" class="btn" onclick="buttonTogglePlay()" >
         <div id="toggle-query" class="glyphicon glyphicon-pause"></div>
@@ -17,10 +17,10 @@
     <div style="display: table-cell; padding-left:25px; vertical-align: middle">
         <b>Zoom: &nbsp</b> <input type="text" value="10" data-slider-min="1" data-slider-max="20" data-slider-step="0.5" data-slider-value="10" data-slider-id="slider_style" id="zoom_slider">
     </div>
-    <div class="checkbox" id="per_ctx_mode_checkbox" style="display: table-cell; padding-left:25px; vertical-align: middle"  data-toggle="tooltip" title="Filter by context using the kernel. For userspace metrics without root access">
-        <label><input type = "checkbox" id = "per_ctx_mode"><b>Per context mode</b> <small>(experimental)</small></label>
+    <div class="checkbox" id="per_ctx_mode_checkbox" style="display: table-cell; padding-left:25px; vertical-align: middle">
+        <label><input type = "checkbox" id = "per_ctx_mode"><b>Per context mode</b></label>
     </div>
-    <div class="checkbox" id="unsupported_checkbox" style="display: table-cell; padding-left:25px; vertical-align: middle" data-toggle="tooltip" title="Hide unsupported metrics, you will not be able to see the documentation for them.">
+    <div class="checkbox" id="unsupported_checkbox" style="display: table-cell; padding-left:25px; vertical-align: middle">
         <label><input type = "checkbox" id = "hide_metrics"><b>Show unsupported</b></label>
     </div>
 
@@ -47,15 +47,14 @@
         } else {
             iSelector.removeClass('glyphicon-play')
             iSelector.addClass('glyphicon-pause')
-            gputop.open_oa_metric_set({guid:global_guid});
+            gputop.open_oa_query_for_trace(global_guid);
         }
     }
 
     var flag_order = ["Overview", "System", "Frame", "Batch", "Draw", "Indicate",
                       "Tier1", "Tier2", "Tier3", "Tier4"];
-    var metric_order = [];
     var selected_index;
-    var set_array = {};
+    var set_array = [];
 
     function count(name, underscore_name, flags)
     {
@@ -79,8 +78,7 @@
         var symbol_name = $counter.attr("symbol_name");
         var description = $counter.attr("description") + " (" + $counter.attr("mdapi_usage_flags") + ")";
         var flags = $counter.attr("mdapi_usage_flags").split(" ");
-        selected_index = metric_order[metric_order.length - 1];
-        set_array[selected_index].counters.push(new count(name, symbol_name, flags));
+        set_array[set_array.length - 1].counters.push(new count(name, symbol_name, flags));
 
         var counter = gputop.get_counter_by_absolute_id(set_index, counter_index);
         if (counter == undefined) {
@@ -105,12 +103,6 @@
             unsupported = "hide_unsupported";
         }
 
-        if (gputop_is_demo()) {
-            stripped_bar = "";
-            initial_progress = "0%";
-            unsupported = "supported";
-        }
-
         var counter_name = '<a href = "#" class="equation" data-toggle="tooltip" title="' + description + '">' +name+ '</a>';
 
         var div_id = 'div_counter_'+set_index + '_' + counter_index;
@@ -120,7 +112,7 @@
         // add transition: none to progress bar css for no animation.
         // display of counter bar metrics
         counter_bars = '\
-        <div id = "' + set_array[selected_index].underscore_name + '_' + symbol_name + '"> \
+        <div id = "' + set_array[set_array.length - 1].underscore_name + '_' + symbol_name + '"> \
             <div class = "metric_row ' + unsupported + '" id="' + div_id + '"> \
                 <div class = "counter_name ' +  symbol_name + '">' + counter_name + '</div> \
                 <div class="progress"> \
@@ -129,10 +121,10 @@
                 <div class = "progress_text" id = "' + counter_text_bar_id +'">' + 0 + '</div> \
                 <div class = "live_trace_dropdown">&nbsp\
                     <a role="button" data-toggle="collapse" href="#collapse_graph_' + set_index + '_' + counter_index + '" aria-expanded="false" aria-controls="collapseExample"> \
-                        <div id = "graph_button_' + set_index + '_' + counter_index + '" class = "glyphicon expand_graph glyphicon-collapse-down"  data-toggle="tooltip" title="Show the time graph"></div> \
+                        <div id = "graph_button_' + set_index + '_' + counter_index + '" class = "glyphicon expand_graph glyphicon-collapse-down"></div> \
                     </a> \
                 </div> \
-                <div class = "handle glyphicon glyphicon-move" data-toggle="tooltip" title="Reorder by drag and drop of the counters"></div> \
+                <div class = "handle glyphicon glyphicon-move"></div> \
             </div> \
             <div class="collapse" id="collapse_graph_' + set_index + '_' + counter_index + '"> \
                 <div class="well graph_container" id="flotcontainer_' + set_index + '_' + counter_index + '"></div> \
@@ -163,8 +155,8 @@
         var title = $set.attr("name");
         var guid = $set.attr("guid");
 
-        set_array[title] = new set(title, $set.attr("underscore_name"), [], []);
-        metric_order.push(title);
+        set_array.push(new set(title, $set.attr("underscore_name"), [], []));
+
         if (global_guid == "")
             global_guid = guid;
 
@@ -184,7 +176,7 @@
             global_guid = guid;
             console.log("click "+e.target.id);
 
-            gputop.open_oa_metric_set({guid:e.target.id});
+            gputop.open_oa_query_for_trace(e.target.id);
         });
 
         // display of metrics tab-pane
@@ -196,17 +188,14 @@
 
         set_index ++;
 
-        var last = set_array[title];
-        var counters = last.counters;
-        for (i = 0; i < counters.length; i++)
+        for (i = 0; i < set_array[set_array.length - 1].counters.length; i++)
         {
-            var flags = counters[i].flags;
-            for (ii = 0; ii < flags.length; ii++)
+            for (ii = 0; ii < set_array[set_array.length - 1].counters[i].flags.length; ii++)
             {
-                if (!(last.flags.indexOf(flags[ii]) > -1))
+                if (!(set_array[set_array.length - 1].flags.indexOf(set_array[set_array.length - 1].counters[i].flags[ii]) > -1))
                 {
-                    last.flags.push(flags[ii]);
-                    last.checked_flags.push(flags[ii]);
+                    set_array[set_array.length - 1].flags.push(set_array[set_array.length - 1].counters[i].flags[ii]);
+                    set_array[set_array.length - 1].checked_flags.push(set_array[set_array.length - 1].counters[i].flags[ii]);
                 }
             }
         }
@@ -214,31 +203,31 @@
 
     function draw_filter_checkboxes()
     {
+        if (selected_index < 0)
+            return;
         var d1 = document.getElementById('flags_bar');
         d1.innerHTML = "";
         var current_drawn_flags = [];
-
-        var set = set_array[selected_index];
-        var flags = set.flags;
+        //var selected_set = set_array[selected_index];
         for (i = 0; i < flag_order.length; i++)
         {
-            if (flags.indexOf(flag_order[i]) > -1)
+            if (set_array[selected_index].flags.indexOf(flag_order[i]) > -1)
             {
                 current_drawn_flags.push(flag_order[i]);
             }
         }
-        for (i = 0; i < flags.length; i++)
+        for (i = 0; i < set_array[selected_index].flags.length; i++)
         {
-            if (current_drawn_flags.indexOf(flags[i]) > -1)
+            if (current_drawn_flags.indexOf(set_array[selected_index].flags[i]) > -1)
                 continue;
-            current_drawn_flags.push(flags[i]);
+            current_drawn_flags.push(set_array[selected_index].flags[i]);
         }
 
         for (i = 0; i < current_drawn_flags.length; i++)
         {
             flags_c = '<div class="checkbox"> \
                            <label> \
-                               <input type = "checkbox" id = "' + set.underscore_name + '_' + current_drawn_flags[i] + '" class="checkbox_event"> \
+                               <input type = "checkbox" id = "' + set_array[selected_index].underscore_name + '_' + current_drawn_flags[i] + '" class="checkbox_event"> \
                                    <b>' + current_drawn_flags[i] + '</b> \
                            </label> \
                        </div>';
@@ -247,35 +236,36 @@
         }
 
         $('.checkbox_event').click(function() {
-            set.checked_flags.splice(0, set.checked_flags.length);
-            for (i = 0; i < flags.length; i++)
+            set_array[selected_index].checked_flags.splice(0, set_array[selected_index].checked_flags.length);
+            for (i = 0; i < set_array[selected_index].flags.length; i++)
             {
-                if (document.getElementById(set.underscore_name + '_' + flags[i]).checked)
-                set.checked_flags.push(flags[i]);
+                if (document.getElementById(set_array[selected_index].underscore_name + '_' + set_array[selected_index].flags[i]).checked)
+                set_array[selected_index].checked_flags.push(set_array[selected_index].flags[i]);
             }
             filter_counters();
         });
 
-        for (i = 0; i < flags.length; i++)
+        for (i = 0; i < set_array[selected_index].flags.length; i++)
         {
-            if (set.checked_flags.indexOf(flags[i]) > -1) {
-                $("#" + set.underscore_name + "_" + current_drawn_flags[i]).prop('checked', true);
+            if (set_array[selected_index].checked_flags.indexOf(set_array[selected_index].flags[i]) > -1) {
+                $("#" + set_array[selected_index].underscore_name + "_" + current_drawn_flags[i]).prop('checked', true);
             } else {
-                $("#" + set.underscore_name + "_" + current_drawn_flags[i]).prop('checked', false);
+                $("#" + set_array[selected_index].underscore_name + "_" + current_drawn_flags[i]).prop('checked', false);
             }
         }
     }
 
     function filter_counters()
     {
-        var set = set_array[selected_index];
-        var counters = set.counters;
-        for (i = 0; i < counters.length; i++)
+        if (selected_index < 0)
+            return;
+
+        for (i = 0; i < set_array[selected_index].counters.length; i++)
         {
             var display = false;
-            for (ii = 0; ii < counters[i].flags.length; ii++)
+            for (ii = 0; ii < set_array[selected_index].counters[i].flags.length; ii++)
             {
-                if (set.checked_flags.indexOf(counters[i].flags[ii]) > -1)
+                if (set_array[selected_index].checked_flags.indexOf(set_array[selected_index].counters[i].flags[ii]) > -1)
                 {
                     display = true;
                     break;
@@ -283,14 +273,14 @@
             }
             if (display)
             {
-                $("#" + set.underscore_name + "_" + counters[i].underscore_name).show();
+                $("#" + set_array[selected_index].underscore_name + "_" + set_array[selected_index].counters[i].underscore_name).show();
                 if ($("#hide_metrics").is(':checked')) {
                     $(".hide_unsupported").show();
                 } else {
                     $(".hide_unsupported").hide();
                 }
             } else {
-                $("#" + set.underscore_name + "_" + counters[i].underscore_name).hide();
+                $("#" + set_array[selected_index].underscore_name + "_" + set_array[selected_index].counters[i].underscore_name).hide();
             }
         }
     }
@@ -298,22 +288,23 @@
     function read_from_xml(xml_name) {
         $("#sidebar_right").html("");
         $("#overview-tab-a").html("Overview "+gputop.get_arch_pretty_name());
-        for (var key in set_array) delete set_array[key];
-        metric_order.splice(0, metric_order.length);
+
         $(xml_name).find("set").each(read_metrics_set);
-        if (metric_order.length < 1)
-            return;
-        selected_index = metric_order[0];
+        if (set_array.length > 0)
+        {
+            selected_index = 0;
+        } else {
+            selected_index = -1;
+        }
         draw_filter_checkboxes();
 
-        for (var key in set_array)
+        for (i = 0; i < set_array.length; i++)
         {
-            var set = set_array[key];
-            set.checked_flags.splice(0, set.checked_flags.length);
-            set.checked_flags.push("Overview");
-            for (ii = 0; ii < set.flags.length; ii++)
-                $("#" + set.underscore_name + "_" + set.flags[ii]).prop('checked', false);
-            $("#" + set.underscore_name + "_Overview").prop('checked', true);
+            set_array[i].checked_flags.splice(0, set_array[i].checked_flags.length);
+            set_array[i].checked_flags.push("Overview");
+            for (ii = 0; ii < set_array[i].flags.length; ii++)
+                $("#" + set_array[i].underscore_name + "_" + set_array[i].flags[ii]).prop('checked', false);
+            $("#" + set_array[i].underscore_name + "_Overview").prop('checked', true);
         }
         filter_counters();
 
@@ -321,16 +312,20 @@
             e.target // newly activated tab
             e.relatedTarget // previous active tab
             $('#page-header-metrics').text(e.target.text);
-            selected_index = e.target.text;
-            draw_filter_checkboxes();
-            var set = set_array[selected_index];
-            var flags = set.flags;
-            for (i = 0; i < flags.length; i++)
+            for (i = 0; i < set_array.length; i++)
             {
-                $("#" + set.underscore_name + "_" + flags[i]).prop('checked', false);
-                if (set.checked_flags.indexOf(flags[i]) > -1)
+                if (set_array[i].name == e.target.text) {
+                    selected_index = i;
+                    break;
+                }
+            }
+            draw_filter_checkboxes();
+            for (i = 0; i < set_array[selected_index].flags.length; i++)
+            {
+                $("#" + set_array[selected_index].underscore_name + "_" + set_array[selected_index].flags[i]).prop('checked', false);
+                if (set_array[selected_index].checked_flags.indexOf(set_array[selected_index].flags[i]) > -1)
                 {
-                    $("#" + set.underscore_name + "_" + flags[i]).prop('checked', true);
+                    $("#" + set_array[selected_index].underscore_name + "_" + set_array[selected_index].flags[i]).prop('checked', true);
                 }
             }
             filter_counters();
@@ -375,6 +370,9 @@
 
     var toggle_mode = 1; // toggle between Overview and Live Tracing metrics
 
+    /* FIXME: avoid having these global i + k variables */
+    //var i = 0;
+    //var k = 1;
     $('#documentation').hide(); // by default hide the equation container
 
     $('#per_ctx_mode').click(function() {
@@ -392,7 +390,7 @@
             console.log("Switching Off "+metric.name_+" per context");
         }
 
-        gputop.open_oa_metric_set({guid:global_guid});
+        gputop.open_oa_query_for_trace(global_guid);
     });
 
     $('#hide_metrics').click(function() {
@@ -451,41 +449,6 @@
         }
 
     });
-
-    $('.checkbox_event').click(function() {
-	if (typeof current_set_map === 'undefined') {
-	    return;
-	}
-
-        underscore_name = current_set_map[current_set];
-        checked_flags_map[underscore_name].splice(0, checked_flags_map[underscore_name].length);
-        for (i = 0; i < all_flags.length; i++)
-        {
-            if (document.getElementById('flags_' + all_flags[i]).checked)
-                checked_flags_map[underscore_name].push(all_flags[i]);
-        }
-        for (var k in counter_flags_map)
-        {
-            var values = counter_flags_map[k];
-            display = false;
-            for (v = 0; v < values.length; v++)
-            {
-                if (checked_flags_map[underscore_name].indexOf(values[v]) > -1)
-                {
-                    display = true;
-                    break;
-                }
-            }
-            if (display)
-                $("#" + underscore_name + "_" + k).show();
-            else
-                $("#" + underscore_name + "_" + k).hide();
-        }
-    });
-
-    if(gputop.fake_metrics) {
-        $('#options_bar').addClass('hidden');
-    }
 
     //# sourceURL=metrics.html
 </script>

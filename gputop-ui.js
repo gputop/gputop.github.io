@@ -66,7 +66,6 @@ function GputopUI () {
     this.start_timestamp = 0;
     this.start_gpu_timestamp = 0;
 
-    this.queue_redraw_ = false;
 }
 
 
@@ -139,13 +138,11 @@ GputopUI.prototype.set_zoom = function(zoom) {
     var metric = gputop.get_map_metric(global_guid);
 
     if (update_metric_period_exponent_for_zoom(metric))
-        gputop.open_oa_metric_set({guid:global_guid});
-
-    this.queue_redraw();
+        gputop.open_oa_query_for_trace(global_guid);
 }
 
 
-GputopUI.prototype.update_graphs = function(timestamp) {
+GputopUI.prototype.display_graph = function(timestamp) {
     var metric = gputop.get_map_metric(global_guid);
 
     for (var i = 0; i < this.graph_array.length; ++i) {
@@ -222,66 +219,53 @@ GputopUI.prototype.update_graphs = function(timestamp) {
 }
 
 
-GputopUI.prototype.update_counter = function(counter) {
+GputopUI.prototype.display_counter = function(counter) {
     var bar_value = counter.latest_value;
     var text_value = counter.latest_value;
     var max = counter.latest_max;
-    var units = counter.units;
-    var units_suffix = "";
+    var units = " " + counter.units;
+    var unit = units;
     var dp = 0;
     var kilo = 1000;
     var mega = kilo * 1000;
     var giga = mega * 1000;
-    var scale = {"bytes":["B", "KB", "MB", "GB"],
-                 "ns":["ns", "μs", "ms", "s"],
-                 "hz":["Hz", "KHz", "MHz", "GHz"],
-                 "texels":[" texels", " K texels", " M texels", " G texels"],
-                 "pixels":[" pixels", " K pixels", " M pixels", " G pixels"],
-                 "cycles":[" cycles", " K cycles", " M cycles", " G cycles"],
-                 "threads":[" threads", " K threads", " M threads", " G threads"]};
-    var duration_dependent = true;
+    var scale = {" percent":["%"],
+                 " bytes":["B", "KB", "MB", "GB"],
+                 " ns":["ns", "μs", "ms", "s"],
+                 " hz":["Hz", "KHz", "MHz", "GHz"],
+                 " texels":[" texels", " K texels", " M texels", " G texels"],
+                 " pixels":[" pixels", " K pixels", " M pixels", " G pixels"]};
 
-    if (units === "us") {
-        units = "ns";
+    if (units == " messages")
+        unit = "";
+
+    if (units == " us") {
+        units = " ns";
+        unit = units;
         text_value *= 1000;
     }
 
-    if (units == "mhz") {
-        units = "hz";
+    if (units == " mhz") {
+        units = " hz";
+        unit = units;
         text_value *= 1000000;
-    }
-
-    if (units === 'hz' || units === 'percent')
-        duration_dependent = false;
-
-    if (duration_dependent) {
-        if (counter.latest_duration) {
-            var per_sec_scale = 1000000000 / counter.latest_duration;
-            text_value *= per_sec_scale;
-        } else
-            text_value = 0;
     }
 
     if ((units in scale)) {
         dp = 2;
         if (text_value >= giga) {
-            units_suffix = scale[units][3];
+            unit = scale[units][3];
             text_value /= 1000000000;
         } else if (text_value >= mega) {
-            units_suffix = scale[units][2];
+            unit = scale[units][2];
             text_value /= 1000000;
         } else if (text_value >= kilo) {
-            units_suffix = scale[units][1];
+            unit = scale[units][1];
             text_value /= 1000;
-        } else
-            units_suffix = scale[units][0];
-    } else if (units === 'percent') {
-        units_suffix = '%';
-        dp = 2;
+        } else {
+            unit = scale[units][0];
+        }
     }
-
-    if (duration_dependent)
-        units_suffix += '/s';
 
     if (counter.div_ == undefined)
         counter.div_ = $('#'+counter.div_bar_id_ );
@@ -291,40 +275,32 @@ GputopUI.prototype.update_counter = function(counter) {
 
     if (max != 0) {
         counter.div_.css("width", 100 * bar_value / max + "%");
-        counter.div_txt_.text(text_value.toFixed(dp) + units_suffix);
+        counter.div_txt_.text(text_value.toFixed(dp) + unit);// + " " +counter.samples_);
     } else {
+        counter.div_txt_.text(text_value.toFixed(dp) + unit);// + " " +counter.samples_);
         counter.div_.css("width", "0%");
-        counter.div_txt_.text(text_value.toFixed(dp) + units_suffix);
     }
 }
 
-GputopUI.prototype.update = function(timestamp) {
-    var metric = gputop.active_oa_metric_;
+GputopUI.prototype.render_bars = function() {
+    window.requestAnimationFrame(gputop_ui.window_render_animation_bars);
+    // add support for render graphs as well
+}
+
+GputopUI.prototype.window_render_animation_bars = function(timestamp) {
+    var metric = gputop.query_active_;
     if (metric == undefined)
         return;
 
-    this.update_graphs(timestamp);
+    gputop_ui.display_graph(timestamp);
 
+    window.requestAnimationFrame(gputop_ui.window_render_animation_bars);
+
+    /* TODO: defer updating the bar graphs to the animation callback */
     for (var i = 0, l = metric.emc_counters_.length; i < l; i++) {
         var counter = metric.emc_counters_[i];
-        this.update_counter(counter);
+        gputop_ui.display_counter(counter);
     }
-
-    /* We want smooth graph panning and bar graph updates while we have
-     * an active stream of metrics, so keep queuing redraws... */
-    this.queue_redraw();
-}
-
-GputopUI.prototype.queue_redraw = function() {
-    if (this.redraw_queued_)
-        return;
-
-    window.requestAnimationFrame(function (timestamp) {
-        gputop_ui.redraw_queued_ = false;
-        gputop_ui.update(timestamp);
-    });
-
-    this.redraw_queued_ = true;
 }
 
 GputopUI.prototype.metric_not_supported = function(metric) {
@@ -360,7 +336,7 @@ GputopUI.prototype.update_features = function(features) {
 
         update_metric_period_exponent_for_zoom(metric);
 
-        gputop.open_oa_metric_set({guid:global_guid});
+        gputop.open_oa_query_for_trace(global_guid);
     });
 }
 
@@ -393,7 +369,6 @@ GputopUI.prototype.log = function(log_level, log_message){
 
 GputopUI.prototype.syslog = function(message){
     gputop_ui.syslog_.value += message + "\n";
-    console.log(message);
 }
 
 GputopUI.prototype.weblog = function(message){
@@ -417,44 +392,14 @@ GputopUI.prototype.load_metrics_panel = function(callback_success) {
 var gputop_ui = new GputopUI();
 
 GputopUI.prototype.btn_close_current_query = function() {
-    var active_metric = gputop.active_oa_metric_;
-    if (active_metric == undefined) {
+    var active_query = gputop.query_active_;
+    if (active_query==undefined) {
         gputop_ui.show_alert(" No Active Query","alert-info");
         return;
     }
 
-    gputop.close_oa_metric_set(active_metric, function() {
+    gputop.close_oa_query(active_query.oa_query_id_, function() {
        gputop_ui.show_alert(" Success closing query","alert-info");
-    });
-}
-
-GputopUI.prototype.update_process = function(process) {
-
-    var pid = process.pid_;
-    var name = process.process_name_;
-
-    var tooltip = '<a id="pid_'+ pid +'" href="#" data-toggle="tooltip" title="' + process.cmd_line_ + '">'+ pid + ' ' +name+ '</a>';
-
-    $("#sidebar_processes_info").append('<li class="col-sm-10 ">' + tooltip + '</li>');
-    $('#pid_'+pid).click(function (e) {
-        console.log("click "+e.target.id);
-    });
-}
-
-GputopUI.prototype.btn_get_process_info = function() {
-    bootbox.prompt("Process Id?", function(result) {
-        if (result === null) {
-            gputop_ui.show_alert(" Cancelled","alert-info");
-        } else {
-            var pid = parseInt(result,10);
-            if (!isNaN(pid)) {
-                gputop.get_process_info(pid, function(msg) {
-                    gputop_ui.show_alert(" Callback "+result,"alert-info");
-                });
-            } else {
-                gputop_ui.show_alert("Input not a valid PID","alert-info");
-            }
-        }
     });
 }
 
@@ -467,9 +412,6 @@ $( document ).ready(function() {
     $( "#gputop-entries" ).append( '<li><a id="close_query" href="#" onClick>Close Query</a></li>' );
     $( '#close_query' ).click( gputop_ui.btn_close_current_query);
 */
-
-    $( '#process-tab-a' ).click(gputop_ui.btn_get_process_info);
-
     gputop_ui.init_interface();
     $( '#editor' ).wysiwyg();
 

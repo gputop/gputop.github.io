@@ -101,9 +101,6 @@ function Counter () {
 
     this.latest_value =  0;
     this.latest_max =  0;
-    this.latest_duration = 0; /* how long where raw counters aggregated before
-                               * calculating latest_value. (so the value can
-                               * be scaled into a per-second value) */
 
     /* Not all counters have a constant or equation for the maximum
      * and so we simply derive a maximum based on the largest value
@@ -117,8 +114,6 @@ function Counter () {
     this.graph_markings = [];
     this.record_data = false;
     this.mathml_xml = "";
-
-    this.test_mode = false;
 }
 
 Counter.prototype.append_counter_data = function (start_timestamp, end_timestamp,
@@ -138,7 +133,6 @@ Counter.prototype.append_counter_data = function (start_timestamp, end_timestamp
     {
         this.latest_value = d_value;
         this.latest_max = max;
-        this.latest_duration = end_timestamp - start_timestamp;
 
         if (d_value > this.inferred_max)
             this.inferred_max = d_value;
@@ -151,6 +145,7 @@ function Metric () {
     this.name_ = "not loaded";
     this.chipset_ = "not loaded";
 
+    this.set_id_ = 0;
     this.guid_ = "undefined";
     this.xml_ = "<xml/>";
     this.supported_ = false;
@@ -159,8 +154,7 @@ function Metric () {
     this.counters_map_ = {}; // Map of counters by with symbol_name
     this.metric_set_ = 0;
 
-    this.server_handle = 0;
-    this.webc_stream_ptr_ = 0;
+    this.oa_query_id_ = -1; // if there is an active query it will be >0
 
     this.per_ctx_mode_ = false;
 
@@ -186,16 +180,13 @@ Metric.prototype.find_counter_by_name = function(symbol_name) {
     return this.counters_map_[symbol_name];
 }
 
-Metric.prototype.add_new_counter = function(guid, symbol_name, counter) {
+Metric.prototype.add_new_counter = function(emc_guid, symbol_name, counter) {
     counter.idx_ = this.n_total_counters_++;
     counter.symbol_name = symbol_name;
 
-    var sp = Runtime.stackSave();
-
-    var counter_idx = _gputop_webc_get_counter_id(String_pointerify_on_stack(guid),
-                                                  String_pointerify_on_stack(symbol_name));
-
-    Runtime.stackRestore(sp);
+    var emc_symbol_name = emc_str_copy(symbol_name);
+    var counter_idx = _get_counter_id(emc_guid, emc_symbol_name);
+    emc_str_free(emc_symbol_name);
 
     counter.emc_idx_ = counter_idx;
     if (counter_idx != -1) {
@@ -208,33 +199,6 @@ Metric.prototype.add_new_counter = function(guid, symbol_name, counter) {
 
     this.counters_map_[symbol_name] = counter;
     this.counters_[counter.idx_] = counter;
-}
-
-//----------------------------- PID --------------------------------------
-function Process_info () {
-    this.pid_ = 0;
-    this.process_name_ = "empty";
-    this.cmd_line_ = "empty";
-    this.active_ = false;
-    this.process_path_ = "empty";
-
-    // List of ctx ids on this process
-    this.context_ids_ = [];
-
-    // Did we ask gputop about this process?
-    this.init_ = false;
-}
-
-Process_info.prototype.update = function(process) {
-    this.pid_ = process.pid;
-    this.cmd_line_ = process.cmd_line;
-    var res = this.cmd_line_.split(" ", 2);
-
-    this.process_path_ = res[0];
-
-    var path = res[0].split("/");
-    this.process_name_ = path[path.length-1];
-    gputop_ui.update_process(this);
 }
 
 //------------------------------ GPUTOP --------------------------------------
@@ -263,79 +227,37 @@ function Gputop () {
     // Initialize protobuffers
     this.builder_ = proto_builder.build("gputop");
 
-    /* When we send a request to open a stream of metrics we send
-     * the server a handle that will be attached to subsequent data
-     * for the stream. We use these handles to lookup the metric
-     * set that the data corresponds to.
-     */
-    this.next_server_handle = 1;
-    this.server_handle_to_metric_map = {};
+    // Next query ID
+    this.query_id_next_ = 1;
 
-    /* When we open a stream of metrics we also call into the
-     * Emscripten compiled webc code to allocate a corresponding
-     * struct gputop_webc_stream. This map lets us look up a
-     * Metric object given a sputop_webc_stream pointer.
-     */
-    this.webc_stream_ptr_to_metric_map = {};
-    this.active_oa_metric_ = undefined;
+    // Current active query sets
+    // Indexes by query_id_next_
+    this.query_metric_handles_ = [];
+    this.query_active_ = undefined;
 
     // Current metric on display
     this.metric_visible_ = undefined;
-
-    // Pending RPC request closures, indexed by request uuid,
-    // to be called once we receive a reply.
-    this.rpc_closures_ = {};
-
-    // Process list map organized by PID
-    this.map_processes_ = [];
-
-    if (is_nodejs) {
-        this.test_mode = false;
-    } else {
-        var test = getUrlParameter('test');
-        if (test === "true" || test === "1")
-            this.test_mode = true;
-        else
-            this.test_mode = false;
-    }
-    this.test_log_messages = [];
-
-    this.test_log("Global Gputop object constructed");
-}
-
-Gputop.prototype.test_log = function(message) {
-    if (this.test_mode) {
-        this.test_log_messages.push(message);
-        this.flush_test_log();
-    }
-}
-
-Gputop.prototype.flush_test_log = function() {
-    if (this.socket_) {
-        for (var i = 0; i < this.test_log_messages.length; i++) {
-            this.rpc_request('test_log', this.test_log_messages[i]);
-        }
-        this.test_log_messages = [];
-    }
-}
-
-Gputop.prototype.get_process_by_pid = function(pid) {
-    var process = this.map_processes_[pid];
-    if (process == undefined) {
-        process = new Process_info();
-        this.map_processes_[pid] = process;
-    }
-    return process;
 }
 
 Gputop.prototype.get_metrics_xml = function() {
     return this.metrics_xml_;
 }
 
+// Remember to free this tring
+function emc_str_copy(string_to_convert) {
+    var buf = Module._malloc(string_to_convert.length+1); // Zero terminated
+    stringToAscii(string_to_convert, buf);
+    return buf;
+}
+
+function emc_str_free(buf) {
+    Module._free(buf);
+}
+
 var params = [ ];
 Gputop.prototype.read_counter_xml = function() {
     var metric = params[0];
-    var guid = params[1];
+    var emc_guid = params[1];
 
     try {
         var $cnt = $(this);
@@ -346,7 +268,7 @@ Gputop.prototype.read_counter_xml = function() {
         counter.mathml_xml = ($cnt.find("mathml_equation"));
         counter.xml_ = $cnt;
         counter.units = units;
-        metric.add_new_counter(guid, symbol_name, counter);
+        metric.add_new_counter(emc_guid, symbol_name, counter);
     } catch (e) {
         gputop_ui.syslog("Catch parsing counter " + e);
     }
@@ -393,24 +315,25 @@ function gputop_read_metrics_set() {
         metric.metric_set_ = Object.keys(gputop.metrics_).length;
         gputop.metrics_[metric.metric_set_] = metric;
 
-        params = [ metric, guid ];
+        params = [ metric, gputop.get_emc_guid(guid) ];
         $set.find("counter").each(gputop.read_counter_xml, params);
     } catch (e) {
         gputop_ui.syslog("Catch parsing metric " + e);
     }
 } // read_metrics_set
 
-Gputop.prototype.stream_update_counter = function (counterId,
-                                                   stream_ptr,
-                                                   start_timestamp,
-                                                   end_timestamp,
-                                                   max,
-                                                   d_value,
-                                                   reason) {
-    var metric = this.webc_stream_ptr_to_metric_map[stream_ptr];
+Gputop.prototype.query_update_counter = function (counterId,
+                                                  id,
+                                                  start_timestamp,
+                                                  end_timestamp,
+                                                  max,
+                                                  d_value,
+                                                  reason) {
+    var metric = this.query_metric_handles_[id];
     if (metric == undefined) {
+        //TODO Close this query which is not being captured
         if (counterId == 0)
-            gputop_ui.show_alert("No query active for data from "+ stream_ptr +" ","alert-danger");
+            gputop_ui.show_alert("No query active for data from "+ id +" ","alert-danger");
         return;
     }
 
@@ -422,157 +345,165 @@ Gputop.prototype.stream_update_counter = function (counterId,
 
     counter.append_counter_data(start_timestamp, end_timestamp,
                                 d_value, max, reason);
-
-    gputop_ui.queue_redraw();
 }
 
-Gputop.prototype.parse_xml_metrics = function(xml) {
+Gputop.prototype.load_xml_metrics = function(xml) {
     gputop.metrics_xml_ = xml;
     $(xml).find("set").each(gputop_read_metrics_set);
-    if (gputop_is_demo()) {
-        $('#pane2').load("ajax/metrics.html");
-    }
 }
 
-Gputop.prototype.set_demo_architecture = function(architecture) {
-    if (this.active_oa_metric_) {
-        gputop.close_oa_metric_set(this.active_oa_metric_,
-            function() {
-                gputop_ui.show_alert(" Success closing query", "alert-info");
-            });
-    }
-
-    this.dispose();
-    this.set_architecture(architecture);
-    this.request_features();
-}
-
-Gputop.prototype.set_architecture = function(architecture) {
+Gputop.prototype.load_oa_queries = function(architecture) {
     this.config_.architecture = architecture;
+    // read counters from xml file and populate the website
+    gputop.xml_file_name_ = architecture +".xml";
+    console.log(architecture);
+    $.get(gputop.xml_file_name_, this.load_xml_metrics);
 }
 
 Gputop.prototype.update_period = function(guid, period_ns) {
     var metric = this.map_metrics_[guid];
     metric.period_ns_ = period_ns;
-    _gputop_webc_update_stream_period(metric.webc_stream_ptr_, period_ns);
+    _gputop_webworker_update_query_period(metric.oa_query_id_, period_ns);
 }
 
-Gputop.prototype.open_oa_metric_set = function(config, callback) {
-
-    function _real_open_oa_metric_set(config, callback) {
-        var metric = this.get_map_metric(config.guid);
-        var oa_exponent = metric.exponent;
-        var per_ctx_mode = metric.per_ctx_mode_;
-
-        if ('oa_exponent' in config)
-            oa_exponent = config.oa_exponent;
-        if ('per_ctx_mode' in config)
-            per_ctx_mode = config.per_ctx_mode;
-
-        var oa_query = new this.builder_.OAQueryInfo();
-
-        oa_query.guid = config.guid;
-        oa_query.period_exponent = oa_exponent;
-
-        var open = new this.builder_.OpenQuery();
-
-        metric.server_handle = gputop.next_server_handle++;
-
-        open.id = metric.server_handle;
-        open.oa_query = oa_query;
-        open.overwrite = false;   /* don't overwrite old samples */
-        open.live_updates = true; /* send live updates */
-        open.per_ctx_mode = per_ctx_mode;
-
-        this.server_handle_to_metric_map[open.id] = metric;
-
-        var self = this;
-        this.rpc_request('open_query', open, function () {
-            gputop_ui.syslog("Opened OA metric set " + metric.name_);
-
-            metric.exponent = oa_exponent;
-            metric.per_ctx_mode_ = per_ctx_mode;
-
-            var sp = Runtime.stackSave();
-
-            metric.webc_stream_ptr_ =
-                _gputop_webc_stream_new(String_pointerify_on_stack(config.guid),
-                                        per_ctx_mode,
-                                        metric.period_ns_);
-
-            Runtime.stackRestore(sp);
-
-            self.webc_stream_ptr_to_metric_map[metric.webc_stream_ptr_] = metric;
-
-            if (callback != undefined)
-                callback(metric);
-        });
-
-        this.active_oa_metric_ = metric;
-
-        if (open.per_ctx_mode)
-            gputop_ui.show_alert("Opening metric set " + metric.name_ + " in per context mode", "alert-info");
-        else
-            gputop_ui.show_alert("Opening metric set " + metric.name_, "alert-info");
-
-        gputop_ui.queue_redraw();
+Gputop.prototype.open_oa_query_for_trace = function(guid) {
+    if (this.no_supported_metrics_ == true) {
+        return;
     }
 
-    var metric = this.get_map_metric(config.guid);
-    if (metric == undefined) {
-        console.error('Error: failed to lookup OA metric set with guid = "' + config.guid + '"');
+    if (guid == undefined) {
+        gputop_ui.show_alert("GUID missing while trying to opening query","alert-danger");
+        return;
+    }
+
+    var metric = this.get_map_metric(guid);
+
+    // Check if we have to close the old query before opening this one
+    var active_metric = this.query_active_;
+    if (active_metric != undefined) {
+        if (active_metric.on_close_callback_ != undefined) {
+            gputop_ui.show_alert("Closing in progress","alert-info");
+            active_metric.on_close_callback_ = function() {
+                gputop.open_oa_query_for_trace(guid);
+            }
+            return;
+        } else
+        this.close_oa_query(this.query_active_.oa_query_id_, function() {
+            console.log("Success! Opening new query "+guid);
+            gputop.open_oa_query_for_trace(guid);
+        });
         return;
     }
 
     if (metric.supported_ == false) {
-        gputop_ui.show_alert(config.guid + " " + metric.name_ + " not supported on this kernel", "alert-danger");
+        gputop_ui.show_alert(guid+" "+metric.name_ +" not supported on this kernel","alert-danger");
         return;
     }
+    gputop_ui.syslog("Launch query GUID " + guid);
 
-    if (metric.closing_) {
-        gputop_ui.show_alert("Ignoring attempt to open OA metrics while waiting for close ACK", "alert-danger");
-        return;
-    }
+    var oa_query = new this.builder_.OAQueryInfo();
+    oa_query.guid = guid;
+    oa_query.metric_set = metric.metric_set_;
 
-    if (this.active_oa_metric_ != undefined) {
-        var self = this;
-        this.close_oa_metric_set(this.active_oa_metric_, function () {
-            _real_open_oa_metric_set.call(self, config, callback);
-        });
-    } else
-        _real_open_oa_metric_set.call(this, config, callback);
+    /* The timestamp for HSW+ increments every 80ns
+     *
+     * The period_exponent gives a sampling period as follows:
+     *   sample_period = 80ns * 2^(period_exponent + 1)
+     *
+     * The overflow period for Haswell can be calculated as:
+     *
+     * 2^32 / (n_eus * max_gen_freq * 2)
+     * (E.g. 40 EUs @ 1GHz = ~53ms)
+     *
+     * We currently sample ~ every 10 milliseconds...
+     */
+
+    metric.oa_query_ = oa_query;
+    metric.oa_query_id_ = this.query_id_next_++;
+
+    var msg = new this.builder_.Request();
+    msg.uuid = this.generate_uuid();
+
+    var open = new this.builder_.OpenQuery();
+
+    oa_query.period_exponent = metric.exponent;
+
+    open.id = metric.oa_query_id_; // oa_query ID
+    open.overwrite = false;   /* don't overwrite old samples */
+    open.live_updates = true; /* send live updates */
+                              /* nanoseconds of aggregation
+                               * i.e. request updates from the worker
+                               * as values that have been aggregated
+                               * over this duration */
+
+    open.per_ctx_mode = metric.is_per_ctx_mode();
+    open.oa_query = oa_query;
+
+    _gputop_webworker_on_open_oa_query(
+          metric.oa_query_id_,
+          this.get_emc_guid(guid),
+          open.per_ctx_mode,
+          metric.period_ns_
+          ); //100000000
+
+    msg.open_query = open;
+    msg.encode();
+    this.socket_.send(msg.toArrayBuffer());
+
+    gputop_ui.syslog(msg.uuid + " sent: Open Query Request ");
+
+    this.query_metric_handles_[metric.oa_query_id_] = metric;
+    this.query_active_ = metric;
+    metric.waiting_ack_ = true;
+
+    console.log(" Render animation bars ");
+
+    if (open.per_ctx_mode)
+        gputop_ui.show_alert("Opening per context query "+ metric.name_, "alert-info");
+    else
+        gputop_ui.show_alert("Opening query "+ metric.name_, "alert-info");
+
+    gputop_ui.render_bars();
 }
 
-Gputop.prototype.close_oa_metric_set = function(metric, callback) {
+Gputop.prototype.close_oa_query = function(id, callback) {
+    var metric = this.query_metric_handles_[id];
 
-    if (metric.closing_ == true ) {
-        gputop_ui.syslog("Pile Up: ignoring repeated request to close oa metric set (already waiting for close ACK)");
+    if ( metric.waiting_ack_ == true ) {
+        gputop_ui.show_alert("Waiting ACK","alert-danger");
         return;
     }
 
-    gputop_ui.show_alert("Closing query " + metric.name_, "alert-info");
+    if (metric == undefined) {
+        gputop_ui.show_alert("Cannot close query "+id+", which does not exist ","alert-danger");
+        return;
+    }
 
-    this.rpc_request('close_query', metric.server_handle, function (msg) {
-        _gputop_webc_stream_destroy(metric.webc_stream_ptr_);
-        delete gputop.webc_stream_ptr_to_metric_map[metric.webc_stream_ptr_];
-        delete gputop.server_handle_to_metric_map[metric.server_handle];
+    metric.on_close_callback_ = callback;
 
-        metric.webc_stream_ptr_ = 0;
-        metric.server_handle = 0;
+    gputop_ui.show_alert("Closing query "+ metric.name_, "alert-info");
 
-        metric.closing_ = false;
+    var msg = new this.builder_.Request();
+    msg.uuid = this.generate_uuid();
 
-        if (callback != undefined)
-            callback();
-    });
+    _gputop_webworker_on_close_oa_query(metric.oa_query_id_);
 
-    metric.closing_ = true;
+    msg.close_query = metric.oa_query_id_;
+    msg.encode();
+    this.socket_.send(msg.toArrayBuffer());
 
-    this.active_oa_metric_ = undefined;
+    gputop_ui.syslog(msg.uuid + " sent: Request close query ");
 }
 
-function String_pointerify_on_stack(js_string) {
-    return allocate(intArrayFromString(js_string), 'i8', ALLOC_STACK);
+// Moves the guid into the emscripten HEAP and returns a ptr to it
+Gputop.prototype.get_emc_guid = function(guid) {
+    // Allocate a temporal buffer for the IDs in gputop, we will reuse this buffer.
+    // This string will be free on dispose.
+    if (gputop.buffer_guid_ == undefined)
+        gputop.buffer_guid_ = Module._malloc(guid.length+1); // Zero terminated
+
+    stringToAscii(guid,  gputop.buffer_guid_);
+    return gputop.buffer_guid_;
 }
 
 Gputop.prototype.get_server_url = function() {
@@ -599,111 +530,35 @@ Gputop.prototype.generate_uuid = function()
     });
 }
 
-/* TODO: maybe make @value unnecessary for methods that take no data. */
-Gputop.prototype.rpc_request = function(method, value, closure) {
+Gputop.prototype.request_features = function() {
+    if (this.socket_.readyState == is_nodejs ? 1 : WebSocket.OPEN) {
+        var msg = new this.builder_.Request();
 
-    if (gputop_is_demo()) {
-        if (closure != undefined)
-            window.setTimeout(closure);
-        return;
-    }
+        msg.uuid = this.generate_uuid();
+        msg.get_features = true;
 
-    var msg = new this.builder_.Request();
-
-    msg.uuid = this.generate_uuid();
-
-    msg.set(method, value);
-
-    msg.encode();
-    this.socket_.send(msg.toArrayBuffer());
-
-    gputop_ui.syslog("RPC: " + msg.req + " request: ID = " + msg.uuid);
-
-    if (closure != undefined) {
-        gputop.rpc_closures_[msg.uuid] = closure;
-
-        console.assert(Object.keys(this.rpc_closures_).length < 1000,
-                       "Leaking RPC closures");
+        msg.encode();
+        this.socket_.send(msg.toArrayBuffer());
+        gputop_ui.syslog(msg.uuid + " sent: Request features");
+    } else {
+        gputop_ui.syslog("Not connected");
     }
 }
 
-Gputop.prototype.request_features = function() {
-    if (!gputop_is_demo()) {
-        if (this.socket_.readyState == is_nodejs ? 1 : WebSocket.OPEN) {
-            gputop.rpc_request('get_features', true);
-        } else {
-            gputop_ui.syslog("Not connected");
-        }
-    } else {
-        var demo_devinfo = new this.builder_.DevInfo();
-
-        demo_devinfo.set('timestamp_frequency', 12500000);
-
-        var n_eus = 0;
-        var threads_per_eu = 7;
-
-        switch (gputop.config_.architecture) {
-        case 'hsw':
-            demo_devinfo.set('devid', 0x0422);
-            demo_devinfo.set('gen', 7);
-            demo_devinfo.set('n_eu_slices', 2);
-            demo_devinfo.set('n_eu_sub_slices', 2);
-            n_eus = 40;
-            demo_devinfo.set('slice_mask', 0x3);
-            demo_devinfo.set('subslice_mask', 0xf);
-            break;
-        case 'bdw':
-            demo_devinfo.set('devid', 0x1616);
-            demo_devinfo.set('gen', 8);
-            demo_devinfo.set('n_eu_slices', 2);
-            demo_devinfo.set('n_eu_sub_slices', 3);
-            n_eus = 48;
-            demo_devinfo.set('slice_mask', 0x3);
-            demo_devinfo.set('subslice_mask', 0x3f);
-            break;
-        case 'chv':
-            demo_devinfo.set('devid', 0x22b0);
-            demo_devinfo.set('gen', 8);
-            demo_devinfo.set('n_eu_slices', 1);
-            demo_devinfo.set('n_eu_sub_slices', 2);
-            n_eus = 16;
-            demo_devinfo.set('slice_mask', 0x1);
-            demo_devinfo.set('subslice_mask', 0x3);
-            break;
-        case 'ukn':
-        case 'skl':
-            demo_devinfo.set('devid', 0x1926);
-            demo_devinfo.set('gen', 9);
-            demo_devinfo.set('n_eu_slices', 3);
-            demo_devinfo.set('n_eu_sub_slices', 3);
-            n_eus = 72;
-            demo_devinfo.set('slice_mask', 0x7);
-            demo_devinfo.set('subslice_mask', 0x1ff);
-            demo_devinfo.set('timestamp_frequency', 12000000);
-            break;
-        }
-
-        demo_devinfo.set('n_eus', n_eus);
-        demo_devinfo.set('eu_threads_count', n_eus * threads_per_eu);
-        demo_devinfo.set('gt_min_freq', 500);
-        demo_devinfo.set('gt_max_freq', 1100);
-
-        var demo_features = new this.builder_.Features();
-
-        demo_features.set('devinfo', demo_devinfo);
-        demo_features.set('has_gl_performance_query', false);
-        demo_features.set('has_i915_oa', true);
-        demo_features.set('n_cpus', 4);
-        demo_features.set('cpu_model', 'Intel(R) Core(TM) i7-4500U CPU @ 1.80GHz');
-        demo_features.set('kernel_release', '4.5.0-rc4');
-        demo_features.set('fake_mode', false);
-        demo_features.set('supported_oa_query_guids', []);
-
-        this.process_features(demo_features);
-    }
+Gputop.prototype.metric_supported = function(element, index, array){
+    var metric = gputop.get_map_metric(element);
+    metric.supported_ = true;
+    metric.print();
 }
 
 Gputop.prototype.process_features = function(features){
+    if (features.supported_oa_query_guids.length == 0) {
+        gputop.no_supported_metrics_ = true;
+        gputop_ui.show_alert("No OA metrics are supported on this Kernel "+features.get_kernel_release(),"alert-danger");
+    } else {
+        features.supported_oa_query_guids.forEach(this.metric_supported);
+    }
+
     var di = features.devinfo;
 
     gputop.devinfo = di;
@@ -719,43 +574,20 @@ Gputop.prototype.process_features = function(features){
      * state
      */
     if (!is_nodejs) {
-        _gputop_webc_update_features(di.devid,
-                                     di.gen,
-                                     di.timestamp_frequency.toInt(),
-                                     di.n_eus.toInt(),
-                                     di.n_eu_slices.toInt(),
-                                     di.n_eu_sub_slices.toInt(),
-                                     di.eu_threads_count.toInt(),
-                                     di.subslice_mask.toInt(),
-                                     di.slice_mask.toInt(),
-                                     di.gt_min_freq.toInt(),
-                                     di.gt_max_freq.toInt());
+        _update_features(di.devid,
+                         di.gen,
+                         di.timestamp_frequency.toInt(),
+                         di.n_eus.toInt(),
+                         di.n_eu_slices.toInt(),
+                         di.n_eu_sub_slices.toInt(),
+                         di.eu_threads_count.toInt(),
+                         di.subslice_mask.toInt(),
+                         di.slice_mask.toInt(),
+                         di.gt_min_freq.toInt(),
+                         di.gt_max_freq.toInt());
     }
 
-    gputop.xml_file_name_ = this.config_.architecture + ".xml";
-    console.log(this.config_.architecture);
-    $.get(gputop.xml_file_name_, function (xml) {
-        gputop.parse_xml_metrics(xml);
-
-        if (gputop_is_demo())
-            gputop.metrics_.forEach(function (metric) { metric.supported_ = true; });
-        else {
-            gputop.metrics_.forEach(function (metric) { metric.supported_ = false; });
-
-            if (features.supported_oa_query_guids.length == 0) {
-                gputop_ui.show_alert("No OA metrics are supported on this Kernel " +
-                                     features.get_kernel_release(), "alert-danger");
-            } else {
-                features.supported_oa_query_guids.forEach(function (guid, i, a) {
-                    var metric = gputop.get_map_metric(guid);
-                    metric.supported_ = true;
-                    metric.print();
-                });
-            }
-        }
-
-        gputop_ui.update_features(features);
-    });
+    gputop_ui.update_features(features);
 }
 
 Gputop.prototype.load_emscripten = function() {
@@ -769,20 +601,17 @@ Gputop.prototype.load_emscripten = function() {
     }
 
     if (!is_nodejs) {
-        var req = new XMLHttpRequest();
-        req.open('GET', gputop.get_gputop_native_js());
-        req.onload = function () {
-            $('<script type="text/javascript">').text(this.responseText + '\n' +
-                              '//# sourceURL=gputop-web.js\n'
-                             ).appendTo(document.body);
-            gputop.request_features();
-            gputop.native_js_loaded_ = true;
-            console.log("GPUTop Emscripten code loaded\n");
-        };
-        req.onerror = function () {
-            console.log( "Failed loading emscripten" );
-        };
-        req.send();
+        $.getScript( gputop.get_gputop_native_js() )
+            .done(function( script, textStatus ) {
+                gputop.request_features();
+                gputop.native_js_loaded_ = true;
+                console.log("gputop weqafrersrgrdfh\n");
+            }).fail(function( jqxhr, settings, exception ) {
+                console.log( "Failed loading emscripten" );
+                setTimeout(function() {
+                    gputop.connect();
+                }, 5000);
+        });
     } else {
         gputop.request_features();
         gputop.native_js_loaded_ = true;
@@ -790,29 +619,32 @@ Gputop.prototype.load_emscripten = function() {
 }
 
 Gputop.prototype.dispose = function() {
-    gputop.is_connected_ = false;
-
-    gputop.metrics_.forEach(function (metric) {
-        if (!metric.closing_ && metric.webc_stream_ptr_)
-            _gputop_webc_stream_destroy(metric.webc_stream_ptr_);
-    });
-
     gputop.metrics_ = [];
     gputop.map_metrics_ = {}; // Map of metrics by GUID
 
-    gputop.webc_stream_ptr_to_metric_map = {};
-    gputop.server_handle_to_metric_map = {};
-    gputop.active_oa_metric_ = undefined;
+    gputop.is_connected_ = false;
+    gputop.query_id_next_ = 1;
+
+    gputop.query_metric_handles_.forEach(function(metric) {
+        // the query stopped being tracked
+        metric.oa_query = undefined;
+        metric.oa_query_id_ = undefined;
+    });
+
+    // Current active query sets
+    // Indexes by query_id_next_
+    gputop.query_metric_handles_ = [];
+    gputop.query_active_ = undefined;
 }
 
 function gputop_socket_on_open() {
     gputop_ui.syslog("Connected");
     gputop_ui.show_alert("Succesfully connected to GPUTOP","alert-success");
     gputop.load_emscripten();
-    gputop.flush_test_log();
 }
 
 function gputop_socket_on_close() {
+    // Resets the connection
     gputop.dispose();
 
     gputop_ui.syslog("Disconnected");
@@ -825,73 +657,96 @@ function gputop_socket_on_close() {
 }
 
 function gputop_socket_on_message(evt) {
-    var dv = new DataView(evt.data, 0);
-    var data = new Uint8Array(evt.data, 8);
-    var msg_type = dv.getUint8(0);
+    try {
+        var dv;
+        var msg_type;
+        var data;
 
-    switch(msg_type) {
-    case 1: /* WS_MESSAGE_PERF */
-        var id = dv.getUint16(4, true /* little endian */);
-        _gputop_webc_handle_perf_message(id, data);
-        break;
-    case 2: /* WS_MESSAGE_PROTOBUF */
-        var msg = gputop.builder_.Message.decode(data);
-        if (msg.features != undefined) {
-            gputop_ui.syslog("Features: "+msg.features.get_cpu_model());
-            gputop.process_features(msg.features);
-        }
-        if (msg.error != undefined) {
-            gputop_ui.show_alert(msg.error,"alert-danger");
-            gputop_ui.syslog(msg.reply_uuid + " recv: Error " + msg.error);
-            gputop_ui.log(4, msg.error);
-        }
-        if (msg.log != undefined) {
-            var entries = msg.log.entries;
-            entries.forEach(function(entry) {
-                gputop_ui.log(entry.log_level, entry.log_message);
-            });
-        }
-        if (msg.process_info != undefined) {
-            var pid = msg.process_info.pid;
-            var process = gputop.get_process_by_pid(pid);
-
-            process.update(msg.process_info);
-            gputop_ui.syslog(msg.reply_uuid + " recv: Console process info "+pid);
-        }
-
-        if (msg.reply_uuid in gputop.rpc_closures_) {
-            var closure = gputop.rpc_closures_[msg.reply_uuid];
-            closure(msg);
-            delete gputop.rpc_closures_[msg.reply_uuid];
-        }
-
-        break;
-    case 3: /* WS_MESSAGE_I915_PERF */
-        var server_handle = dv.getUint16(4, true /* little endian */);
-
-        if (server_handle in gputop.server_handle_to_metric_map) {
-            gputop_ui.queue_redraw();
-
-            var sp = Runtime.stackSave();
-
-            var stack_data = allocate(data, 'i8', ALLOC_STACK);
-
-            var metric = gputop.server_handle_to_metric_map[server_handle];
-
-            _gputop_webc_handle_i915_perf_message(metric.webc_stream_ptr_,
-                                                  stack_data,
-                                                  data.length);
-
-            Runtime.stackRestore(sp);
+        if (!is_nodejs) {
+            dv = new DataView(evt.data, 0);
+            msg_type = dv.getUint8(0);
+            data = new Uint8Array(evt.data, 8);
         } else {
-            console.log("Ignoring i915 perf data for unknown Metric object")
-        }
-        break;
-    }
-}
+            var buffer = new ArrayBuffer(evt.length);
+            data = new Uint8Array(buffer);
+            for (i = 0; i < evt.length; i++) {
+                data[i] = evt[i];
+            }
 
-Gputop.prototype.get_process_info = function(pid, callback) {
-    this.rpc_request('get_process_info', pid, callback);
+            dv = new DataView(buffer, 0);
+            msg_type = dv.getUint8(0);
+        }
+
+        switch(msg_type) {
+            case 1: /* WS_MESSAGE_PERF */
+                var id = dv.getUint16(4, true /* little endian */);
+                //handle_perf_message(id, data);
+            break;
+            case 2: /* WS_MESSAGE_PROTOBUF */
+                var msg = gputop.builder_.Message.decode(data);
+                if (msg.features != undefined) {
+                    gputop_ui.syslog("Features: "+msg.features.get_cpu_model());
+                    gputop.process_features(msg.features);
+                }
+                if (msg.ack != undefined) {
+                    //gputop_ui.log(0, "Ack");
+                    gputop_ui.syslog(msg.reply_uuid + " recv: ACK ");
+                    if (gputop.query_active_!=undefined) {
+                        gputop.query_active_.waiting_ack_ = false;
+                    }
+                }
+                if (msg.error != undefined) {
+                    gputop_ui.show_alert(msg.error,"alert-danger");
+                    gputop_ui.syslog(msg.reply_uuid + " recv: Error " + msg.error);
+                    gputop_ui.log(4, msg.error);
+                }
+                if (msg.log != undefined) {
+                    var entries = msg.log.entries;
+                    entries.forEach(function(entry) {
+                        gputop_ui.log(entry.log_level, entry.log_message);
+                    });
+                }
+                if (msg.close_notify != undefined) {
+                    var id = msg.close_notify.id;
+                    gputop_ui.syslog(msg.reply_uuid + " recv: Close notify "+id);
+                    gputop.query_metric_handles_.forEach(function(metric) {
+                        if (metric.oa_query_id_ == id) {
+                            if (gputop.query_active_ == metric) {
+                                gputop.query_active_ = undefined;
+                            } else {
+                                gputop_ui.syslog("* Query was NOT active "+id);
+                            }
+
+                            delete gputop.query_metric_handles_[id];
+                            // the query stopped being tracked
+                            metric.oa_query = undefined;
+                            metric.oa_query_id_ = undefined;
+
+                            var callback = metric.on_close_callback_;
+                            if (callback != undefined) {
+                                gputop_ui.syslog("* Callback! ");
+                                metric.on_close_callback_ = undefined;
+                                callback();
+                            }
+
+                        }
+                    });
+                }
+
+            break;
+            case 3: /* WS_MESSAGE_I915_PERF */
+                var id = dv.getUint16(4, true /* little endian */);
+                var dataPtr = Module._malloc(data.length);
+                var dataHeap = new Uint8Array(Module.HEAPU8.buffer, dataPtr, data.length);
+                dataHeap.set(data);
+                _handle_i915_perf_message(id, dataHeap.byteOffset, data.length);
+                Module._free(dataHeap.byteOffset);
+            break;
+        }
+    } catch (err) {
+        console.log("Error: "+err);
+        gputop_ui.log(0, "Error: "+err+"\n");
+    }
 }
 
 function gputop_get_socket_web(websocket_url) {
@@ -907,17 +762,11 @@ function gputop_get_socket_web(websocket_url) {
 
 function gputop_get_socket_nodejs(websocket_url) {
     var WebSocket = require('ws');
-    var socket = new WebSocket(websocket_url, "binary");
+    var socket = new WebSocket(websocket_url);
 
-    socket.onopen = gputop_socket_on_open;
-    socket.onclose = gputop_socket_on_close;
-    socket.onmessage = function (evt) {
-        //node.js ws api doesn't support .binaryType = "arraybuffer"
-        //so manually convert evt.data to an ArrayBuffer...
-        evt.data = new Uint8Array(evt.data).buffer;
-
-        gputop_socket_on_node_message(evt);
-    }
+    socket.on('open', gputop_socket_on_open);
+    socket.on('close', gputop_socket_on_close);
+    socket.on('message', gputop_socket_on_message);
 
     return socket;
 }
@@ -931,13 +780,10 @@ Gputop.prototype.get_socket = function(websocket_url) {
 
 // Connect to the socket for transactions
 Gputop.prototype.connect = function() {
-    if (!gputop_is_demo()) {
-        var websocket_url = this.get_websocket_url();
-        gputop_ui.syslog('Connecting to port ' + websocket_url);
-        //----------------- Data transactions ----------------------
-        this.socket_ = this.get_socket(websocket_url);
-    } else
-        this.load_emscripten();
+    var websocket_url = this.get_websocket_url();
+    gputop_ui.syslog('Connecting to port ' + websocket_url);
+    //----------------- Data transactions ----------------------
+    this.socket_ = this.get_socket(websocket_url);
 }
 
 if (!is_nodejs)
