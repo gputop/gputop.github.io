@@ -1,4 +1,4 @@
-<metrics merge_md5="71f1da5f04d5e4d487c89bcc941d29a9" version="1447117753">
+<metrics merge_md5="71f1da5f04d5e4d487c89bcc941d29a9" version="1458834996">
   <set chipset="CHV" guid="9d8a3af5-c02c-4a4a-b947-f1672469e0fb" mdapi_supported_apis="OGL OCL IO" name="Render Metrics Basic Gen8LP" symbol_name="RenderBasic" underscore_name="render_basic">
     <counter data_type="uint64" description="The total number of GPU core clocks elapsed during the measurement." equation="GPU_CLOCK 0 READ" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Frame Batch Draw" name="GPU Core Clocks" semantic_type="event" symbol_name="GpuCoreClocks" underscore_name="gpu_core_clocks" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -342,7 +342,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -353,9 +353,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -370,7 +373,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -1107,7 +1114,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -1118,9 +1125,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -1135,7 +1145,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -1695,7 +1709,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -1706,9 +1720,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -1723,7 +1740,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -2577,7 +2598,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -2588,9 +2609,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -2605,7 +2629,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -3381,7 +3409,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -3392,9 +3420,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -3409,7 +3440,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -4099,7 +4134,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -4110,9 +4145,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -4127,7 +4165,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -4800,7 +4842,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -4811,9 +4853,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -4828,7 +4873,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -5501,7 +5550,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -5512,9 +5561,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -5529,7 +5581,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -6270,7 +6326,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6281,9 +6337,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6298,7 +6357,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -7073,7 +7136,7 @@
 </maction></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -7084,9 +7147,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -7101,7 +7167,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -7859,7 +7929,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -7870,9 +7940,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -7887,7 +7960,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -8628,7 +8705,7 @@
 </maction></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -8639,9 +8716,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -8656,7 +8736,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
@@ -9448,7 +9532,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL 12500000 UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -9459,9 +9543,12 @@
 <mn>1000000000</mn>
 </mrow>
 <mrow>
-<mn>12500000</mn></mrow>
+<maction actiontype="tooltip">
+<mi>$GpuTimestampFrequency</mi>
+<mtext>placeholder</mtext>
+</maction></mrow>
 </mfrac></mathml_EQ></counter>
-    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequencyMHz" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequencyMHz" underscore_name="avg_gpu_core_frequency_mhz" units="mhz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -9476,7 +9563,11 @@
 <mi>$GpuTime</mi>
 <mtext>placeholder</mtext>
 </maction></mrow>
-</mfrac></mathml_EQ></counter>
+</mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<maction actiontype="tooltip">
+<mi>$GpuMaxFrequencyMHz</mi>
+<mtext>placeholder</mtext>
+</maction></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups (with 2x2 accuracy) that missed L1 sampler cache." equation="A 29 READ 4 UMUL" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OCL IO" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler Texels Misses" semantic_type="event" symbol_name="SamplerTexelMisses" underscore_name="sampler_texel_misses" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>A29</mi>
