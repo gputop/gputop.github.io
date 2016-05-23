@@ -27,6 +27,8 @@
  */
 
 function GputopUI () {
+    Gputop.call(this);
+
     this.graph_array = [];
     this.zoom = 10; //seconds
 
@@ -40,9 +42,12 @@ function GputopUI () {
     this.start_timestamp = 0;
     this.start_gpu_timestamp = 0;
 
-    this.queue_redraw_ = false;
+    this.redraw_queued_ = false;
+
+    this.previous_zoom = 0;
 }
 
+GputopUI.prototype = Object.create(Gputop.prototype);
 
 function create_default_markings(xaxis) {
     var markings = [];
@@ -55,9 +60,9 @@ function create_default_markings(xaxis) {
 
 /* FIXME: this isn't a good place for code relating to fiddly OA exponent details
  */
-function max_exponent_below(nsec) {
+function max_exponent_below(nsec, timestamp_frequency) {
     for (var i = 0; i < 64; i++) {
-        var period = (1<<i) * 1000000000 / gputop.devinfo.get_timestamp_frequency();
+        var period = (1<<i) * 1000000000 / timestamp_frequency;
 
         if (period > nsec)
             return Math.max(0, i - 1);
@@ -70,7 +75,7 @@ function max_exponent_below(nsec) {
 /* returns true if the exponent changed and therefore the metric
  * stream needs to be re-opened, else false.
  */
-function update_metric_period_exponent_for_zoom(metric) {
+GputopUI.prototype.update_metric_period_exponent_for_zoom = function (metric) {
     var hack_graph_size_px = 1000;
 
     /* We want to set an aggregation period such that we get ~1 update per
@@ -83,7 +88,7 @@ function update_metric_period_exponent_for_zoom(metric) {
      * assuming 1000 pixels.
      */
 
-    var ns_per_pixel = gputop_ui.zoom * 1000000000 / hack_graph_size_px;
+    var ns_per_pixel = this.zoom * 1000000000 / hack_graph_size_px;
 
     /* XXX: the way we make side-band changes to the metric object while its
      * still open seems fragile.
@@ -96,8 +101,9 @@ function update_metric_period_exponent_for_zoom(metric) {
      * new, pending configuration shouldn't have any affect on any currently
      * open stream.
      */
-    gputop.update_period(global_guid, ns_per_pixel);
-    var exponent = max_exponent_below(ns_per_pixel);
+    this.update_period(global_guid, ns_per_pixel);
+    var exponent = max_exponent_below(ns_per_pixel,
+                                      this.devinfo.get_timestamp_frequency());
 
     if (metric.exponent != exponent) {
         metric.exponent = exponent;
@@ -108,19 +114,97 @@ function update_metric_period_exponent_for_zoom(metric) {
 
 
 GputopUI.prototype.set_zoom = function(zoom) {
-    gputop_ui.zoom = zoom;
+    this.zoom = zoom;
 
-    var metric = gputop.get_map_metric(global_guid);
+    var metric = this.lookup_metric_for_guid(global_guid);
 
-    if (update_metric_period_exponent_for_zoom(metric))
-        gputop.open_oa_metric_set({guid:global_guid});
+    // First update metric period exponent, then check for paused query.
+    // The other way around would have not checked whether or not to update the
+    // exponent if the query was paused.
+    if (this.update_metric_period_exponent_for_zoom(metric) && !global_paused_query)
+        this.open_oa_metric_set({guid:global_guid});
 
     this.queue_redraw();
 }
 
+// remove all the data from all opened graphs
+GputopUI.prototype.clear_graphs = function() {
+    var metric = this.lookup_metric_for_guid(global_guid);
+
+    // reset the accumulator clock and continuation report
+    webc._gputop_webc_reset_accumulator(metric.webc_stream_ptr_);
+
+    // go through the list of opened graphs
+    for (var i = 0; i < this.graph_array.length; ++i) {
+        var container = "#" + this.graph_array[i];
+        var counter = $(container).data("counter");
+        counter.graph_data = [];
+        counter.updates = [];
+        this.start_timestamp = 0;
+    }
+}
+
+GputopUI.prototype.update_graphs_paused = function (timestamp) {
+    var metric = this.lookup_metric_for_guid(global_guid);
+
+    for (var i = 0; i < this.graph_array.length; ++i) {
+        var container = "#" + this.graph_array[i];
+        var counter = $(container).data("counter");
+
+        var length = counter.updates.length;
+        var x_min = 0;
+        var x_max = 1;
+
+        if (length > 0) {
+                this.start_gpu_timestamp = counter.updates[0][0]; // end_timestamp
+                this.end_gpu_timestamp = counter.updates[length - 1][0]; // end_timestamp
+        }
+        if (length > 0 || this.previous_zoom != this.zoom) {
+            this.previous_zoom = this.zoom;
+            var time_range = this.zoom * 1000000000;
+            var margin = time_range * 0.1;
+
+            x_max = this.end_gpu_timestamp;
+            x_min = x_max - time_range;
+            var max_graph_data = x_max - 20000000000;
+
+            for (var j = 0; j < length; j++) {
+                var start = counter.updates[j][0];
+                var end = counter.updates[j][1];
+                var val = counter.updates[j][2];
+                var max = counter.updates[j][3];
+                var mid = start + (end - start) / 2;
+
+                counter.graph_data.push([mid, val]);
+                counter.graph_options.yaxis.max = 1.10 * counter.inferred_max; // add another 10% to the Y axis
+            }
+
+            // adjust the min and max (start and end of the graph)
+            counter.graph_options.xaxis.min = x_min + margin;
+            counter.graph_options.xaxis.max = x_max;
+            counter.graph_options.xaxis.label = this.zoom + ' seconds';
+            counter.graph_options.xaxis.panRange = [max_graph_data, x_max];
+
+            var default_markings = create_default_markings(counter.graph_options.xaxis);
+            counter.graph_options.grid.markings = default_markings.concat(counter.graph_markings);
+
+            this.series[0].data = counter.graph_data;
+            $.plot(container, this.series, counter.graph_options);
+
+            // remove all the samples from the updates array
+            counter.updates.splice(0, counter.updates.length);
+        }
+    }
+}
 
 GputopUI.prototype.update_graphs = function(timestamp) {
-    var metric = gputop.get_map_metric(global_guid);
+    this.timestamp = timestamp;
+    if (global_paused_query) {
+        this.update_graphs_paused(timestamp);
+        return;
+    }
+
+    var metric = this.lookup_metric_for_guid(global_guid);
 
     for (var i = 0; i < this.graph_array.length; ++i) {
         var container = "#" + this.graph_array[i];
@@ -138,7 +222,7 @@ GputopUI.prototype.update_graphs = function(timestamp) {
         var elapsed = (timestamp - this.start_timestamp) * 1000000; // elapsed time from the very begining
 
         var time_range = this.zoom * 1000000000;
-        var margin = time_range * 0.1;
+        var margin = time_range * 0.05;
 
         x_max = this.start_gpu_timestamp + elapsed;
         x_min = x_max - time_range;
@@ -253,14 +337,14 @@ GputopUI.prototype.update_counter = function(counter) {
 }
 
 GputopUI.prototype.update = function(timestamp) {
-    var metric = gputop.active_oa_metric_;
+    var metric = this.active_oa_metric_;
     if (metric == undefined)
         return;
 
     this.update_graphs(timestamp);
 
-    for (var i = 0, l = metric.emc_counters_.length; i < l; i++) {
-        var counter = metric.emc_counters_[i];
+    for (var i = 0, l = metric.webc_counters.length; i < l; i++) {
+        var counter = metric.webc_counters[i];
         this.update_counter(counter);
     }
 
@@ -273,12 +357,16 @@ GputopUI.prototype.queue_redraw = function() {
     if (this.redraw_queued_)
         return;
 
-    window.requestAnimationFrame(function (timestamp) {
-        gputop_ui.redraw_queued_ = false;
-        gputop_ui.update(timestamp);
+    window.requestAnimationFrame((timestamp) => {
+        this.redraw_queued_ = false;
+        this.update(timestamp);
     });
 
     this.redraw_queued_ = true;
+}
+
+GputopUI.prototype.notify_metric_updated = function() {
+    this.queue_redraw();
 }
 
 GputopUI.prototype.metric_not_supported = function(metric) {
@@ -289,10 +377,10 @@ GputopUI.prototype.metric_not_supported = function(metric) {
  * connecting to the server, after Gputop has been initialized */
 GputopUI.prototype.update_features = function(features) {
     if (features.devinfo.get_devid() == 0 ) {
-        gputop_ui.show_alert(" No device was detected, is it the functionality on kernel ? ","alert-danger");
+        this.show_alert(" No device was detected, is it the functionality on kernel ? ","alert-danger");
     }
 
-    $( "#gputop-gpu" ).html( gputop.get_arch_pretty_name() );
+    $( "#gputop-gpu" ).html( this.get_arch_pretty_name() );
 
     $( ".gputop-connecting" ).hide();
     $( "#gputop-cpu" ).html( features.get_cpu_model() );
@@ -309,12 +397,12 @@ GputopUI.prototype.update_features = function(features) {
     if (features.get_fake_mode())
         $( "#metrics-tab-a" ).html("Metrics (Fake Mode) ");
 
-    gputop_ui.load_metrics_panel(function() {
-        var metric = gputop.get_map_metric(global_guid);
+    this.load_metrics_panel(() => {
+        var metric = this.lookup_metric_for_guid(global_guid);
 
-        update_metric_period_exponent_for_zoom(metric);
+        this.update_metric_period_exponent_for_zoom(metric);
 
-        gputop.open_oa_metric_set({guid:global_guid});
+        this.open_oa_metric_set({guid:global_guid});
     });
 }
 
@@ -342,43 +430,28 @@ GputopUI.prototype.log = function(log_level, log_message){
         case 3: color = "blue"; break;
         case 4: color = "black"; break;
     }
-    $('#editor').append("<font color='"+color+"'>"+log_message+"<br/></font>");
+    $('#log').append('<font color="' + color + '">' + log_message + '</font></br>');
 }
 
 GputopUI.prototype.syslog = function(message){
-    gputop_ui.syslog_.value += message + "\n";
     console.log(message);
 }
 
-GputopUI.prototype.weblog = function(message){
-    //gputop_ui.weblog.value += message + "\n";
-}
-
 GputopUI.prototype.init_interface = function(){
-    $( "#gputop-overview-panel" ).load( "ajax/overview.html", function() {
-        console.log('gputop-overview-panel load');
-        gputop.connect();
+    $( "#gputop-overview-panel" ).load( "ajax/overview.html", () => {
+        console.log('gputop-overview-panel loaded');
+        $( '#process-tab-a' ).click(this.btn_get_process_info);
+
+        // Display tooltips
+        $( '[data-toggle="tooltip"]' ).tooltip();
+        this.reconnect();
     });
 }
 
 GputopUI.prototype.load_metrics_panel = function(callback_success) {
-    $( '#pane2' ).load( "ajax/metrics.html", function() {
+    $( '#gputop-metrics-panel' ).load( "ajax/metrics.html", () => {
         console.log('Metrics panel loaded');
         callback_success();
-    });
-}
-
-var gputop_ui = new GputopUI();
-
-GputopUI.prototype.btn_close_current_query = function() {
-    var active_metric = gputop.active_oa_metric_;
-    if (active_metric == undefined) {
-        gputop_ui.show_alert(" No Active Query","alert-info");
-        return;
-    }
-
-    gputop.close_oa_metric_set(active_metric, function() {
-       gputop_ui.show_alert(" Success closing query","alert-info");
     });
 }
 
@@ -396,37 +469,23 @@ GputopUI.prototype.update_process = function(process) {
 }
 
 GputopUI.prototype.btn_get_process_info = function() {
-    bootbox.prompt("Process Id?", function(result) {
+    bootbox.prompt("Process Id?", (result) => {
         if (result === null) {
-            gputop_ui.show_alert(" Cancelled","alert-info");
+            this.show_alert(" Cancelled","alert-info");
         } else {
             var pid = parseInt(result,10);
             if (!isNaN(pid)) {
-                gputop.get_process_info(pid, function(msg) {
-                    gputop_ui.show_alert(" Callback "+result,"alert-info");
+                this.get_process_info(pid, function(msg) {
+                    this.show_alert(" Callback "+result,"alert-info");
                 });
             } else {
-                gputop_ui.show_alert("Input not a valid PID","alert-info");
+                this.show_alert("Input not a valid PID","alert-info");
             }
         }
     });
 }
 
-// jquery code
-$( document ).ready(function() {
-    //log = $( "#log" );
-    gputop_ui.syslog_ = document.getElementById("log");
-
-/*
-    $( "#gputop-entries" ).append( '<li><a id="close_query" href="#" onClick>Close Query</a></li>' );
-    $( '#close_query' ).click( gputop_ui.btn_close_current_query);
-*/
-
-    $( '#process-tab-a' ).click(gputop_ui.btn_get_process_info);
-
-    gputop_ui.init_interface();
-    $( '#editor' ).wysiwyg();
-
-    // Display tooltips
-    $( '[data-toggle="tooltip"]' ).tooltip();
-});
+GputopUI.prototype.reconnect = function(callback) {
+    var address = $('#target_address').val() + ':' + $('#target_port').val();
+    this.connect(address, callback);
+}
