@@ -29,6 +29,26 @@
 function GputopUI () {
     Gputop.call(this);
 
+    /* NB: Although we initialize in demo mode in these conditions, it's still
+     * possible to enter/leave demo mode interactively by specifying and
+     * address:port for a target to connect to. (which is why we don't
+     * do these checks in the .is_demo() method.
+     */
+    var demo = getUrlParameter('demo');
+    if (demo == "true" || demo == "1"
+        || window.location.hostname == "gputop.github.io"
+        || window.location.hostname == "www.gputop.com"
+       ) {
+        $('#target_address').attr('value', "demo");
+        this.demo_mode = true;
+    } else {
+        $('#target_address').attr('value', window.location.hostname);
+        this.demo_mode = false;
+    }
+
+    this.overview_loaded = false;
+    this.demo_ui_loaded = false;
+
     this.graph_array = [];
     this.zoom = 10; //seconds
 
@@ -45,9 +65,22 @@ function GputopUI () {
     this.redraw_queued_ = false;
 
     this.previous_zoom = 0;
+
+    this.cpu_stats_stream = undefined;
+
+    this.cpu_stats_last = undefined;
+    this.cpu_stats_start = 0;
+    this.cpu_stats_start_js = 0;
+    this.cpu_stats_last_graph_update_time = 0;
+    this.cpu_stats = undefined;
+    this.cpu_stats_div = undefined;
 }
 
 GputopUI.prototype = Object.create(Gputop.prototype);
+
+GputopUI.prototype.is_demo = function() {
+    return this.demo_mode;
+}
 
 function create_default_markings(xaxis) {
     var markings = [];
@@ -197,7 +230,7 @@ GputopUI.prototype.update_graphs_paused = function (timestamp) {
     }
 }
 
-GputopUI.prototype.update_graphs = function(timestamp) {
+GputopUI.prototype.update_oa_graphs = function(timestamp) {
     this.timestamp = timestamp;
     if (global_paused_query) {
         this.update_graphs_paused(timestamp);
@@ -336,12 +369,105 @@ GputopUI.prototype.update_counter = function(counter) {
     }
 }
 
+GputopUI.prototype.update_cpu_stats = function (timestamp) {
+
+    if (this.cpu_stats === undefined || this.cpu_stats_start === 0)
+        return;
+
+    if (this.cpu_stats_div === undefined) {
+        this.cpu_stats_div = document.getElementById('cpu-stats');
+
+        this.cpu_stats_start_js = timestamp;
+
+        var layout = {
+            title: "CPU Overview",
+            xaxis: { range: [this.cpu_stats_start, this.cpu_stats_start + 5000000000], autorange: false, rangemode: 'normal', ticks: '', showticklabels: false },
+            yaxis: { range: [0, 100], showgrid: false, title: "Busy %" },
+            showLegend: true
+        };
+
+        var config = {
+            displayModeBar: false
+        };
+
+        var traces = new Array(this.cpu_stats.length);
+
+        for (var i = 0; i < this.cpu_stats.length; i++) {
+            traces[i] = {
+                name: "CPU " + i,
+                type: "scatter",
+                mode: "lines",
+                x: [],
+                y: [],
+            };
+        }
+
+        Plotly.newPlot(this.cpu_stats_div,
+                       traces,
+                       layout,
+                       config);
+    }
+
+    var progress = (timestamp - this.cpu_stats_start_js) * 1000000;
+
+    var time_range = 10000000000; // 10 seconds
+
+    var x_max = this.cpu_stats_start + progress;
+    var x_min = x_max - time_range;
+
+    var margin = time_range * 0.05;
+    var new_layout = {
+        'xaxis.range': [x_min + margin, x_max - margin],
+    };
+    Plotly.relayout(this.cpu_stats_div, new_layout);
+
+    /* Updating the graph data is a lot more costly so we do it in batches
+     * instead of every frame... */
+    var margin_ms = margin / 1000000;
+    if ((timestamp - this.cpu_stats_last_graph_update_time) < (margin_ms / 2))
+        return;
+
+    var timestamps = this.cpu_stats_div.data[0].x;
+    for (var clip = 0, dlen = timestamps.length; clip < dlen && timestamps[clip] < x_min; clip++) {}
+    // remove the old samples
+    if (clip > 0)
+        timestamps = timestamps.slice(clip);
+
+    timestamps = timestamps.concat(this.cpu_stats_timestamp_updates);
+    this.cpu_stats_timestamp_updates = [];
+
+    var y_updates = new Array(this.cpu_stats.length);
+    var x_updates = new Array(this.cpu_stats.length);
+
+    for (var i = 0; i < this.cpu_stats.length; i++) {
+
+        var y_data = this.cpu_stats_div.data[i].y;
+
+        // remove the old samples
+        if (clip > 0)
+            y_data = y_data.slice(clip);
+
+        y_data = y_data.concat(this.cpu_stats[i]);
+        this.cpu_stats[i] = [];
+
+        y_updates[i] = y_data;
+        x_updates[i] = timestamps;
+    }
+    var update = { x: x_updates, y: y_updates };
+    Plotly.restyle(this.cpu_stats_div, update);
+
+    this.cpu_stats_last_graph_update_time = timestamp;
+}
+
 GputopUI.prototype.update = function(timestamp) {
     var metric = this.active_oa_metric_;
     if (metric == undefined)
         return;
 
-    this.update_graphs(timestamp);
+    this.update_oa_graphs(timestamp);
+
+
+    this.update_cpu_stats(timestamp);
 
     for (var i = 0, l = metric.webc_counters.length; i < l; i++) {
         var counter = metric.webc_counters[i];
@@ -382,7 +508,6 @@ GputopUI.prototype.update_features = function(features) {
 
     $( "#gputop-gpu" ).html( this.get_arch_pretty_name() );
 
-    $( ".gputop-connecting" ).hide();
     $( "#gputop-cpu" ).html( features.get_cpu_model() );
     $( "#gputop-kernel-build" ).html( features.get_kernel_build() );
     $( "#gputop-kernel-release" ).html( features.get_kernel_release() );
@@ -403,6 +528,57 @@ GputopUI.prototype.update_features = function(features) {
         this.update_metric_period_exponent_for_zoom(metric);
 
         this.open_oa_metric_set({guid:global_guid});
+    });
+
+    this.cpu_stats_stream = this.open_cpu_stats({sample_period_ms: 300}, () => {
+        console.log("CPU Stats stream open");
+
+        this.cpu_stats_stream.on('update', (ev) => {
+            var stats = ev.stats;
+
+            if (this.cpu_stats_last == undefined) {
+                this.cpu_stats_start = stats.cpus[0].get_timestamp().toNumber();
+                this.cpu_stats_timestamp_updates = [];
+                this.cpu_stats = new Array(stats.cpus.length);
+                for (var i = 0; i < stats.cpus.length; i++) {
+                    this.cpu_stats[i] = [];
+                }
+            } else {
+                var last = this.cpu_stats_last;
+                var last_time = last.cpus[0].get_timestamp().toNumber();
+                var time = stats.cpus[0].get_timestamp().toNumber();
+                var mid_time = last_time + ((time - last_time) / 2);
+
+                console.assert(time > last_time, "Time went backwards!");
+                /* Expect timestamps to be consistent for all core samples so
+                 * just maintain one array of timestamp updates... */
+                this.cpu_stats_timestamp_updates.push(mid_time);
+
+                for (var i = 0; i < stats.cpus.length; i++) {
+                    var core_last = last.cpus[i];
+                    var core = stats.cpus[i];
+
+                    var user = core.user - core_last.user;
+                    var nice = core.nice - core_last.nice;
+                    var system = core.system - core_last.system;
+                    var idle = core.idle - core_last.idle;
+                    var iowait = core.iowait - core_last.iowait;
+                    var irq = core.irq - core_last.irq;
+                    var softirq = core.softirq - core_last.softirq;
+                    var steal = core.steal - core_last.steal;
+                    var guest = core.guest - core_last.guest;
+                    var guest_nice = core.guest_nice - core_last.guest_nice;
+
+                    var total = user + nice + system + idle + iowait + irq + softirq + steal + guest + guest_nice;
+
+                    var busy_percentage = 100 - ((idle / total) * 100);
+                    this.cpu_stats[i].push(busy_percentage);
+
+                    //console.log("CPU" + i + ": ts = " + mid_time + " busy = " + busy_percentage);
+                }
+            }
+            this.cpu_stats_last = stats;
+        });
     });
 }
 
@@ -437,15 +613,56 @@ GputopUI.prototype.syslog = function(message){
     console.log(message);
 }
 
-GputopUI.prototype.init_interface = function(){
-    $( "#gputop-overview-panel" ).load( "ajax/overview.html", () => {
-        console.log('gputop-overview-panel loaded');
-        $( '#process-tab-a' ).click(this.btn_get_process_info);
+GputopUI.prototype.init_interface = function(callback) {
 
-        // Display tooltips
-        $( '[data-toggle="tooltip"]' ).tooltip();
-        this.reconnect();
-    });
+    if (this.demo_mode) {
+
+        if (!this.demo_ui_loaded) {
+            this.demo_ui_loaded = true;
+
+            $('#gputop-welcome-panel').load("ajax/welcome.html");
+
+            $('#gputop-entries').prepend('<li class="dropdown" id="metric-menu"></li>');
+            $('#metric-menu').append('<a href="#" class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-haspopup="true" aria-expanded="true">Inspect metric set</a>');
+            $('#metric-menu').append('<ul id="demoMenu" class="dropdown-menu" aria-labelledby="dropdownMenu1"></ul>');
+
+            var arch_list = [
+                ["hsw", "Haswell"],
+                ["chv", "Cherryview"],
+                ["bdw", "Broadwell"],
+                ["skl", "Skylake"],
+            ];
+
+            for (var i = 0; i < arch_list.length; i++)
+                $("#demoMenu").append('<li><a href="#" onclick="gputop.set_demo_architecture(\'' + arch_list[i][0] + '\')">'+ arch_list[i][1] + '</a></li>');
+        }
+
+        $("#welcome").show();
+        $("#build-instructions").show();
+        $("#wiki").show();
+        $('#welcome-tab-a').trigger('click');
+    } else {
+        $("#welcome").hide();
+        $("#build-instructions").hide();
+        $("#wiki").hide();
+        $('#overview-tab-a').trigger('click');
+    }
+
+
+    if (!this.overview_loaded) {
+        this.overview_loaded = true;
+
+        $("#gputop-overview-panel" ).load( "ajax/overview.html", () => {
+            // Display tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            if (callback !== undefined)
+                callback();
+        });
+    } else {
+        if (callback !== undefined)
+            callback();
+    }
 }
 
 GputopUI.prototype.load_metrics_panel = function(callback_success) {
@@ -468,24 +685,35 @@ GputopUI.prototype.update_process = function(process) {
     });
 }
 
-GputopUI.prototype.btn_get_process_info = function() {
-    bootbox.prompt("Process Id?", (result) => {
-        if (result === null) {
-            this.show_alert(" Cancelled","alert-info");
-        } else {
-            var pid = parseInt(result,10);
-            if (!isNaN(pid)) {
-                this.get_process_info(pid, function(msg) {
-                    this.show_alert(" Callback "+result,"alert-info");
-                });
-            } else {
-                this.show_alert("Input not a valid PID","alert-info");
-            }
-        }
-    });
-}
-
 GputopUI.prototype.reconnect = function(callback) {
     var address = $('#target_address').val() + ':' + $('#target_port').val();
-    this.connect(address, callback);
+
+    var current_demo_mode = this.demo_mode;
+
+    if ($('#target_address').val() === "demo")
+        this.demo_mode = true;
+    else
+        this.demo_mode = false;
+
+    function do_connect() {
+        $( ".gputop-connecting" ).show();
+        this.connect(address, () => {
+            $( ".gputop-connecting" ).hide();
+            if (callback !== undefined)
+                callback();
+        });
+    }
+
+    if (this.demo_mode !== current_demo_mode) {
+        this.init_interface(() => {
+            do_connect.call(this);
+        });
+    } else
+        do_connect.call(this);
+}
+
+GputopUI.prototype.dispose = function() {
+    this.cpu_stats_stream = undefined;
+
+    Gputop.prototype.dispose.call(this);
 }

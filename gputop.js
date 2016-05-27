@@ -70,22 +70,9 @@ function get_file(filename, load_callback, error_callback) {
     }
 }
 
-function gputop_is_demo() {
-
-    if (!is_nodejs) {
-        var demo = getUrlParameter('demo');
-        if (demo == "true" || demo == "1"
-                || window.location.hostname == "gputop.github.io"
-                || window.location.hostname == "www.gputop.com"
-                //      || window.location.hostname == "localhost"
-           ) {
-            return true;
-        }
-    }
-
+Gputop.prototype.is_demo = function() {
     return false;
 }
-
 
 function Counter () {
     /* Index into metric.webc_counters_, understood by gputop-web.c code */
@@ -300,6 +287,8 @@ function Gputop () {
 
     this.builder_ = undefined;
 
+    this.socket_ = undefined;
+
     /* When we send a request to open a stream of metrics we send
      * the server a handle that will be attached to subsequent data
      * for the stream. We use these handles to lookup the metric
@@ -307,6 +296,7 @@ function Gputop () {
      */
     this.next_server_handle = 1;
     this.server_handle_to_metric_map = {};
+    this.server_handle_to_stream_map = {};
 
     /* When we open a stream of metrics we also call into the
      * Emscripten compiled webc code to allocate a corresponding
@@ -529,9 +519,8 @@ Gputop.prototype.parse_xml_metrics = function(xml) {
     $(xml).find("set").each((i, elem) => {
         this.parse_metrics_set_xml(elem);
     });
-    if (gputop_is_demo()) {
+    if (this.is_demo())
         $('#gputop-metrics-panel').load("ajax/metrics.html");
-    }
 }
 
 Gputop.prototype.set_demo_architecture = function(architecture) {
@@ -745,15 +734,17 @@ Gputop.prototype.open_cpu_stats = function(config, callback) {
     open.set('overwrite', false);   /* don't overwrite old samples */
     open.set('live_updates', true); /* send live updates */
 
-    /* FIXME: remove from OpenQuery - not relevent to opening cpu stats */
+    /* FIXME: remove from OpenQuery - not relevant to opening cpu stats */
     open.set('per_ctx_mode', false);
 
+    stream.on('open', callback);
+
     this.rpc_request('open_query', open, () => {
+        this.server_handle_to_stream_map[open.id] = stream;
+
         var ev = { type: "open" };
         stream.dispatchEvent(ev);
     });
-
-    this.cpu_stats_stream = stream;
 
     return stream;
 }
@@ -786,7 +777,7 @@ Gputop.prototype.generate_uuid = function()
 /* TODO: maybe make @value unnecessary for methods that take no data. */
 Gputop.prototype.rpc_request = function(method, value, closure) {
 
-    if (gputop_is_demo()) {
+    if (this.is_demo()) {
         if (closure != undefined)
             window.setTimeout(closure);
         return;
@@ -812,7 +803,7 @@ Gputop.prototype.rpc_request = function(method, value, closure) {
 }
 
 Gputop.prototype.request_features = function() {
-    if (!gputop_is_demo()) {
+    if (!this.is_demo()) {
         if (this.socket_.readyState == is_nodejs ? 1 : WebSocket.OPEN) {
             this.rpc_request('get_features', true);
         } else {
@@ -925,7 +916,7 @@ Gputop.prototype.process_features = function(features){
     get_file(this.xml_file_name_, (xml) => {
         this.parse_xml_metrics(xml);
 
-        if (gputop_is_demo())
+        if (this.is_demo())
             this.metrics_.forEach(function (metric) { metric.supported_ = true; });
         else {
             this.metrics_.forEach(function (metric) { metric.supported_ = false; });
@@ -988,6 +979,10 @@ Gputop.prototype.load_emscripten = function(callback) {
 }
 
 Gputop.prototype.dispose = function() {
+    if (this.socket_ !== undefined)
+        this.socket_.close();
+    this.socket_ = undefined;
+
     this.is_connected_ = false;
 
     this.metrics_.forEach(function (metric) {
@@ -1000,6 +995,7 @@ Gputop.prototype.dispose = function() {
 
     this.webc_stream_ptr_to_metric_map = {};
     this.server_handle_to_metric_map = {};
+    this.server_handle_to_stream_map = {};
     this.active_oa_metric_ = undefined;
 }
 
@@ -1038,7 +1034,6 @@ function gputop_socket_on_message(evt) {
     var data = new Uint8Array(evt.data, 8);
     var msg_type = dv.getUint8(0);
 
-    data.length
     switch(msg_type) {
     case 1: /* WS_MESSAGE_PERF */
         var id = dv.getUint16(4, true /* little endian */);
@@ -1046,33 +1041,40 @@ function gputop_socket_on_message(evt) {
         break;
     case 2: /* WS_MESSAGE_PROTOBUF */
         var msg = this.builder_.Message.decode(data);
-        if (msg.features != undefined) {
+
+        switch (msg.cmd) {
+        case 'features':
             this.syslog("Features: "+msg.features.get_cpu_model());
             this.process_features(msg.features);
-        }
-        if (msg.error != undefined) {
+            break;
+        case 'error':
             this.show_alert(msg.error,"alert-danger");
             this.syslog(msg.reply_uuid + " recv: Error " + msg.error);
             this.log(4, msg.error);
-        }
-        if (msg.log != undefined) {
+            break;
+        case 'log':
             var entries = msg.log.entries;
             entries.forEach((entry) => {
                 this.log(entry.log_level, entry.log_message);
             });
-        }
-        if (msg.process_info != undefined) {
+            break;
+        case 'process_info':
             var pid = msg.process_info.pid;
             var process = this.get_process_by_pid(pid);
 
             process.update(msg.process_info);
             this.syslog(msg.reply_uuid + " recv: Console process info "+pid);
-        }
-        if (msg.cpu_stats != undefined) {
-            console.log("cpu stats:" + msg.cpu_stats.cpus[0]);
-            for (var i = 0; i < msg.cpu_stats.cpus.length; i++) {
-                console.log("> " + i + ") " + msg.cpu_stats.cpus[i]);
+            break;
+        case 'cpu_stats':
+            var server_handle = msg.cpu_stats.id;
+
+            if (server_handle in this.server_handle_to_stream_map) {
+                var stream = this.server_handle_to_stream_map[server_handle];
+
+                var ev = { type: "update", stats: msg.cpu_stats };
+                stream.dispatchEvent(ev);
             }
+            break;
         }
 
         if (msg.reply_uuid in this.rpc_closures_) {
@@ -1148,7 +1150,7 @@ Gputop.prototype.connect = function(address, callback) {
 
     this.load_emscripten(() => {
         this.load_gputop_proto(() => {
-            if (!gputop_is_demo()) {
+            if (!this.is_demo()) {
                 var websocket_url = 'ws://' + address + '/gputop/';
                 this.syslog('Connecting to port ' + websocket_url);
                 this.socket_ = this.connect_web_socket(websocket_url, () => {
