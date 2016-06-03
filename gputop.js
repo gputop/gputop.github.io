@@ -43,8 +43,6 @@ if (typeof module !== 'undefined' && module.exports) {
     var path = require('path');
     install_prefix = path.resolve(install_prefix, '..');
 
-    console.log("install prefix = " + install_prefix);
-
     is_nodejs = true;
 } else {
     var webc = undefined;
@@ -74,7 +72,10 @@ Gputop.prototype.is_demo = function() {
     return false;
 }
 
-function Counter () {
+function Counter (metricParent) {
+
+    this.metric = metricParent;
+
     /* Index into metric.webc_counters_, understood by gputop-web.c code */
     this.webc_counter_id_ = -1;
     this.name = '';
@@ -142,7 +143,9 @@ Counter.prototype.append_counter_data = function (start_timestamp, end_timestamp
     }
 }
 
-function Metric () {
+function Metric (gputopParent) {
+    this.gputop = gputopParent; /* yay for mark-sweep */
+
     this.name = "not loaded";
     this.symbol_name = "UnInitialized";
     this.chipset_ = "not loaded";
@@ -227,14 +230,23 @@ Metric.prototype.add_new_counter = function(counter) {
     counter.webc_counter_id_ = counter_idx;
     if (counter_idx != -1) {
         counter.supported_ = true;
-        console.log('Counter ' + counter_idx + " " + symbol_name);
+        this.gputop.log('  Added available counter ' + counter_idx + ": " + symbol_name);
         this.webc_counters[counter_idx] = counter;
     } else {
-        console.log('Counter not available ' + symbol_name);
+        this.gputop.log('  Not adding unavailable counter:' + symbol_name);
     }
 
     this.counters_map_[symbol_name] = counter;
     this.counters_.push(counter);
+}
+
+Metric.prototype.set_aggregation_period = function(period_ns) {
+    console.assert(typeof period_ns === 'number', "Need to pass Number to set_aggregation_period");
+
+    this.period_ns_ = period_ns;
+
+    if (this.webc_stream_ptr_)
+        webc._gputop_webc_update_stream_period(this.webc_stream_ptr_, period_ns);
 }
 
 function Process_info () {
@@ -265,6 +277,17 @@ Process_info.prototype.update = function(process) {
 
 function Gputop () {
 
+    /* To support being able to redirect the output of node.js tools
+     * we redirect all console logging to stderr... */
+    if (is_nodejs)
+        this.console = new console.Console(process.stderr, process.stderr);
+    else
+        this.console = console;
+
+    this.LOG=0;
+    this.WARN=1;
+    this.ERROR=2;
+
     this.metrics_ = [];
     this.map_metrics_ = {}; // Map of metrics by GUID
 
@@ -284,8 +307,10 @@ function Gputop () {
         }
         return this.config_.architecture;
     }
+    this.system_properties = {};
 
     this.builder_ = undefined;
+    this.gputop_proto_ = undefined;
 
     this.socket_ = undefined;
 
@@ -329,22 +354,34 @@ function Gputop () {
     this.test_log("Global Gputop object constructed");
 }
 
-/* Application log messages */
-Gputop.prototype.log = function(level, message)
+Gputop.prototype.application_log = function(level, message)
 {
-    console.log("APP LOG: (" + level + ") " + message.trim());
+    this.console.log("APP LOG: (" + level + ") " + message.trim());
 }
 
-/* Internal console.log wrapper in case we want to forward/redirect */
-Gputop.prototype.syslog = function(message)
+Gputop.prototype.log = function(message, level)
 {
-    console.log(message);
+    if (level === undefined)
+        level = this.LOG;
+
+    switch (level) {
+    case this.LOG:
+        this.console.log(message);
+        break;
+    case this.WARN:
+        this.console.warn("WARN:" + message);
+        break;
+    case this.ERROR:
+        this.console.error("ERROR:" + message);
+        break;
+    default:
+        this.console.error("Unknown log level " + level + ": " + message);
+    }
 }
 
-/* User directed messages */
-Gputop.prototype.show_alert = function(message, type)
+Gputop.prototype.user_msg = function(message, level)
 {
-    console.log(message);
+    this.log(message, level);
 }
 
 /* For unit test feedback, sent back to server in test mode */
@@ -378,38 +415,34 @@ Gputop.prototype.get_metrics_xml = function() {
 }
 
 Gputop.prototype.parse_counter_xml = function(metric, xml_elem) {
-    try {
-        var $cnt = $(xml_elem);
+    var $cnt = $(xml_elem);
 
-        var counter = new Counter();
-        counter.name = $cnt.attr("name");
-        counter.symbol_name = $cnt.attr("symbol_name");
-        counter.underscore_name = $cnt.attr("underscore_name");
-        counter.description = $cnt.attr("description");
-        counter.eq_xml = ($cnt.find("mathml_EQ"));
-        counter.max_eq_xml = ($cnt.find("mathml_MAX_EQ"));
-        if (counter.max_eq_xml.length == 0)
-            counter.max_eq_xml = undefined;
-        counter.xml_ = $cnt;
+    var counter = new Counter(metric);
+    counter.name = $cnt.attr("name");
+    counter.symbol_name = $cnt.attr("symbol_name");
+    counter.underscore_name = $cnt.attr("underscore_name");
+    counter.description = $cnt.attr("description");
+    counter.eq_xml = ($cnt.find("mathml_EQ"));
+    counter.max_eq_xml = ($cnt.find("mathml_MAX_EQ"));
+    if (counter.max_eq_xml.length == 0)
+        counter.max_eq_xml = undefined;
+    counter.xml_ = $cnt;
 
-        var units = $cnt.attr("units");
-        if (units === "us") {
-            units = "ns";
-            counter.units_scale = 1000;
-        }
-        if (units === "mhz") {
-            units = "hz";
-            counter.units_scale *= 1000000;
-        }
-        counter.units = units;
-
-         if (units === 'hz' || units === 'percent')
-             counter.duration_dependent = false;
-
-        metric.add_new_counter.call(metric, counter);
-    } catch (e) {
-        this.syslog("Failed to parse counter: " + e);
+    var units = $cnt.attr("units");
+    if (units === "us") {
+        units = "ns";
+        counter.units_scale = 1000;
     }
+    if (units === "mhz") {
+        units = "hz";
+        counter.units_scale *= 1000000;
+    }
+    counter.units = units;
+
+     if (units === 'hz' || units === 'percent')
+         counter.duration_dependent = false;
+
+    metric.add_new_counter.call(metric, counter);
 }
 
 Gputop.prototype.get_metric_by_id = function(idx){
@@ -421,7 +454,7 @@ Gputop.prototype.lookup_metric_for_guid = function(guid){
     if (guid in this.map_metrics_) {
         metric = this.map_metrics_[guid];
     } else {
-        metric = new Metric();
+        metric = new Metric(this);
         metric.guid_ = guid;
         this.map_metrics_[guid] = metric;
     }
@@ -429,28 +462,26 @@ Gputop.prototype.lookup_metric_for_guid = function(guid){
 }
 
 Gputop.prototype.parse_metrics_set_xml = function (xml_elem) {
-    try {
-        var guid = $(xml_elem).attr("guid");
-        var metric = this.lookup_metric_for_guid(guid);
-        metric.xml_ = $(xml_elem);
-        metric.name = $(xml_elem).attr("name");
-        metric.symbol_name = $(xml_elem).attr("symbol_name");
-        metric.underscore_name = $(xml_elem).attr("underscore_name");
-        metric.chipset_ = $(xml_elem).attr("chipset");
+    var guid = $(xml_elem).attr("guid");
+    var metric = this.lookup_metric_for_guid(guid);
+    metric.xml_ = $(xml_elem);
+    metric.name = $(xml_elem).attr("name");
 
-        this.syslog(guid + '\n Found metric ' + metric.name);
+    this.log('Parsing metric set:' + metric.name);
+    this.log("  HW config GUID: " + guid);
 
-        // We populate our array with metrics in the same order as the XML
-        // The metric will already be defined when the features query finishes
-        metric.metric_set_ = Object.keys(this.metrics_).length;
-        this.metrics_[metric.metric_set_] = metric;
+    metric.symbol_name = $(xml_elem).attr("symbol_name");
+    metric.underscore_name = $(xml_elem).attr("underscore_name");
+    metric.chipset_ = $(xml_elem).attr("chipset");
 
-        $(xml_elem).find("counter").each((i, elem) => {
-            this.parse_counter_xml(metric, elem);
-        });
-    } catch (e) {
-        this.syslog("Failed to parse metrics set: " + e);
-    }
+    // We populate our array with metrics in the same order as the XML
+    // The metric will already be defined when the features query finishes
+    metric.metric_set_ = Object.keys(this.metrics_).length;
+    this.metrics_[metric.metric_set_] = metric;
+
+    $(xml_elem).find("counter").each((i, elem) => {
+        this.parse_counter_xml(metric, elem);
+    });
 }
 
 Gputop.prototype.stream_start_update = function (stream_ptr,
@@ -535,12 +566,6 @@ Gputop.prototype.set_architecture = function(architecture) {
     this.config_.architecture = architecture;
 }
 
-Gputop.prototype.update_period = function(guid, period_ns) {
-    var metric = this.map_metrics_[guid];
-    metric.period_ns_ = period_ns;
-    webc._gputop_webc_update_stream_period(metric.webc_stream_ptr_, period_ns);
-}
-
 Gputop.prototype.open_oa_metric_set = function(config, callback) {
 
     function _real_open_oa_metric_set(config, callback) {
@@ -554,7 +579,7 @@ Gputop.prototype.open_oa_metric_set = function(config, callback) {
             per_ctx_mode = config.per_ctx_mode;
 
         function _finalize_open() {
-            this.syslog("Opened OA metric set " + metric.name);
+            this.log("Opened OA metric set " + metric.name);
 
             metric.exponent = oa_exponent;
             metric.per_ctx_mode_ = per_ctx_mode;
@@ -577,20 +602,20 @@ Gputop.prototype.open_oa_metric_set = function(config, callback) {
         this.active_oa_metric_ = metric;
 
         // if (open.per_ctx_mode)
-        //     this.show_alert("Opening metric set " + metric.name + " in per context mode", "alert-info");
+        //     this.user_msg("Opening metric set " + metric.name + " in per context mode");
         // else
-        //     this.show_alert("Opening metric set " + metric.name, "alert-info");
+        //     this.user_msg("Opening metric set " + metric.name);
 
 
         if ('paused_state' in config) {
             _finalize_open.call(this);
         } else {
-            var oa_query = new this.builder_.OAQueryInfo();
+            var oa_query = new this.gputop_proto_.OAQueryInfo();
 
             oa_query.guid = config.guid;
             oa_query.period_exponent = oa_exponent;
 
-            var open = new this.builder_.OpenQuery();
+            var open = new this.gputop_proto_.OpenQuery();
 
             metric.server_handle = this.next_server_handle++;
 
@@ -621,12 +646,12 @@ Gputop.prototype.open_oa_metric_set = function(config, callback) {
     }
 
     if (metric.supported_ == false) {
-        this.show_alert(config.guid + " " + metric.name + " not supported on this kernel (guid=" + config.guid + ")", "alert-danger");
+        this.user_msg(config.guid + " " + metric.name + " not supported on this kernel (guid=" + config.guid + ")", this.ERROR);
         return;
     }
 
     if (metric.closing_) {
-        //this.show_alert("Ignoring attempt to open OA metrics while waiting for close ACK", "alert-danger");
+        //this.user_msg("Ignoring attempt to open OA metrics while waiting for close ACK", this.ERROR);
         return;
     }
 
@@ -640,7 +665,7 @@ Gputop.prototype.open_oa_metric_set = function(config, callback) {
 
 Gputop.prototype.close_oa_metric_set = function(metric, callback) {
     if (metric.closing_ == true ) {
-        this.syslog("Pile Up: ignoring repeated request to close oa metric set (already waiting for close ACK)");
+        this.log("Pile Up: ignoring repeated request to close oa metric set (already waiting for close ACK)", this.WARN);
         return;
     }
 
@@ -658,7 +683,7 @@ Gputop.prototype.close_oa_metric_set = function(metric, callback) {
             callback();
     }
 
-    //this.show_alert("Closing query " + metric.name, "alert-info");
+    //this.user_msg("Closing query " + metric.name);
     metric.closing_ = true;
     this.active_oa_metric_ = undefined;
 
@@ -669,6 +694,17 @@ Gputop.prototype.close_oa_metric_set = function(metric, callback) {
             _finish_close.call(this);
         });
     }
+}
+
+Gputop.prototype.calculate_max_exponent_for_period = function(nsec) {
+    for (var i = 0; i < 64; i++) {
+        var period = (1<<i) * 1000000000 / this.system_properties.timestamp_frequency;
+
+        if (period > nsec)
+            return Math.max(0, i - 1);
+    }
+
+    return i;
 }
 
 var EventTarget = function() {
@@ -722,13 +758,13 @@ Stream.prototype = Object.create(EventTarget.prototype);
 Gputop.prototype.open_cpu_stats = function(config, callback) {
     var stream = new Stream(this.next_server_handle++);
 
-    var cpu_stats = new this.builder_.CpuStatsInfo();
+    var cpu_stats = new this.gputop_proto_.CpuStatsInfo();
     if ('sample_period_ms' in config)
         cpu_stats.set('sample_period_ms', config.sample_period_ms);
     else
         cpu_stats.set('sample_period_ms', 10);
 
-    var open = new this.builder_.OpenQuery();
+    var open = new this.gputop_proto_.OpenQuery();
     open.set('id', stream.server_handle);
     open.set('cpu_stats', cpu_stats);
     open.set('overwrite', false);   /* don't overwrite old samples */
@@ -751,7 +787,7 @@ Gputop.prototype.open_cpu_stats = function(config, callback) {
 
 Gputop.prototype.close_active_metric_set = function(callback) {
     if (this.active_oa_metric_ == undefined) {
-        this.show_alert("No Active Metric Set", "alert-info");
+        this.user_msg("No Active Metric Set");
         return;
     }
 
@@ -783,7 +819,7 @@ Gputop.prototype.rpc_request = function(method, value, closure) {
         return;
     }
 
-    var msg = new this.builder_.Request();
+    var msg = new this.gputop_proto_.Request();
 
     msg.uuid = this.generate_uuid();
 
@@ -792,7 +828,7 @@ Gputop.prototype.rpc_request = function(method, value, closure) {
     msg.encode();
     this.socket_.send(msg.toArrayBuffer());
 
-    this.syslog("RPC: " + msg.req + " request: ID = " + msg.uuid);
+    this.log("RPC: " + msg.req + " request: ID = " + msg.uuid);
 
     if (closure != undefined) {
         this.rpc_closures_[msg.uuid] = closure;
@@ -807,10 +843,10 @@ Gputop.prototype.request_features = function() {
         if (this.socket_.readyState == is_nodejs ? 1 : WebSocket.OPEN) {
             this.rpc_request('get_features', true);
         } else {
-            this.syslog("Not connected");
+            this.log("Can't request features while not connected", this.ERROR);
         }
     } else {
-        var demo_devinfo = new this.builder_.DevInfo();
+        var demo_devinfo = new this.gputop_proto_.DevInfo();
 
         demo_devinfo.set('devname', this.demo_architecture);
 
@@ -866,7 +902,7 @@ Gputop.prototype.request_features = function() {
         demo_devinfo.set('gt_min_freq', 500);
         demo_devinfo.set('gt_max_freq', 1100);
 
-        var demo_features = new this.builder_.Features();
+        var demo_features = new this.gputop_proto_.Features();
 
         demo_features.set('devinfo', demo_devinfo);
         demo_features.set('has_gl_performance_query', false);
@@ -882,36 +918,54 @@ Gputop.prototype.request_features = function() {
 }
 
 Gputop.prototype.process_features = function(features){
-    var di = features.devinfo;
 
-    this.devinfo = di;
+    this.devinfo = features.devinfo;
 
-    this.set_architecture(di.devname);
+    this.log("Features: ");
+    this.log("CPU: " + features.get_cpu_model());
+    this.log("Architecture: " + features.devinfo.devname);
+    this.set_architecture(features.devinfo.devname);
 
-    /* We convert the 64 bits protobuffer entry into 32 bits
-     * to make it easier to call the emscripten native API.
-     * DevInfo values should not overflow the native type,
-     * but stay in 64b internally to help native processing in C.
-     *
-     * XXX: it would be good if there were a more maintainable
-     * way of forwarding this info, since it's currently too
-     * easy to forget to update this to forward new devinfo
-     * state
-     */
-    webc._gputop_webc_update_features(di.devid,
-                                      di.gen,
-                                      di.timestamp_frequency.toInt(),
-                                      di.n_eus.toInt(),
-                                      di.n_eu_slices.toInt(),
-                                      di.n_eu_sub_slices.toInt(),
-                                      di.eu_threads_count.toInt(),
-                                      di.subslice_mask.toInt(),
-                                      di.slice_mask.toInt(),
-                                      di.gt_min_freq.toInt(),
-                                      di.gt_max_freq.toInt());
+    this.system_properties = {};
+    webc._gputop_webc_reset_system_properties();
+
+    var DevInfo = this.builder_.lookup("gputop.DevInfo");
+    var fields = DevInfo.getChildren(ProtoBuf.Reflect.Message.Field);
+    fields.forEach((field) => {
+        var val = 0;
+        var name_c_string = String_pointerify_on_stack(field.name);
+
+        switch (field.type.name) {
+        case "uint64":
+            /* NB uint64 types are handled via long.js and we're being lazy
+             * for now and casting to a Number when forwarding to the webc
+             * api. Later we could add a set_system_property_u64() api if
+             * necessary */
+            val = features.devinfo[field.name].toInt();
+            webc._gputop_webc_set_system_property(name_c_string, val);
+            break;
+        case "uint32":
+            val = features.devinfo[field.name];
+            webc._gputop_webc_set_system_property(name_c_string, val);
+            break;
+        case "string":
+            val = features.devinfo[field.name];
+            /* FIXME: allow forwarding string properties to webc via
+             * a _set_system_property_string() api */
+            break;
+        default:
+            console.error("Unexpected DevInfo " + field.name + " field type");
+            val = features.devinfo[field.name];
+            break;
+        }
+
+        this.system_properties[field.name] = val;
+    });
+
+
+    webc._gputop_webc_update_system_metrics();
 
     this.xml_file_name_ = this.config_.architecture + ".xml";
-    console.log(this.config_.architecture);
 
     get_file(this.xml_file_name_, (xml) => {
         this.parse_xml_metrics(xml);
@@ -922,13 +976,14 @@ Gputop.prototype.process_features = function(features){
             this.metrics_.forEach(function (metric) { metric.supported_ = false; });
 
             if (features.supported_oa_query_guids.length == 0) {
-                this.show_alert("No OA metrics are supported on this Kernel " +
-                                features.get_kernel_release(), "alert-danger");
+                this.user_msg("No OA metrics are supported on this Kernel " +
+                              features.get_kernel_release(), this.ERROR);
             } else {
+                this.log("Metrics:");
                 features.supported_oa_query_guids.forEach((guid, i, a) => {
                     var metric = this.lookup_metric_for_guid(guid);
                     metric.supported_ = true;
-                    this.syslog(guid);
+                    this.log("  " + metric.name + " (guid = " + guid + ")");
                 });
             }
         }
@@ -958,11 +1013,11 @@ Gputop.prototype.load_emscripten = function(callback) {
                     webc.gputop_singleton = this;
 
                     this.native_js_loaded_ = true;
-                    console.log("GPUTop Emscripten code loaded\n");
+                    this.log("GPUTop Emscripten code loaded\n");
                     callback();
                 },
                 function () {
-                    console.log( "Failed loading emscripten" );
+                    this.log( "Failed loading emscripten", this.ERROR);
                 });
     } else {
         /* In the case of node.js we use require('./gputop-web.js') to
@@ -1002,8 +1057,8 @@ Gputop.prototype.dispose = function() {
 function gputop_socket_on_close() {
     this.dispose();
 
-    this.syslog("Disconnected");
-    this.show_alert("Failed connecting to GPUTOP <p\>Retry in 5 seconds","alert-warning");
+    this.log("Disconnected");
+    this.user_msg("Failed connecting to GPUTOP <p\>Retry in 5 seconds", this.WARN);
     // this will automatically close the alert and remove this if the users doesnt close it in 5 secs
     setTimeout(this.connect.bind(this), 5000);
 
@@ -1040,22 +1095,20 @@ function gputop_socket_on_message(evt) {
         webc._gputop_webc_handle_perf_message(id, data);
         break;
     case 2: /* WS_MESSAGE_PROTOBUF */
-        var msg = this.builder_.Message.decode(data);
+        var msg = this.gputop_proto_.Message.decode(data);
 
         switch (msg.cmd) {
         case 'features':
-            this.syslog("Features: "+msg.features.get_cpu_model());
             this.process_features(msg.features);
             break;
         case 'error':
-            this.show_alert(msg.error,"alert-danger");
-            this.syslog(msg.reply_uuid + " recv: Error " + msg.error);
-            this.log(4, msg.error);
+            this.user_msg(msg.error, this.ERROR);
+            this.log(msg.reply_uuid + " recv: Error " + msg.error, this.ERROR);
             break;
         case 'log':
             var entries = msg.log.entries;
             entries.forEach((entry) => {
-                this.log(entry.log_level, entry.log_message);
+                this.application_log(entry.log_level, entry.log_message);
             });
             break;
         case 'process_info':
@@ -1063,7 +1116,7 @@ function gputop_socket_on_message(evt) {
             var process = this.get_process_by_pid(pid);
 
             process.update(msg.process_info);
-            this.syslog(msg.reply_uuid + " recv: Console process info "+pid);
+            this.log(msg.reply_uuid + " recv: Console process info "+pid);
             break;
         case 'cpu_stats':
             var server_handle = msg.cpu_stats.id;
@@ -1121,8 +1174,7 @@ Gputop.prototype.connect_web_socket = function(websocket_url, onopen) {
     socket.binaryType = "arraybuffer";
 
     socket.onopen = () => {
-        this.syslog("Connected");
-        this.show_alert("Succesfully connected to GPUTOP", "alert-success");
+        this.user_msg("Connected to GPUTOP");
         this.flush_test_log();
         onopen();
     }
@@ -1134,11 +1186,11 @@ Gputop.prototype.connect_web_socket = function(websocket_url, onopen) {
 
 Gputop.prototype.load_gputop_proto = function(onload) {
     get_file('gputop.proto', (proto) => {
-        var proto_builder = ProtoBuf.newBuilder();
+        this.builder_ = ProtoBuf.newBuilder();
 
-        ProtoBuf.protoFromString(proto, proto_builder, "gputop.proto");
+        ProtoBuf.protoFromString(proto, this.builder_, "gputop.proto");
 
-        this.builder_ = proto_builder.build("gputop");
+        this.gputop_proto_ = this.builder_.build("gputop");
 
         onload();
     },
@@ -1152,7 +1204,7 @@ Gputop.prototype.connect = function(address, callback) {
         this.load_gputop_proto(() => {
             if (!this.is_demo()) {
                 var websocket_url = 'ws://' + address + '/gputop/';
-                this.syslog('Connecting to port ' + websocket_url);
+                this.log('Connecting to port ' + websocket_url);
                 this.socket_ = this.connect_web_socket(websocket_url, () => {
                     this.is_connected_ = true;
                     this.request_features();
