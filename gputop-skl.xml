@@ -1,4 +1,4 @@
-<metrics merge_md5="" version="1467042848">
+<metrics merge_md5="" version="1467210025">
   <set chipset="SKL" hw_config_guid="fdfc01cc-e28e-423a-aae0-b5ed5d4d7a9f" mdapi_supported_apis="OGL OCL IO BB" name="Render Metrics Basic Gen9" symbol_name="RenderBasic" underscore_name="render_basic">
     <counter data_type="uint64" description="The total number of GPU core clocks elapsed during the measurement." equation="GPU_CLOCK 0 READ" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Frame Batch Draw" name="GPU Core Clocks" semantic_type="event" symbol_name="GpuCoreClocks" underscore_name="gpu_core_clocks" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -912,7 +912,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <register_config availability="$SkuRevisionId 0x02 ULT" id="1" priority="0">
+    <register_config availability="$SkuRevisionId 0x02 ULT" id="1" priority="1">
         <register address="0x00009888" type="NOA" value="0x166C01E0" />
         <register address="0x00009888" type="NOA" value="0x12170280" />
         <register address="0x00009888" type="NOA" value="0x12370280" />
@@ -986,7 +986,7 @@
         <register address="0x00009888" type="NOA" value="0x43900000" />
         <register address="0x00009888" type="NOA" value="0x53901111" />
     </register_config>
-    <register_config availability="$SkuRevisionId 0x02 UGTE" id="1" priority="0">
+    <register_config availability="$SkuRevisionId 0x02 UGTE" id="1" priority="1">
         <register address="0x00009888" type="NOA" value="0x166C01E0" />
         <register address="0x00009888" type="NOA" value="0x12170280" />
         <register address="0x00009888" type="NOA" value="0x12370280" />
@@ -5235,7 +5235,7 @@
         <register address="0x00009888" type="NOA" value="0x43900800" />
         <register address="0x00009888" type="NOA" value="0x53900000" />
     </register_config>
-    <register_config availability="$SubsliceMask 0x02 AND $SkuRevisionId 0x02 ULT &amp;&amp;" id="1" priority="0">
+    <register_config availability="$SubsliceMask 0x02 AND $SkuRevisionId 0x02 ULT &amp;&amp;" id="1" priority="2">
         <register address="0x00009888" type="NOA" value="0x104F00E0" />
         <register address="0x00009888" type="NOA" value="0x143C0160" />
         <register address="0x00009888" type="NOA" value="0x163C0015" />
@@ -5298,7 +5298,7 @@
         <register address="0x00009888" type="NOA" value="0x43900400" />
         <register address="0x00009888" type="NOA" value="0x53900000" />
     </register_config>
-    <register_config availability="$SubsliceMask 0x04 AND $SkuRevisionId 0x02 ULT &amp;&amp;" id="1" priority="0">
+    <register_config availability="$SubsliceMask 0x04 AND $SkuRevisionId 0x02 ULT &amp;&amp;" id="1" priority="4">
         <register address="0x00009888" type="NOA" value="0x124F1C00" />
         <register address="0x00009888" type="NOA" value="0x145C8160" />
         <register address="0x00009888" type="NOA" value="0x165C8015" />

@@ -1,4 +1,4 @@
-<metrics merge_md5="" version="1467042848">
+<metrics merge_md5="" version="1467210025">
   <set chipset="CHV" hw_config_guid="9d8a3af5-c02c-4a4a-b947-f1672469e0fb" mdapi_supported_apis="OGL OCL IO BB" name="Render Metrics Basic Gen8LP" symbol_name="RenderBasic" underscore_name="render_basic">
     <counter data_type="uint64" description="The total number of GPU core clocks elapsed during the measurement." equation="GPU_CLOCK 0 READ" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Frame Batch Draw" name="GPU Core Clocks" semantic_type="event" symbol_name="GpuCoreClocks" underscore_name="gpu_core_clocks" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">

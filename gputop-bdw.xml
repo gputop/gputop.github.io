@@ -1,4 +1,4 @@
-<metrics merge_md5="" version="1467042848">
+<metrics merge_md5="" version="1467210024">
   <set chipset="BDW" hw_config_guid="b541bd57-0e0f-4154-b4c0-5858010a2bf7" mdapi_supported_apis="OGL OCL IO BB" name="Render Metrics Basic Gen8" symbol_name="RenderBasic" underscore_name="render_basic">
     <counter data_type="uint64" description="The total number of GPU core clocks elapsed during the measurement." equation="GPU_CLOCK 0 READ" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Frame Batch Draw" name="GPU Core Clocks" semantic_type="event" symbol_name="GpuCoreClocks" underscore_name="gpu_core_clocks" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -1026,7 +1026,7 @@
         <register address="0x00009888" type="NOA" value="0x3F8014A5" />
         <register address="0x00009888" type="NOA" value="0x41800005" />
     </register_config>
-    <register_config availability="$SliceMask 0x02 AND" id="1" priority="0">
+    <register_config availability="$SliceMask 0x02 AND" id="1" priority="1">
         <register address="0x00009888" type="NOA" value="0x143F000F" />
         <register address="0x00009888" type="NOA" value="0x14BF000F" />
         <register address="0x00009888" type="NOA" value="0x14910014" />
@@ -1857,7 +1857,7 @@
         <register address="0x00009888" type="NOA" value="0x3F801062" />
         <register address="0x00009888" type="NOA" value="0x41801084" />
     </register_config>
-    <register_config availability="$SliceMask 0x02 AND" id="1" priority="0">
+    <register_config availability="$SliceMask 0x02 AND" id="1" priority="2">
         <register address="0x00009888" type="NOA" value="0x10DC00E0" />
         <register address="0x00009888" type="NOA" value="0x10D800E0" />
         <register address="0x00009888" type="NOA" value="0x10B800E0" />
@@ -5115,7 +5115,7 @@
         <register address="0x00009888" type="NOA" value="0x258B5551" />
         <register address="0x00009888" type="NOA" value="0x278B0015" />
     </register_config>
-    <register_config availability="$SubsliceMask 0x02 AND" id="1" priority="0">
+    <register_config availability="$SubsliceMask 0x02 AND" id="1" priority="2">
         <register address="0x00009888" type="NOA" value="0x105C00E0" />
         <register address="0x00009888" type="NOA" value="0x145B0160" />
         <register address="0x00009888" type="NOA" value="0x165B2800" />
@@ -5171,7 +5171,7 @@
         <register address="0x00009888" type="NOA" value="0x258B5551" />
         <register address="0x00009888" type="NOA" value="0x278B0015" />
     </register_config>
-    <register_config availability="$SubsliceMask 0x04 AND" id="1" priority="0">
+    <register_config availability="$SubsliceMask 0x04 AND" id="1" priority="4">
         <register address="0x00009888" type="NOA" value="0x103800E0" />
         <register address="0x00009888" type="NOA" value="0x143A0160" />
         <register address="0x00009888" type="NOA" value="0x163A2800" />
@@ -5219,7 +5219,7 @@
         <register address="0x00009888" type="NOA" value="0x258B5551" />
         <register address="0x00009888" type="NOA" value="0x278B0015" />
     </register_config>
-    <register_config availability="$SubsliceMask 0x08 AND" id="1" priority="0">
+    <register_config availability="$SubsliceMask 0x08 AND" id="1" priority="1">
         <register address="0x00009888" type="NOA" value="0x14BD0160" />
         <register address="0x00009888" type="NOA" value="0x16BD2800" />
         <register address="0x00009888" type="NOA" value="0x18BD0120" />
@@ -5308,7 +5308,7 @@
         <register address="0x00009888" type="NOA" value="0x038DA000" />
         <register address="0x00009888" type="NOA" value="0x058DA000" />
     </register_config>
-    <register_config availability="$SubsliceMask 0x10 AND" id="1" priority="0">
+    <register_config availability="$SubsliceMask 0x10 AND" id="1" priority="3">
         <register address="0x00009888" type="NOA" value="0x10DC00E0" />
         <register address="0x00009888" type="NOA" value="0x14DB0160" />
         <register address="0x00009888" type="NOA" value="0x16DB2800" />
@@ -5380,7 +5380,7 @@
         <register address="0x00009888" type="NOA" value="0x038DA000" />
         <register address="0x00009888" type="NOA" value="0x058DA000" />
     </register_config>
-    <register_config availability="$SubsliceMask 0x20 AND" id="1" priority="0">
+    <register_config availability="$SubsliceMask 0x20 AND" id="1" priority="5">
         <register address="0x00009888" type="NOA" value="0x10B800E0" />
         <register address="0x00009888" type="NOA" value="0x14BA0160" />
         <register address="0x00009888" type="NOA" value="0x16BA2800" />
