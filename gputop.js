@@ -28,6 +28,7 @@
  */
 
 var is_nodejs = false;
+var using_emscripten = true;
 
 if (typeof module !== 'undefined' && module.exports) {
 
@@ -44,9 +45,11 @@ if (typeof module !== 'undefined' && module.exports) {
      * compiled webc code, to cover more code in common with the web ui...
      */
     if (process.env.GPUTOP_NODE_USE_WEBC !== undefined) {
+        using_emscripten = true;
         cc = require("./gputop-web.js");
         cc.gputop_singleton = undefined;
     } else {
+        using_emscripten = false;
         cc = require("gputop-client-c");
         cc.gputop_singleton = undefined;
 
@@ -101,18 +104,11 @@ function Counter (metricParent) {
     this.supported_ = false;
     this.xml_ = "<xml/>";
 
-    this.latest_value =  0;
-    this.latest_max =  0;
-    this.latest_duration = 0; /* how long were raw counters aggregated before
-                               * calculating latest_value. (so the value can
-                               * be scaled into a per-second value) */
-
     /* Not all counters have a constant or equation for the maximum
      * and so we simply derive a maximum based on the largest value
      * we've seen */
     this.inferred_max = 0;
 
-    this.updates = [];
     this.units = '';
 
     /* whether append_counter_data() should really append to counter.updates[] */
@@ -123,38 +119,6 @@ function Counter (metricParent) {
 
     this.duration_dependent = true;
     this.units_scale = 1; // default value
-}
-
-Counter.prototype.append_counter_data = function (start_timestamp, end_timestamp,
-                                                  max, value, reason) {
-    var duration = end_timestamp - start_timestamp;
-    value *= this.units_scale;
-    max *= this.units_scale;
-    if (this.duration_dependent && (duration != 0)) {
-        var per_sec_scale = 1000000000 / duration;
-        value *= per_sec_scale;
-        max *= per_sec_scale;
-    }
-    if (this.record_data) {
-        this.updates.push([start_timestamp, end_timestamp, value, max, reason]);
-        if (this.updates.length > 2000) {
-            console.warn("Discarding old counter update (> 2000 updates old)");
-            this.updates.shift();
-        }
-    }
-
-    if (this.latest_value != value ||
-        this.latest_max != max)
-    {
-        this.latest_value = value;
-        this.latest_max = max;
-        this.latest_duration = duration;
-
-        if (value > this.inferred_max)
-            this.inferred_max = value;
-        if (max > this.inferred_max)
-            this.inferred_max = max;
-    }
 }
 
 function Metric (gputopParent) {
@@ -178,14 +142,8 @@ function Metric (gputopParent) {
 
     this.open_config = undefined;
     this.server_handle = 0;
-    this.cc_stream_ptr_ = 0;
 
-    // Aggregation period
-    this.period_ns_ = 1000000000;
-
-    this.history = []; // buffer used when query is paused.
-    this.history_index = 0;
-    this.history_size = 0;
+    this.oa_accumulators = [];
 }
 
 Metric.prototype.find_counter_by_name = function(symbol_name) {
@@ -214,74 +172,6 @@ Metric.prototype.add_counter = function(counter) {
 
     this.counters_map_[symbol_name] = counter;
     this.counters_.push(counter);
-}
-
-Metric.prototype.set_aggregation_period = function(period_ns) {
-    console.assert(typeof period_ns === 'number', "Need to pass Number to set_aggregation_period");
-
-    this.period_ns_ = period_ns;
-
-    if (this.cc_stream_ptr_)
-        cc._gputop_cc_update_stream_period(this.cc_stream_ptr_, period_ns);
-}
-
-Metric.prototype.clear_metric_data = function() {
-
-    cc._gputop_cc_reset_accumulator(this.cc_stream_ptr_);
-
-    for (var i = 0; i < this.cc_counters.length; i++) {
-        var counter = this.cc_counters[i];
-        counter.updates = [];
-    }
-}
-
-Metric.prototype.replay_buffer = function() {
-    this.clear_metric_data();
-
-    for (var i = 0; i < this.history.length; i++) {
-        var data = this.history[i];
-
-        var sp = cc.Runtime.stackSave();
-
-        var stack_data = cc.allocate(data, 'i8', cc.ALLOC_STACK);
-
-        cc._gputop_cc_handle_i915_perf_message(this.cc_stream_ptr_,
-                                               stack_data,
-                                               data.length);
-        cc.Runtime.stackRestore(sp);
-    }
-}
-
-Metric.prototype.set_paused = function(paused) {
-
-    if (this.stream === undefined) {
-        this.gputop.log("Can't change pause state of OA metric without a stream", this.gputop.ERROR);
-        return;
-    }
-
-    if (this.open_config.paused === paused)
-        return;
-
-    if (this.closing_) {
-        this.gputop.log("Ignoring attempt to pause OA metrics while waiting for close ACK", this.gputop.ERROR);
-        return;
-    }
-
-    function _open_with_new_state(config) {
-        config.paused = paused;
-
-        if (paused) {
-            this.open(config, this.replay_buffer.bind(this));
-        } else {
-            this.clear_metric_data();
-            this.open(config);
-        }
-    }
-
-    var config = this.open_config;
-    this.close(() => {
-        _open_with_new_state.call(this, config);
-    });
 }
 
 Metric.prototype.filter_counters = function(options) {
@@ -383,9 +273,12 @@ function Gputop () {
     this.get_arch_pretty_name = function() {
         switch (this.config_.architecture) {
             case 'hsw': return "Haswell";
-            case 'skl': return "Skylake";
             case 'bdw': return "Broadwell";
             case 'chv': return "Cherryview";
+            case 'sklgt2': return "Skylake GT2";
+            case 'sklgt3': return "Skylake GT3";
+            case 'sklgt4': return "Skylake GT4";
+            case 'bxt': return "Broxton";
         }
         return this.config_.architecture;
     }
@@ -410,6 +303,7 @@ function Gputop () {
      * Metric object given a gputop_cc_stream pointer.
      */
     this.cc_stream_ptr_to_obj_map = {};
+    this.cc_oa_accumulator_ptr_to_obj_map = {}
 
     this.current_update_ = { metric: null };
 
@@ -566,7 +460,6 @@ Gputop.prototype.parse_metrics_set_xml = function (xml_elem) {
     metric.chipset_ = $(xml_elem).attr("chipset");
 
     // We populate our array with metrics in the same order as the XML
-    // The metric will already be defined when the features query finishes
     metric.metric_set_index_ = Object.keys(this.metrics_).length;
     this.metrics_[metric.metric_set_index_] = metric;
 
@@ -575,28 +468,121 @@ Gputop.prototype.parse_metrics_set_xml = function (xml_elem) {
     });
 }
 
-Gputop.prototype.stream_start_update = function (stream_ptr,
-                                                 start_timestamp,
-                                                 end_timestamp,
-                                                 reason) {
+Gputop.prototype.clear_accumulated_metrics = function(metric) {
+    for (var i = 0; i < metric.oa_accumulators.length; i++) {
+        var accumulator = metric.oa_accumulators[i];
+
+        for (var j = 0; j < accumulator.accumulated_counters.length; j++) {
+            var accumulated_counter = accumulator.accumulated_counters[j];
+
+            accumulated_counter.updates = [];
+        }
+    }
+}
+
+Gputop.prototype.replay_i915_perf_history = function(metric) {
+    this.clear_accumulated_metrics(metric);
+
+    var stream = metric.stream;
+
+    for (var i = 0; i < this.i915_perf_history.length; i++) {
+        var data = this.i915_perf_history[i];
+
+        var sp = cc.Runtime.stackSave();
+
+        var stack_data = cc.allocate(data, 'i8', cc.ALLOC_STACK);
+
+        var n_accumulators = metric.oa_accumulators.length;
+
+        /* XXX: unfortunately we can't handle passing an array of accumulator
+         * pointers consistently between Node.js and Emscripten bindings.
+         * With Emscripten we're passing a packed array of uint32 integers
+         * as pointers, while for Node.js we want to pass a standard Javascript
+         * array and let the binding implementation map this into an array
+         * before calling the real C function.
+         */
+        if (using_emscripten) {
+            /* Note: 2nd type arg ignored when 1st arg is a size/number in bytes*/
+            var vec = cc.allocate(4 * n_accumulators, '*', cc.ALLOC_STACK);
+            for (var i = 0; i < n_accumulators; i++) {
+                var accumulator = metric.oa_accumulators[i];
+                cc.setValue(vec + i * 4, accumulator.cc_accumulator_ptr_, '*');
+            }
+
+            if (stream.cc_stream_ptr_ === 0) {
+                gputop.log("NULL CC Stream while replaying i915 perf message", this.ERROR);
+            } else
+                cc._gputop_cc_handle_i915_perf_message(stream.cc_stream_ptr_,
+                                                       stack_data,
+                                                       data.length,
+                                                       vec,
+                                                       n_accumulators);
+        } else {
+            var vec = [];
+            for (var i = 0; i < n_accumulators; i++) {
+                var accumulator = metric.oa_accumulators[i];
+                vec.push(accumulator.cc_accumulator_ptr_);
+            }
+
+            cc._gputop_cc_handle_i915_perf_message(stream.cc_stream_ptr_,
+                                                   stack_data,
+                                                   data.length,
+                                                   vec,
+                                                   n_accumulators);
+        }
+
+        cc.Runtime.stackRestore(sp);
+    }
+}
+
+Gputop.prototype.accumulator_filter_events = function (metric, accumulator, events_mask) {
+    if (events_mask & 1) //period elapsed
+        return true;
+    else
+        return false; //currently ignore context switch events
+}
+
+Gputop.prototype.accumulator_start_update = function (stream_ptr,
+                                                      accumulator_ptr,
+                                                      events_mask,
+                                                      start_timestamp,
+                                                      end_timestamp) {
     var update = this.current_update_;
+
+    console.assert(update.metric === null, "Started stream update before finishing previous update");
 
     if (!(stream_ptr in this.cc_stream_ptr_to_obj_map)) {
         console.error("Ignoring spurious update for unknown stream");
         update.metric = null;
-        return;
+        return false;
     }
 
-    update.metric = this.cc_stream_ptr_to_obj_map[stream_ptr];
+    if (!(accumulator_ptr in this.cc_oa_accumulator_ptr_to_obj_map)) {
+        console.error("Ignoring spurious update for unknown OA accumulator");
+        update.metric = null;
+        return false;
+    }
+
+    var metric = this.cc_stream_ptr_to_obj_map[stream_ptr];
+    var accumulator = this.cc_oa_accumulator_ptr_to_obj_map[accumulator_ptr];
+
+    if (!this.accumulator_filter_events(metric, accumulator, events_mask)) {
+        update.metric = null;
+        return false;
+    }
+
+    update.metric = metric;
+    update.accumulator = accumulator;
     update.start_timestamp = start_timestamp;
     update.end_timestamp = end_timestamp;
-    update.reason = reason;
+    update.events_mask = events_mask;
+
+    return true;
 }
 
-Gputop.prototype.stream_update_counter = function (stream_ptr,
-                                                   counter_id,
-                                                   max,
-                                                   value) {
+Gputop.prototype.accumulator_append_count = function (counter_id,
+                                                      max,
+                                                      value) {
     var update = this.current_update_;
 
     var metric = update.metric;
@@ -610,14 +596,60 @@ Gputop.prototype.stream_update_counter = function (stream_ptr,
         return;
     }
 
+    var accumulator = update.accumulator;
+
     var counter = metric.cc_counters[counter_id];
-    counter.append_counter_data(update.start_timestamp,
-                                update.end_timestamp,
-                                max, value,
-                                update.reason);
+
+    if (counter_id >= accumulator.accumulated_counters.length) {
+        for (var i = accumulator.accumulated_counters.length; i <= counter_id; i++) {
+            accumulator.accumulated_counters[i] = {
+                counter: metric.cc_counters[i],
+                latest_value: 0,
+                latest_max: 0,
+                updates: [],
+            };
+        }
+    }
+
+    var accumulated_counter = accumulator.accumulated_counters[counter_id];
+
+    var reason = update.reason;
+
+    var start_timestamp = update.start_timestamp;
+    var end_timestamp = update.end_timestamp;
+    var duration = end_timestamp - start_timestamp;
+
+    value *= counter.units_scale;
+    max *= counter.units_scale;
+
+    if (counter.duration_dependent && (duration !== 0)) {
+        var per_sec_scale = 1000000000 / duration;
+        value *= per_sec_scale;
+        max *= per_sec_scale;
+    }
+
+    if (counter.record_data) {
+        accumulated_counter.updates.push([start_timestamp, end_timestamp, value, max, reason]);
+        if (accumulated_counter.updates.length > 2000) {
+            console.warn("Discarding old counter update (> 2000 updates old)");
+            accumulated_counter.updates.shift();
+        }
+    }
+
+    if (accumulated_counter.latest_value !== value ||
+        accumulated_counter.latest_max !== max)
+    {
+        accumulated_counter.latest_value = value;
+        accumulated_counter.latest_max = max;
+
+        if (value > counter.inferred_max)
+            counter.inferred_max = value;
+        if (max > counter.inferred_max)
+            counter.inferred_max = max;
+    }
 }
 
-Gputop.prototype.stream_end_update = function (stream_ptr) {
+Gputop.prototype.accumulator_end_update = function () {
     var update = this.current_update_;
 
     var metric = update.metric;
@@ -628,11 +660,65 @@ Gputop.prototype.stream_end_update = function (stream_ptr) {
 
     update.metric = null;
 
-    this.notify_metric_updated(metric);
+    this.notify_accumulator_events(metric,
+                                   update.accumulator,
+                                   update.events_mask);
 }
 
-Gputop.prototype.notify_metric_updated = function (metric) {
-    /* NOP */
+Gputop.prototype.accumulator_clear = function (accumulator) {
+    cc._gputop_cc_oa_accumulator_clear(accumulator.cc_accumulator_ptr_);
+}
+
+Gputop.prototype.format_counter_value = function(accumulated_counter, compact) {
+    var counter = accumulated_counter.counter;
+    var value = accumulated_counter.latest_value;
+    var max = counter.inferred_max;
+    var units = counter.units;
+    var units_suffix = "";
+    var dp = 0;
+    var kilo = counter.units === "bytes" ? 1024 : 1000;
+    var mega = kilo * kilo;
+    var giga = mega * kilo;
+    if (compact === false) {
+        var scale = {"bytes":["B", "KiB", "MiB", "GiB"],
+                     "ns":["ns", "μs", "ms", "s"],
+                     "hz":["Hz", "KHz", "MHz", "GHz"],
+                     "texels":[" texels", "K texels", "M texels", "G texels"],
+                     "pixels":[" pixels", "K pixels", "M pixels", "G pixels"],
+                     "cycles":[" cycles", "K cycles", "M cycles", "G cycles"],
+                     "threads":[" threads", "K threads", "M threads", "G threads"]};
+    } else {
+        var scale = {"bytes":["", "KiB", "MiB", "GiB"],
+                     "ns":["", "μs", "ms", "s"],
+                     "hz":["", "KHz", "MHz", "GHz"],
+                     "texels":["", "KT", "MT", "GT"],
+                     "pixels":["", "KP", "MP", "GP"],
+                     "cycles":["", "ᴇ3", "ᴇ6", "ᴇ9"],
+                     "threads":["", "ᴇ3", "ᴇ6", "ᴇ9"]};
+    }
+
+    if ((units in scale)) {
+        dp = 1;
+        if (value >= giga) {
+            units_suffix = scale[units][3];
+            value /= giga;
+        } else if (value >= mega) {
+            units_suffix = scale[units][2];
+            value /= mega;
+        } else if (value >= kilo) {
+            units_suffix = scale[units][1];
+            value /= kilo;
+        } else
+            units_suffix = scale[units][0];
+    } else if (units === 'percent') {
+        units_suffix = compact === true ? '' : '%';
+        dp = 1;
+    }
+
+    if (compact !== true && counter.duration_dependent)
+        units_suffix += '/s';
+
+    return value.toFixed(dp) + units_suffix;
 }
 
 Gputop.prototype.parse_xml_metrics = function(xml) {
@@ -696,8 +782,6 @@ Metric.prototype.open = function(config,
 
     if (config.oa_exponent === undefined)
         config.oa_exponent = 14;
-    if (config.per_ctx_mode === undefined)
-        config.per_ctx_mode = false;
     if (config.paused === undefined)
         config.paused = false;
 
@@ -705,61 +789,158 @@ Metric.prototype.open = function(config,
     this.stream = stream;
 
     function _finalize_open() {
-        this.gputop.log("Opened OA metric set " + this.name);
-
-        var sp = cc.Runtime.stackSave();
-
-        this.cc_stream_ptr_ =
-            cc._gputop_cc_oa_stream_new(String_pointerify_on_stack(this.guid_),
-                                        config.per_ctx_mode,
-                                        this.period_ns_);
-
-        cc.Runtime.stackRestore(sp);
-
-        this.gputop.cc_stream_ptr_to_obj_map[this.cc_stream_ptr_] = this;
-
         var ev = { type: "open" };
         stream.dispatchEvent(ev);
     }
 
+    function _alloc_cc_stream() {
+        this.gputop.log("Opened OA metric set " + this.name);
+
+        var sp = cc.Runtime.stackSave();
+
+        stream.cc_stream_ptr_ =
+            cc._gputop_cc_oa_stream_new(String_pointerify_on_stack(this.guid_));
+
+        cc.Runtime.stackRestore(sp);
+
+        this.gputop.cc_stream_ptr_to_obj_map[stream.cc_stream_ptr_] = this;
+    }
+
     if (config.paused === true) {
         stream.server_handle = 0;
+        _alloc_cc_stream.call(this);
         _finalize_open.call(this);
     } else {
-        var oa_query = new this.gputop.gputop_proto_.OAQueryInfo();
+        var oa_stream = new this.gputop.gputop_proto_.OAStreamInfo();
 
-        oa_query.guid = this.guid_;
-        oa_query.period_exponent = config.oa_exponent;
+        oa_stream.set('guid', this.guid_);
+        oa_stream.set('period_exponent', config.oa_exponent);
+        oa_stream.set('per_ctx_mode', false); /* TODO: add UI + way to select a specific ctx */
 
-        var open = new this.gputop.gputop_proto_.OpenQuery();
+        var open = new this.gputop.gputop_proto_.OpenStream();
 
         open.set('id', stream.server_handle);
-        open.set('oa_query', oa_query);
+        open.set('oa_stream', oa_stream);
         open.set('overwrite', false);   /* don't overwrite old samples */
         open.set('live_updates', true); /* send live updates */
-        open.set('per_ctx_mode', config.per_ctx_mode);
 
         this.gputop.server_handle_to_obj[open.id] = this;
 
-        this.gputop.rpc_request('open_query', open, _finalize_open.bind(this));
+        _alloc_cc_stream.call(this);
 
-        this.history = [];
-        this.history_size = 0;
+        this.gputop.rpc_request('open_stream', open, _finalize_open.bind(this));
+
+        this.gputop.i915_perf_history = [];
+        this.gputop.i915_perf_history_size = 0;
     }
 
     return stream;
 }
 
-Metric.prototype.destroy_stream = function () {
-    _gputop_cc_stream_destroy(this.cc_stream_ptr_);
-    delete this.gputop.cc_stream_ptr_to_obj_map[this.cc_stream_ptr_];
-    delete this.gputop.server_handle_to_obj[this.stream.server_handle];
-
-    this.cc_stream_ptr_ = 0;
-    this.open_config = undefined;
+/* Note that this can only be called for a Metric with an open stream */
+Metric.prototype.create_oa_accumulator = function(config) {
 
     var stream = this.stream;
-    this.stream = undefined;
+
+    if (stream === undefined || stream.cc_stream_ptr_ === 0) {
+        this.gputop.log("Can't create OA accumulator for Metric without open stream", this.gputop.ERROR);
+        return;
+    }
+
+    if (config.period_ns === undefined)
+        config.period_ns = 1000000000;
+    if (config.enable_ctx_switch_events === undefined)
+        config.enable_ctx_switch_events = false;
+
+    this.gputop.log("Creating accumulator with aggregation period of " + config.period_ns + "ns", this.gputop.LOG);
+
+    var accumulator = {};
+
+    accumulator.accumulated_counters = [];
+
+    var sp = cc.Runtime.stackSave();
+
+    accumulator.cc_accumulator_ptr_ =
+        cc._gputop_cc_oa_accumulator_new(stream.cc_stream_ptr_,
+                                         config.period_ns,
+                                         config.enable_ctx_switch_events);
+
+    cc.Runtime.stackRestore(sp);
+
+    this.gputop.cc_oa_accumulator_ptr_to_obj_map[accumulator.cc_accumulator_ptr_] = accumulator;
+
+    accumulator.id = this.oa_accumulators.length;
+    this.oa_accumulators.push(accumulator);
+
+    return accumulator;
+}
+
+Metric.prototype.set_oa_accumulator_period = function(accumulator, period_ns) {
+
+    if (accumulator.cc_accumulator_ptr_ === 0) {
+        this.gputop.log("NULL CC accumulator", this.gputop.ERROR);
+        return;
+    }
+
+    this.gputop.log("Setting aggregation period to " + period_ns + "ns", this.gputop.LOG);
+    cc._gputop_cc_oa_accumulator_set_period(accumulator.cc_accumulator_ptr_, period_ns);
+}
+
+Metric.prototype.destroy_oa_accumulator = function(accumulator) {
+    /* Allow for this to be called multiple times. It may be called
+     * automatically when the stream (which the accumulator depends on)
+     * is closed.
+     */
+    if (accumulator.cc_accumulator_ptr_ !== 0) {
+        cc._gputop_cc_oa_accumulator_destroy(accumulator.cc_accumulator_ptr_);
+        delete this.gputop.cc_oa_accumulator_ptr_to_obj_map[accumulator.cc_accumulator_ptr_];
+        accumulator.cc_accumulator_ptr_ = 0;
+    }
+
+    /* Disassociate from Metric */
+    delete this.oa_accumulators[accumulator.id];
+    accumulator.id = -1;
+}
+
+/* We have to consider that Client C state isn't automatically garbage
+ * collected so this should be called explicitly, when the Metric
+ * stream is being gracefully closed, or there was a known error with
+ * the stream.
+ *
+ * This will also destroy any associated CC accumulator state that depends
+ * on the stream.
+ */
+Metric.prototype.dispose = function () {
+
+    /* In the case of an OA metrics stream, also clean up corresponding
+     * accumulators that depend on the stream...
+     */
+    for (var i = 0; i < this.oa_accumulators.length; i++) {
+        var accumulator = this.oa_accumulators[i];
+
+        /* array may be sparse if individual accumulator was destroyed
+         * via metric.destroy_oa_accumulator()
+         */
+        if (accumulator !== undefined)
+            this.destroy_oa_accumulator(accumulator);
+    }
+    this.oa_accumulators = [];
+
+    if (this.stream) {
+        if (this.stream.cc_stream_ptr_ !== 0) {
+            cc._gputop_cc_stream_destroy(this.stream.cc_stream_ptr_);
+            delete this.gputop.cc_stream_ptr_to_obj_map[this.stream.cc_stream_ptr_];
+            this.stream.cc_stream_ptr_ = 0;
+        }
+
+        if (this.stream.server_handle !== 0) {
+            delete this.gputop.server_handle_to_obj[this.stream.server_handle];
+            this.stream.server_handle = 0;
+        }
+        this.stream = undefined;
+    }
+
+    this.open_config = undefined;
 }
 
 Metric.prototype.close = function(onclose) {
@@ -775,15 +956,15 @@ Metric.prototype.close = function(onclose) {
     }
 
     function _finish_close() {
-        this.destroy_stream();
+        var ev = { type: "close" };
+        this.stream.dispatchEvent(ev);
+
+        this.dispose();
 
         this.closing_ = false;
 
         if (onclose !== undefined)
             onclose();
-
-        var ev = { type: "close" };
-        stream.dispatchEvent(ev);
     }
 
     this.closing_ = true;
@@ -792,21 +973,73 @@ Metric.prototype.close = function(onclose) {
     if (this.stream.server_handle === 0) {
         _finish_close.call(this);
     } else {
-        this.gputop.rpc_request('close_query', this.stream.server_handle, (msg) => {
+        this.gputop.rpc_request('close_stream', this.stream.server_handle, (msg) => {
             _finish_close.call(this);
         });
     }
 }
 
-Gputop.prototype.calculate_max_exponent_for_period = function(nsec) {
-    for (var i = 0; i < 64; i++) {
-        var period = (1<<i) * 1000000000 / this.system_properties.timestamp_frequency;
+Gputop.prototype.oa_exponent_to_nsec = function(exponent) {
+    return (1 << exponent) * 1000000000 / this.system_properties.timestamp_frequency;
+}
 
-        if (period > nsec)
-            return Math.max(0, i - 1);
+/* NB: the OA unit only has a limited exponential scale for what sampling
+ * periods it supports, so a requested accumulation period might need to be
+ * based on multiple higher-frequency samples.
+ *
+ * NB: we may impose a maximum limit on the hardware sampling period to ensure
+ * we can account for 32bit counter overflow.
+ *
+ * Searches for an exponent that factors to within @margin nanoseconds of the
+ * requested period.
+ *
+ * Be careful to consider that too strict of a margin along with a short
+ * sampling period could result in an excessively high sampling frequency.
+ *
+ * The margin should be >= 1% of the period since that's the limit of the
+ * searching done here.
+ */
+Gputop.prototype.calculate_sample_state_for_accumulation_period = function(requested_period, max_hw_period, margin) {
+
+    for (var f = 1; f < 101; f++) {
+        for (var e = 0; e < 64; e++) {
+            var hw_period = this.oa_exponent_to_nsec(e);
+            var factored_period = hw_period * f;
+
+            if (hw_period > max_hw_period)
+                break;
+
+            if (factored_period < (requested_period + margin) &&
+                factored_period > (requested_period - margin))
+            {
+                /* Once we manage to get within the requested margin the
+                 * exponent is fixed but the multiplication factor may
+                 * still be refined...
+                 */
+                var best_factor = f;
+                var best_difference = Math.abs(factored_period - requested_period);
+
+                for (f++; f < 101; f++) {
+                    var factored_period = hw_period * f;
+                    var difference = Math.abs(factored_period - requested_period);
+
+                    if (difference < best_difference) {
+                        best_factor = f;
+                        best_difference = difference;
+                    } else
+                        break;
+                }
+
+                return { oa_exponent: e, period: hw_period, factor: best_factor };
+            }
+        }
     }
 
-    return i;
+    for (var j = 0; j < 64; j++) {
+    }
+
+    console.assert(0, "Requested margin for finding OA exponent was too low");
+    return undefined;
 }
 
 var EventTarget = function() {
@@ -862,6 +1095,7 @@ var Stream = function(server_handle) {
     EventTarget.call(this);
 
     this.server_handle = server_handle
+    this.cc_stream_ptr_ = 0;
 }
 
 Stream.prototype = Object.create(EventTarget.prototype);
@@ -875,19 +1109,19 @@ Gputop.prototype.request_open_cpu_stats = function(config, callback) {
     else
         cpu_stats.set('sample_period_ms', 10);
 
-    var open = new this.gputop_proto_.OpenQuery();
+    var open = new this.gputop_proto_.OpenStream();
     open.set('id', stream.server_handle);
     open.set('cpu_stats', cpu_stats);
     open.set('overwrite', false);   /* don't overwrite old samples */
     open.set('live_updates', true); /* send live updates */
 
-    /* FIXME: remove from OpenQuery - not relevant to opening cpu stats */
-    open.set('per_ctx_mode', false);
+    if (callback !== undefined) {
+        stream.on('open', () => {
+            callback.call(this)
+        });
+    }
 
-    if (callback !== undefined)
-        stream.on('open', callback);
-
-    this.rpc_request('open_query', open, () => {
+    this.rpc_request('open_stream', open, () => {
         this.server_handle_to_obj[open.id] = stream;
 
         var ev = { type: "open" };
@@ -1065,17 +1299,14 @@ Gputop.prototype.open_tracepoint = function(tracepoint_info, config, onopen, onc
 
         tracepoint.set('id', tracepoint_info.id);
 
-        var open = new this.gputop_proto_.OpenQuery();
+        var open = new this.gputop_proto_.OpenStream();
         open.set('id', stream.server_handle);
         open.set('tracepoint', tracepoint);
         open.set('overwrite', false);   /* don't overwrite old samples */
         open.set('live_updates', true); /* send live updates */
 
-        /* FIXME: remove from OpenQuery - not relevant to opening a tracepoint */
-        open.set('per_ctx_mode', false);
-
         console.log("REQUEST = " + JSON.stringify(open));
-        this.rpc_request('open_query', open, () => {
+        this.rpc_request('open_stream', open, () => {
             this.server_handle_to_obj[open.id] = stream;
 
             _finalize_open.call(this);
@@ -1204,7 +1435,7 @@ Gputop.prototype.request_features = function() {
         demo_features.set('cpu_model', 'Intel(R) Core(TM) i7-4500U CPU @ 1.80GHz');
         demo_features.set('kernel_release', '4.5.0-rc4');
         demo_features.set('fake_mode', false);
-        demo_features.set('supported_oa_query_guids', []);
+        demo_features.set('supported_oa_guids', []);
 
         this.process_features(demo_features);
     }
@@ -1270,12 +1501,12 @@ Gputop.prototype.process_features = function(features){
         else {
             this.metrics_.forEach(function (metric) { metric.supported_ = false; });
 
-            if (features.supported_oa_query_guids.length == 0) {
+            if (features.supported_oa_guids.length == 0) {
                 this.user_msg("No OA metrics are supported on this Kernel " +
                               features.get_kernel_release(), this.ERROR);
             } else {
                 this.log("Metrics:");
-                features.supported_oa_query_guids.forEach((guid, i, a) => {
+                features.supported_oa_guids.forEach((guid, i, a) => {
                     var metric = this.lookup_metric_for_guid(guid);
                     metric.supported_ = true;
                     this.log("  " + metric.name + " (guid = " + guid + ")");
@@ -1324,7 +1555,7 @@ Gputop.prototype.load_emscripten = function(callback) {
          * code can call methods on it...
          */
         cc._gputop_cc_set_singleton(this);
-        console.log("Initialized gputop_singleton");
+        this.log("Initialized gputop_singleton");
         callback();
     }
 }
@@ -1337,8 +1568,11 @@ Gputop.prototype.dispose = function() {
     this.is_connected_ = false;
 
     this.metrics_.forEach(function (metric) {
-        if (!metric.closing_ && metric.cc_stream_ptr_)
-            metric.destroy_stream();
+        /* NB: The Client C state is not automatically garbage collected so we
+         * need to be careful about explicitly freeing it...
+         */
+        if (!metric.closing_)
+            metric.dispose();
     });
 
     this.metrics_ = [];
@@ -1364,13 +1598,13 @@ function gputop_socket_on_message(evt) {
 
             var stream = this.server_handle_to_obj[server_handle];
 
-            // save messages in a buffer to replay when query is paused
+            // TODO: save messages in a buffer to replay when stream is paused
             /*
-            metric.history.push(data);
-            metric.history_size += data.length;
-            if (metric.history_size > 1048576) // 1 MB of data
-                metric.history.shift();
-                */
+            this.tracepoint_history.push(data);
+            this.tracepoint_history_size += data.length;
+            if (this.tracepoint_history_size > 1048576) // 1 MB of data
+                this.tracepoint_history.shift();
+            */
 
             cc._gputop_cc_handle_tracepoint_message(stream.cc_stream_ptr_,
                                                     stack_data,
@@ -1428,21 +1662,56 @@ function gputop_socket_on_message(evt) {
         var server_handle = dv.getUint16(4, true /* little endian */);
 
         if (server_handle in this.server_handle_to_obj) {
+            var metric = this.server_handle_to_obj[server_handle];
+
+            // save messages in a buffer to replay when stream is paused
+            this.i915_perf_history.push(data);
+            this.i915_perf_history_size += data.length;
+            if (this.i915_perf_history_size > 1048576) // 1 MB of data
+                this.i915_perf_history.shift();
+
             var sp = cc.Runtime.stackSave();
 
             var stack_data = cc.allocate(data, 'i8', cc.ALLOC_STACK);
 
-            var metric = this.server_handle_to_obj[server_handle];
+            var n_accumulators = metric.oa_accumulators.length;
 
-            // save messages in a buffer to replay when query is paused
-            metric.history.push(data);
-            metric.history_size += data.length;
-            if (metric.history_size > 1048576) // 1 MB of data
-                metric.history.shift();
+            /* XXX: unfortunately we can't handle passing an array of accumulator
+             * pointers consistently between Node.js and Emscripten bindings.
+             * With Emscripten we're passing a packed array of uint32 integers
+             * as pointers, while for Node.js we want to pass a standard Javascript
+             * array and let the binding implementation map this into an array
+             * before calling the real C function.
+             */
+            if (using_emscripten) {
+                /* Note: 2nd type arg ignored when 1st arg is a size/number in bytes*/
+                var vec = cc.allocate(4 * n_accumulators, '*', cc.ALLOC_STACK);
+                for (var i = 0; i < n_accumulators; i++) {
+                    var accumulator = metric.oa_accumulators[i];
+                    cc.setValue(vec + i * 4, accumulator.cc_accumulator_ptr_, '*');
+                }
 
-            cc._gputop_cc_handle_i915_perf_message(metric.cc_stream_ptr_,
-                                                   stack_data,
-                                                   data.length);
+                if (metric.stream.cc_stream_ptr_ === 0) {
+                    gputop.log("NULL CC Stream while handling i915 perf message", this.ERROR);
+                } else
+                    cc._gputop_cc_handle_i915_perf_message(metric.stream.cc_stream_ptr_,
+                                                           stack_data,
+                                                           data.length,
+                                                           vec,
+                                                           n_accumulators);
+            } else {
+                var vec = [];
+                for (var i = 0; i < n_accumulators; i++) {
+                    var accumulator = metric.oa_accumulators[i];
+                    vec.push(accumulator.cc_accumulator_ptr_);
+                }
+
+                cc._gputop_cc_handle_i915_perf_message(metric.stream.cc_stream_ptr_,
+                                                       stack_data,
+                                                       data.length,
+                                                       vec,
+                                                       n_accumulators);
+            }
 
             cc.Runtime.stackRestore(sp);
         } else {

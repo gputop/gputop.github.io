@@ -1,4 +1,4 @@
-<metrics merge_md5="" version="1467210024">
+<metrics merge_md5="" version="1490233727">
   <set chipset="HSW" hw_config_guid="403d8832-1a27-4aa6-a64e-f5389ce7b212" mdapi_supported_apis="OGL OCL IO BB" name="Render Metrics Basic Gen7.5" symbol_name="RenderBasic" underscore_name="render_basic">
     <counter data_type="uint64" description="The total number of GPU core clocks elapsed during the measurement." equation="C 2 READ" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Frame Batch Draw" name="GPU Core Clocks" semantic_type="event" symbol_name="GpuCoreClocks" underscore_name="gpu_core_clocks" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -24,11 +24,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which evaluation shaders were stalled on the EUs." equation="A 13 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TES EU Stall" semantic_type="duration" symbol_name="DsEuStall" underscore_name="ds_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -50,11 +46,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on post-FS alpha test." equation="A 37 READ" mdapi_group="3D Pipe/Output Merger" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Alpha Test Fails" semantic_type="event" symbol_name="AlphaTestFails" underscore_name="alpha_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -72,11 +64,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of evaluation shader hardware threads dispatched." equation="A 15 READ" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="TES Threads Dispatched" semantic_type="event" symbol_name="DsThreads" underscore_name="ds_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -92,11 +80,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$DsThreads</mi>
-<mtext>The total number of evaluation shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$DsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of geometry shader hardware threads dispatched." equation="A 25 READ" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="GS Threads Dispatched" semantic_type="event" symbol_name="GsThreads" underscore_name="gs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -123,11 +107,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which compute shaders were processed actively on the EUs." equation="A 17 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="CS EU Active" semantic_type="duration" symbol_name="CsEuActive" underscore_name="cs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -149,11 +129,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which vertex shaders were processed actively on the EUs." equation="A 2 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="VS EU Active" semantic_type="duration" symbol_name="VsEuActive" underscore_name="vs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -175,11 +151,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which control shaders were processed actively on the EUs." equation="A 7 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TCS EU Active" semantic_type="duration" symbol_name="HsEuActive" underscore_name="hs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -201,11 +173,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which evaluation shaders were processed actively on the EUs." equation="A 12 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TES EU Active" semantic_type="duration" symbol_name="DsEuActive" underscore_name="ds_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -227,11 +195,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which geometry shaders were processed actively on the EUs." equation="A 22 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="GS EU Active" semantic_type="duration" symbol_name="GsEuActive" underscore_name="gs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -253,11 +217,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which fragment shaders were processed actively on the EUs." equation="A 27 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="FS EU Active" semantic_type="duration" symbol_name="PsEuActive" underscore_name="ps_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -279,11 +239,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which compute shaders were stalled on the EUs." equation="A 18 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="CS EU Stall" semantic_type="duration" symbol_name="CsEuStall" underscore_name="cs_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -305,11 +261,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the Execution Units were stalled." equation="A 1 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier2 Overview System Frame Batch Draw" name="EU Stall" semantic_type="duration" symbol_name="EuStall" underscore_name="eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -331,11 +283,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which vertex shaders were stalled on the EUs." equation="A 3 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="VS EU Stall" semantic_type="duration" symbol_name="VsEuStall" underscore_name="vs_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -357,11 +305,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which control shaders were stalled on the EUs." equation="A 8 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TCS EU Stall" semantic_type="duration" symbol_name="HsEuStall" underscore_name="hs_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -383,11 +327,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which fragment shaders were stalled on the EUs." equation="A 28 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="FS EU Stall" semantic_type="duration" symbol_name="PsEuStall" underscore_name="ps_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -409,11 +349,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -520,17 +456,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -559,11 +487,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter availability="$SubsliceMask 0x2 AND" data_type="float" description="The percentage of time in which sampler 1 was busy." equation="B 1 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="Sampler" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Batch Frame Draw" name="Sampler 1 Busy" semantic_type="duration" symbol_name="Sampler1Busy" underscore_name="sampler1_busy" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -576,11 +500,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which samplers were busy." equation="B 0 READ  B 1 READ UADD $GpuCoreClocks FDIV 2 FDIV 100 FMUL" max_equation="100" mdapi_group="Sampler" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier2 Overview System Frame Batch Draw" name="Samplers Busy" semantic_type="duration" symbol_name="SamplersBusy" underscore_name="samplers_busy" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -598,11 +518,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac>
 </mrow>
 <mrow>
@@ -703,17 +619,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -728,11 +636,7 @@
 <mtext>placeholder</mtext>
 </maction>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GPU memory bytes read from GTI." equation="C 6 READ 128 UMUL" max_equation="$GpuCoreClocks 64 UMUL" mdapi_group="GTI" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GTI Read Throughput" semantic_type="throughput" symbol_name="GtiReadThroughput" underscore_name="gti_read_throughput" units="bytes"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -741,11 +645,7 @@
 <mtext>placeholder</mtext>
 </maction>
 <mo>*</mo>
-<mn>128</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>128</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of compute shader hardware threads dispatched." equation="A 20 READ" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="CS Threads Dispatched" semantic_type="event" symbol_name="CsThreads" underscore_name="cs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -761,11 +661,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$CsThreads</mi>
-<mtext>The total number of compute shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$CsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter availability="$SubsliceMask 0x1 AND" data_type="float" description="The percentage of time in which sampler 0 was bottlenecks." equation="B 2 READ 100 UMUL $GpuCoreClocks FDIV" high_watermark="15" low_watermark="5" max_equation="100" mdapi_group="Sampler" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Indicate Draw" name="Sampler 0 Bottleneck" semantic_type="duration" symbol_name="Sampler0Bottleneck" underscore_name="sampler0_bottleneck" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -778,11 +674,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which geometry shaders were stalled on the EUs." equation="A 23 READ $GsThreads UDIV" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="GS AVG Stall per Thread" semantic_type="event" symbol_name="GsEuStallPerThread" underscore_name="gs_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -793,11 +685,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GsThreads</mi>
-<mtext>The total number of geometry shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$GsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter availability="$SubsliceMask 0x1 AND" data_type="uint64" description="The total number of texels lookups in LOD0 in sampler 0 unit." equation="B 4 READ 4 UMUL" mdapi_group="Sampler" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Draw" name="Sampler 0 Texels LOD0" semantic_type="event" symbol_name="Sampler0Texels" underscore_name="sampler0_texels" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -814,16 +702,8 @@
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of texels lookups in LOD0 in all sampler units." equation="$Sampler0Texels $Sampler1Texels UADD $EuSlicesTotalCount UMUL" mdapi_group="Sampler" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Sampler Texels LOD0" semantic_type="event" symbol_name="SamplerTexels" underscore_name="sampler_texels" units="texels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
-<mtext>(</mtext>
-<maction actiontype="tooltip">
-<mi>$Sampler0Texels</mi>
-<mtext>The total number of texels lookups in LOD0 in sampler 0 unit.</mtext>
-</maction>
-<mo>+</mo>
-<maction actiontype="tooltip">
-<mi>$Sampler1Texels</mi>
-<mtext>The total number of texels lookups in LOD0 in sampler 1 unit.</mtext>
-</maction>
+<mtext>(</mtext><mi>$Sampler0Texels</mi>
+<mo>+</mo><mi>$Sampler1Texels</mi>
 <mtext>)</mtext>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_EQ></counter>
     <counter data_type="uint64" description="Total Geometry Shader GPU duration." equation="A 22 READ  A 0 READ UMUL  A 2 READ  A 7 READ UADD  A 12 READ UADD  A 17 READ UADD  A 22 READ UADD  A 27 READ UADD UDIV  A 23 READ  A 1 READ UMUL  A 3 READ  A 8 READ UADD  A 13 READ UADD  A 18 READ UADD  A 23 READ UADD  A 28 READ UADD UDIV UADD $GpuTime UMUL $GpuCoreClocks $EuCoresTotalCount UMUL 1000 UMUL UDIV" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GS Duration" semantic_type="duration" symbol_name="GsDuration" underscore_name="gs_duration" units="us"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -918,17 +798,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -939,32 +811,16 @@
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000000000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequency" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequency" underscore_name="avg_gpu_core_frequency" units="hz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>1000000000</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuTime</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuMaxFrequency</mi></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the Execution Units were idle." equation="100 $EuActive $EuStall FADD FSUB" max_equation="100" mdapi_group="EU Array" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier2 Overview System Frame Batch Draw" name="EU Idle" semantic_type="duration" symbol_name="EuIdle" underscore_name="eu_idle" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mn>100</mn>
-<mo>-</mo>
-<maction actiontype="tooltip">
-<mi>$EuActive</mi>
-<mtext>The percentage of time in which the Execution Units were actively processing.</mtext>
-</maction>
-<mo>+</mo>
-<maction actiontype="tooltip">
-<mi>$EuStall</mi>
-<mtext>The percentage of time in which the Execution Units were stalled.</mtext>
-</maction></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<mo>-</mo><mi>$EuActive</mi>
+<mo>+</mo><mi>$EuStall</mi></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GPU memory bytes transferred between depth caches and GTI." equation="C 0 READ 64 UMUL" max_equation="$GpuCoreClocks 64 UMUL $EuSlicesTotalCount UMUL" mdapi_group="GTI/Depth Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier2 Frame Batch Draw" name="GTI Depth Throughput" semantic_type="throughput" symbol_name="GtiDepthThroughput" underscore_name="gti_depth_throughput" units="bytes"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -972,11 +828,7 @@
 <mtext>placeholder</mtext>
 </maction>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_MAX_EQ></counter>
@@ -986,11 +838,7 @@
 <mtext>placeholder</mtext>
 </maction>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>32</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which fragment shaders were stalled on the EUs." equation="A 28 READ $PsThreads UDIV" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="FS AVG Stall per Thread" semantic_type="event" symbol_name="PsEuStallPerThread" underscore_name="ps_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1001,11 +849,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$PsThreads</mi>
-<mtext>The total number of fragment shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$PsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of GPU memory bytes transferred between L3 caches and GTI." equation="C 4 READ 64 UMUL" max_equation="$GpuCoreClocks 64 UMUL $EuSlicesTotalCount UMUL" mdapi_group="GTI/L3" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier2 Frame Batch Draw" name="GTI L3 Throughput" semantic_type="throughput" symbol_name="GtiL3Throughput" underscore_name="gti_l3_throughput" units="bytes"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -1013,11 +857,7 @@
 <mtext>placeholder</mtext>
 </maction>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_MAX_EQ></counter>
@@ -1029,11 +869,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$VsThreads</mi>
-<mtext>The total number of vertex shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$VsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of blended samples or pixels written to all render targets." equation="C 5 READ $EuSlicesTotalCount 4 UMUL UMUL" mdapi_group="3D Pipe/Output Merger" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Samples Blended" semantic_type="event" symbol_name="SamplesBlended" underscore_name="samples_blended" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -1053,11 +889,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which fragment shaders were processed actively on the EUs." equation="A 27 READ $PsThreads UDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="FS AVG Active per Thread" semantic_type="event" symbol_name="PsEuActivePerThread" underscore_name="ps_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1068,11 +900,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$PsThreads</mi>
-<mtext>The total number of fragment shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$PsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on early depth test." equation="A 35 READ" mdapi_group="3D Pipe/Rasterizer/Early Depth Test" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="Early Depth Test Fails" semantic_type="event" symbol_name="EarlyDepthTestFails" underscore_name="early_depth_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1172,17 +1000,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -1199,11 +1019,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$DsThreads</mi>
-<mtext>The total number of evaluation shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$DsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which geometry shaders were processed actively on the EUs." equation="A 22 READ $GsThreads UDIV" max_equation="100" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="GS AVG Active per Thread" semantic_type="event" symbol_name="GsEuActivePerThread" underscore_name="gs_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -1213,11 +1029,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GsThreads</mi>
-<mtext>The total number of geometry shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$GsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of control shader hardware threads dispatched." equation="A 10 READ" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="TCS Threads Dispatched" semantic_type="event" symbol_name="HsThreads" underscore_name="hs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1233,11 +1045,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$HsThreads</mi>
-<mtext>The total number of control shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$HsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of samples or pixels dropped in fragment shaders." equation="A 36 READ" mdapi_group="3D Pipe/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Overview Frame Batch Draw" name="Samples Killed in FS" semantic_type="event" symbol_name="SamplesKilledInPs" underscore_name="samples_killed_in_ps" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -1249,22 +1057,10 @@
 <mi>A39</mi>
 <mtext>placeholder</mtext>
 </maction>
-<mo>-</mo>
-<maction actiontype="tooltip">
-<mi>$SamplesKilledInPs</mi>
-<mtext>The total number of samples or pixels dropped in fragment shaders.</mtext>
-</maction></mathml_EQ></counter>
+<mo>-</mo><mi>$SamplesKilledInPs</mi></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which samplers were bottlenecks." equation="$Sampler0Bottleneck $Sampler1Bottleneck FMAX" high_watermark="15" low_watermark="5" max_equation="100" mdapi_group="Sampler" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Indicate System Frame Batch Draw" name="Sampler Bottleneck" semantic_type="duration" symbol_name="SamplerBottleneck" underscore_name="sampler_bottleneck" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
-<mtext>max ( </mtext>
-<maction actiontype="tooltip">
-<mi>$Sampler0Bottleneck</mi>
-<mtext>The percentage of time in which sampler 0 was bottlenecks.</mtext>
-</maction>
-<mtext> , </mtext>
-<maction actiontype="tooltip">
-<mi>$Sampler1Bottleneck</mi>
-<mtext>The percentage of time in which sampler 1 was bottlenecks.</mtext>
-</maction>
+<mtext>max ( </mtext><mi>$Sampler0Bottleneck</mi>
+<mtext> , </mtext><mi>$Sampler1Bottleneck</mi>
 <mtext> ) </mtext></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which control shaders were processed actively on the EUs." equation="A 7 READ $HsThreads UDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="TCS AVG Active per Thread" semantic_type="event" symbol_name="HsEuActivePerThread" underscore_name="hs_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1275,11 +1071,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$HsThreads</mi>
-<mtext>The total number of control shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$HsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="Total Fragment Shader GPU duration." equation="A 27 READ  A 0 READ UMUL  A 2 READ  A 7 READ UADD  A 12 READ UADD  A 17 READ UADD  A 22 READ UADD  A 27 READ UADD UDIV  A 28 READ  A 1 READ UMUL  A 3 READ  A 8 READ UADD  A 13 READ UADD  A 18 READ UADD  A 23 READ UADD  A 28 READ UADD UDIV UADD $GpuTime UMUL $GpuCoreClocks $EuCoresTotalCount UMUL 1000 UMUL UDIV" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="FS Duration" semantic_type="duration" symbol_name="PsDuration" underscore_name="ps_duration" units="us"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1374,17 +1166,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -1406,11 +1190,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$CsThreads</mi>
-<mtext>The total number of compute shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$CsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on post-FS stencil test." equation="A 38 READ" mdapi_group="3D Pipe/Output Merger" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="Late Stencil Test Fails" semantic_type="event" symbol_name="PostPsStencilTestFails" underscore_name="post_ps_stencil_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -1423,11 +1203,7 @@
 <mtext>placeholder</mtext>
 </maction>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_MAX_EQ></counter>
@@ -1447,11 +1223,7 @@
 <mn>2</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_MAX_EQ></counter>
@@ -1463,11 +1235,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$VsThreads</mi>
-<mtext>The total number of vertex shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$VsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="Total Vertex Shader GPU duration." equation="A 2 READ  A 0 READ UMUL  A 2 READ  A 7 READ UADD  A 12 READ UADD  A 17 READ UADD  A 22 READ UADD  A 27 READ UADD UDIV  A 3 READ  A 1 READ UMUL  A 3 READ  A 8 READ UADD  A 13 READ UADD  A 18 READ UADD  A 23 READ UADD  A 28 READ UADD UDIV UADD $GpuTime UMUL $GpuCoreClocks $EuCoresTotalCount UMUL 1000 UMUL UDIV" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="VS Duration" semantic_type="duration" symbol_name="VsDuration" underscore_name="vs_duration" units="us"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1562,17 +1330,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -1586,7 +1346,7 @@
 <mi>A40</mi>
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
-    <register_config id="0">
+    <register_config type="NOA">
         <register address="0x000253A4" type="NOA" value="0x01600000" />
         <register address="0x00025440" type="NOA" value="0x00100000" />
         <register address="0x00025128" type="NOA" value="0x00000000" />
@@ -1647,7 +1407,7 @@
         <register address="0x0002541C" type="NOA" value="0x00000000" />
         <register address="0x00025428" type="NOA" value="0x00042049" />
     </register_config>
-    <register_config id="1">
+    <register_config type="OA">
         <register address="0x00002724" type="OA" value="0x00800000" /> 
         <register address="0x00002720" type="OA" value="0x00000000" /> 
         <register address="0x00002714" type="OA" value="0x00800000" /> 
@@ -1680,11 +1440,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which evaluation shaders were stalled on the EUs." equation="A 13 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TES EU Stall" semantic_type="duration" symbol_name="DsEuStall" underscore_name="ds_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1706,11 +1462,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of untyped memory bytes written via Data Port." equation="B 6 READ B 7 READ UADD $EuSlicesTotalCount 64 UMUL UMUL" max_equation="$GpuCoreClocks 64 UMUL $EuSlicesTotalCount UMUL" mdapi_group="L3/Data Port" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Draw" name="Typed Bytes Written" semantic_type="throughput" symbol_name="TypedBytesWritten" underscore_name="typed_bytes_written" units="bytes"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1727,11 +1479,7 @@
 <mtext>)</mtext>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_MAX_EQ></counter>
@@ -1753,11 +1501,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$HsThreads</mi>
-<mtext>The total number of control shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$HsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of geometry shader hardware threads dispatched." equation="A 25 READ" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="GS Threads Dispatched" semantic_type="event" symbol_name="GsThreads" underscore_name="gs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1784,11 +1528,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of vertex shader hardware threads dispatched." equation="A 5 READ" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="VS Threads Dispatched" semantic_type="event" symbol_name="VsThreads" underscore_name="vs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1814,11 +1554,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$CsThreads</mi>
-<mtext>The total number of compute shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$CsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of typed memory bytes read via Data Port." equation="B 0 READ B 1 READ UADD $EuSlicesTotalCount 64 UMUL UMUL" max_equation="$GpuCoreClocks 64 UMUL $EuSlicesTotalCount UMUL" mdapi_group="L3/Data Port" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Draw" name="Untyped Bytes Read" semantic_type="throughput" symbol_name="UntypedBytesRead" underscore_name="untyped_bytes_read" units="bytes"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1835,11 +1571,7 @@
 <mtext>)</mtext>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_MAX_EQ></counter>
@@ -1851,11 +1583,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GsThreads</mi>
-<mtext>The total number of geometry shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$GsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of typed atomics." equation="C 0 READ C 1 READ UADD $EuSlicesTotalCount UMUL" mdapi_group="L3/Data Port" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Draw" name="Typed Atomics" semantic_type="event" symbol_name="TypedAtomics" underscore_name="typed_atomics" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mtext>(</mtext>
@@ -1884,19 +1612,11 @@
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000000000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequency" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL OGL4 OCL IO BB" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequency" underscore_name="avg_gpu_core_frequency" units="hz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>1000000000</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuTime</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuMaxFrequency</mi></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GPU memory bytes read from shared local memory." equation="C 6 READ C 7 READ UADD $EuSlicesTotalCount 64 UMUL UMUL" max_equation="$GpuCoreClocks 64 UMUL $EuSlicesTotalCount UMUL" mdapi_group="L3/Data Port/SLM" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Draw" name="SLM Bytes Read" semantic_type="throughput" symbol_name="SlmBytesRead" underscore_name="slm_bytes_read" units="bytes"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mtext>(</mtext>
@@ -1912,11 +1632,7 @@
 <mtext>)</mtext>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_MAX_EQ></counter>
@@ -1928,11 +1644,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$PsThreads</mi>
-<mtext>The total number of fragment shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$PsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which evaluation shaders were processed actively on the EUs." equation="A 12 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TES EU Active" semantic_type="duration" symbol_name="DsEuActive" underscore_name="ds_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -1953,11 +1665,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which vertex shaders were stalled on the EUs." equation="A 3 READ $VsThreads UDIV" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="VS AVG Stall per Thread" semantic_type="event" symbol_name="VsEuStallPerThread" underscore_name="vs_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -1968,11 +1676,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$VsThreads</mi>
-<mtext>The total number of vertex shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$VsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which control shaders were stalled on the EUs." equation="A 8 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TCS EU Stall" semantic_type="duration" symbol_name="HsEuStall" underscore_name="hs_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -1993,11 +1697,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the GPU has being processing GPU commands." equation="A 41 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame" name="GPU Busy" semantic_type="duration" symbol_name="GpuBusy" underscore_name="gpu_busy" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2010,11 +1710,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which fragment shaders were processed actively on the EUs." equation="A 27 READ $PsThreads UDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="FS AVG Active per Thread" semantic_type="event" symbol_name="PsEuActivePerThread" underscore_name="ps_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2025,11 +1721,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$PsThreads</mi>
-<mtext>The total number of fragment shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$PsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on early depth test." equation="A 35 READ" mdapi_group="3D Pipe/Rasterizer/Early Depth Test" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="Early Depth Test Fails" semantic_type="event" symbol_name="EarlyDepthTestFails" underscore_name="early_depth_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2050,11 +1742,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$DsThreads</mi>
-<mtext>The total number of evaluation shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$DsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which geometry shaders were processed actively on the EUs." equation="A 22 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="GS EU Active" semantic_type="duration" symbol_name="GsEuActive" underscore_name="gs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2076,11 +1764,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which fragment shaders were processed actively on the EUs." equation="A 27 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="FS EU Active" semantic_type="duration" symbol_name="PsEuActive" underscore_name="ps_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2102,11 +1786,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which evaluation shaders were stalled on the EUs." equation="A 13 READ $DsThreads UDIV" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="TES AVG Stall per Thread" semantic_type="event" symbol_name="DsEuStallPerThread" underscore_name="ds_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2117,11 +1797,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$DsThreads</mi>
-<mtext>The total number of evaluation shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$DsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which geometry shaders were processed actively on the EUs." equation="A 22 READ $GsThreads UDIV" max_equation="100" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="GS AVG Active per Thread" semantic_type="event" symbol_name="GsEuActivePerThread" underscore_name="gs_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -2131,11 +1807,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GsThreads</mi>
-<mtext>The total number of geometry shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$GsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of untyped memory bytes written via Data Port." equation="B 2 READ B 3 READ UADD $EuSlicesTotalCount 64 UMUL UMUL" max_equation="$GpuCoreClocks 64 UMUL $EuSlicesTotalCount UMUL" mdapi_group="L3/Data Port" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Draw" name="Untyped Writes" semantic_type="throughput" symbol_name="UntypedBytesWritten" underscore_name="untyped_bytes_written" units="bytes"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2152,11 +1824,7 @@
 <mtext>)</mtext>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_MAX_EQ></counter>
@@ -2174,11 +1842,7 @@
 <mtext>)</mtext>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_MAX_EQ></counter>
@@ -2190,11 +1854,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$HsThreads</mi>
-<mtext>The total number of control shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$HsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which control shaders were processed actively on the EUs." equation="A 7 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TCS EU Active" semantic_type="duration" symbol_name="HsEuActive" underscore_name="hs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -2215,11 +1875,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of samples or pixels dropped in fragment shaders." equation="A 36 READ" mdapi_group="3D Pipe/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier4 Overview Frame Batch Draw" name="Samples Killed in FS" semantic_type="event" symbol_name="SamplesKilledInPs" underscore_name="samples_killed_in_ps" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2232,11 +1888,7 @@
 <mi>A39</mi>
 <mtext>placeholder</mtext>
 </maction>
-<mo>-</mo>
-<maction actiontype="tooltip">
-<mi>$SamplesKilledInPs</mi>
-<mtext>The total number of samples or pixels dropped in fragment shaders.</mtext>
-</maction></mathml_EQ></counter>
+<mo>-</mo><mi>$SamplesKilledInPs</mi></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which fragment shaders were stalled on the EUs." equation="A 28 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="FS EU Stall" semantic_type="duration" symbol_name="PsEuStall" underscore_name="ps_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
@@ -2256,11 +1908,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the Execution Units were stalled." equation="A 1 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier2 Overview System Frame Batch Draw" name="EU Stall" semantic_type="duration" symbol_name="EuStall" underscore_name="eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2282,11 +1930,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on early hierarchical depth test." equation="A 33 READ" mdapi_group="3D Pipe/Rasterizer/Hi-Depth Test" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="Early Hi-Depth Test Fails" semantic_type="event" symbol_name="HiDepthTestFails" underscore_name="hi_depth_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2313,11 +1957,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which compute shaders were processed actively on the EUs." equation="A 17 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="CS EU Active" semantic_type="duration" symbol_name="CsEuActive" underscore_name="cs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2339,11 +1979,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which compute shaders were stalled on the EUs." equation="A 18 READ $CsThreads UDIV" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="CS AVG Stall per Thread" semantic_type="event" symbol_name="CsEuStallPerThread" underscore_name="cs_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2354,11 +1990,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$CsThreads</mi>
-<mtext>The total number of compute shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$CsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on post-FS stencil test." equation="A 38 READ" mdapi_group="3D Pipe/Output Merger" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="Late Stencil Test Fails" semantic_type="event" symbol_name="PostPsStencilTestFails" underscore_name="post_ps_stencil_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -2373,11 +2005,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$VsThreads</mi>
-<mtext>The total number of vertex shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$VsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which compute shaders were stalled on the EUs." equation="A 18 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="CS EU Stall" semantic_type="duration" symbol_name="CsEuStall" underscore_name="cs_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2399,11 +2027,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of typed memory bytes read via Data Port." equation="B 4 READ B 5 READ UADD $EuSlicesTotalCount 64 UMUL UMUL" max_equation="$GpuCoreClocks 64 UMUL $EuSlicesTotalCount UMUL" mdapi_group="L3/Data Port" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Draw" name="Typed Bytes Read" semantic_type="throughput" symbol_name="TypedBytesRead" underscore_name="typed_bytes_read" units="bytes"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2420,11 +2044,7 @@
 <mtext>)</mtext>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi>
 <mo>*</mo>
-<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mn>64</mn></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>64</mn>
 <mo>*</mo><mi>$EuSlicesTotalCount</mi></mathml_MAX_EQ></counter>
@@ -2452,14 +2072,10 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
-    <register_config id="0">
+    <register_config type="NOA">
         <register address="0x000253A4" type="NOA" value="0x00000000" />
         <register address="0x0002681C" type="NOA" value="0x01F00800" />
         <register address="0x00026820" type="NOA" value="0x00001000" />
@@ -2493,7 +2109,7 @@
         <register address="0x0002541C" type="NOA" value="0x00000000" />
         <register address="0x00025428" type="NOA" value="0x00000C03" />
     </register_config>
-    <register_config id="1">
+    <register_config type="OA">
         <register address="0x00002710" type="OA" value="0x00000000" /> 
         <register address="0x00002714" type="OA" value="0x00800000" /> 
         <register address="0x00002718" type="OA" value="0xAAAAAAAA" /> 
@@ -2527,17 +2143,9 @@
 </maction></mathml_EQ></counter>
     <counter data_type="float" description="The ratio of EU untyped write requests to L3 cache line writes." equation="$EuUntypedWrites0 $UntypedWrites0 FDIV" mdapi_group="L3/Data Port" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="UntypedWritesPerCacheLine" semantic_type="ratio" symbol_name="UntypedWritesPerCacheLine" underscore_name="untyped_writes_per_cache_line" units="eu sends to l3 cache lines"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$EuUntypedWrites0</mi>
-<mtext>The subslice 0 EU Untyped Writes subslice 0.</mtext>
-</maction>
+<mrow><mi>$EuUntypedWrites0</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$UntypedWrites0</mi>
-<mtext>The subslice 0 untyped writes (including SLM writes).</mtext>
-</maction></mrow>
+<mrow><mi>$UntypedWrites0</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The subslice 0 typed reads." equation="C 2 READ" mdapi_group="L3/Data Port" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="Typed Reads 0" semantic_type="event" symbol_name="TypedReads0" underscore_name="typed_reads0" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -2561,17 +2169,9 @@
 </maction></mathml_EQ></counter>
     <counter data_type="float" description="The ratio of EU typed atomics requests to L3 cache line writes." equation="$EuTypedAtomics0 $TypedAtomics0 FDIV" mdapi_group="L3/Data Port" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="TypedAtomicsPerCacheLine" semantic_type="ratio" symbol_name="TypedAtomicsPerCacheLine" underscore_name="typed_atomics_per_cache_line" units="eu sends to l3 cache lines"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$EuTypedAtomics0</mi>
-<mtext>The subslice 0 EU Typed Atomics subslice 0.</mtext>
-</maction>
+<mrow><mi>$EuTypedAtomics0</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$TypedAtomics0</mi>
-<mtext>The subslice 0 typed atomics.</mtext>
-</maction></mrow>
+<mrow><mi>$TypedAtomics0</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The subslice 0 EU Untyped Reads subslice 0." equation="B 0 READ" mdapi_group="L3/Data Port" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="EuUntypedReads0" semantic_type="event" symbol_name="EuUntypedReads0" underscore_name="eu_untyped_reads0" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -2600,17 +2200,9 @@
 </maction></mathml_EQ></counter>
     <counter data_type="float" description="The ratio of EU typed write requests to L3 cache line writes." equation="$EuTypedWrites0 $TypedWrites0 FDIV" mdapi_group="L3/Data Port" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="TypedWritesPerCacheLine" semantic_type="ratio" symbol_name="TypedWritesPerCacheLine" underscore_name="typed_writes_per_cache_line" units="eu sends to l3 cache lines"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$EuTypedWrites0</mi>
-<mtext>The subslice 0 EU Typed Writes subslice 0.</mtext>
-</maction>
+<mrow><mi>$EuTypedWrites0</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$TypedWrites0</mi>
-<mtext>The subslice 0 typed writes.</mtext>
-</maction></mrow>
+<mrow><mi>$TypedWrites0</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The subslice 0 EU Typed Reads subslice 0." equation="B 2 READ" mdapi_group="L3/Data Port" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="EuTypedReads0" semantic_type="event" symbol_name="EuTypedReads0" underscore_name="eu_typed_reads0" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -2629,17 +2221,9 @@
 </maction></mathml_EQ></counter>
     <counter data_type="float" description="The ratio of EU untyped read requests to L3 cache line reads." equation="$EuUntypedReads0 $UntypedReads0 FDIV" mdapi_group="L3/Data Port" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="UntypedReadsPerCacheLine" semantic_type="ratio" symbol_name="UntypedReadsPerCacheLine" underscore_name="untyped_reads_per_cache_line" units="eu sends to l3 cache lines"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$EuUntypedReads0</mi>
-<mtext>The subslice 0 EU Untyped Reads subslice 0.</mtext>
-</maction>
+<mrow><mi>$EuUntypedReads0</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$UntypedReads0</mi>
-<mtext>The subslice 0 untyped reads (including SLM reads).</mtext>
-</maction></mrow>
+<mrow><mi>$UntypedReads0</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -2655,19 +2239,11 @@
 </mfrac></mathml_EQ></counter>
     <counter data_type="float" description="The ratio of EU typed read requests to L3 cache line reads." equation="$EuTypedReads0 $TypedReads0 FDIV" mdapi_group="L3/Data Port" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="TypedReadsPerCacheLine" semantic_type="ratio" symbol_name="TypedReadsPerCacheLine" underscore_name="typed_reads_per_cache_line" units="eu sends to l3 cache lines"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$EuTypedReads0</mi>
-<mtext>The subslice 0 EU Typed Reads subslice 0.</mtext>
-</maction>
+<mrow><mi>$EuTypedReads0</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$TypedReads0</mi>
-<mtext>The subslice 0 typed reads.</mtext>
-</maction></mrow>
+<mrow><mi>$TypedReads0</mi></mrow>
 </mfrac></mathml_EQ></counter>
-    <register_config id="0">
+    <register_config type="NOA">
         <register address="0x0002681C" type="NOA" value="0x3EB00800" />
         <register address="0x00026820" type="NOA" value="0x00900000" />
         <register address="0x00025384" type="NOA" value="0x02AAAAAA" />
@@ -2684,7 +2260,7 @@
         <register address="0x0002541C" type="NOA" value="0x00000000" />
         <register address="0x00025428" type="NOA" value="0x00000000" />
     </register_config>
-    <register_config id="1">
+    <register_config type="OA">
         <register address="0x00002724" type="OA" value="0xF0800000" /> 
         <register address="0x00002720" type="OA" value="0x00000000" /> 
         <register address="0x00002714" type="OA" value="0xF0800000" /> 
@@ -2733,11 +2309,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which evaluation shaders were stalled on the EUs." equation="A 13 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TES EU Stall" semantic_type="duration" symbol_name="DsEuStall" underscore_name="ds_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2759,11 +2331,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on post-FS alpha test." equation="A 37 READ" mdapi_group="3D Pipe/Output Merger" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Alpha Test Fails" semantic_type="event" symbol_name="AlphaTestFails" underscore_name="alpha_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2784,11 +2352,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$DsThreads</mi>
-<mtext>The total number of evaluation shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$DsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of geometry shader hardware threads dispatched." equation="A 25 READ" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="GS Threads Dispatched" semantic_type="event" symbol_name="GsThreads" underscore_name="gs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2815,11 +2379,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of vertex shader hardware threads dispatched." equation="A 5 READ" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="VS Threads Dispatched" semantic_type="event" symbol_name="VsThreads" underscore_name="vs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2855,11 +2415,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$CsThreads</mi>
-<mtext>The total number of compute shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$CsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory reads from Render Depth Cache." equation="B 7 READ" mdapi_group="GTI/Depth Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiRczMemoryReads" semantic_type="event" symbol_name="GtiRczMemoryReads" underscore_name="gti_rcz_memory_reads" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2875,11 +2431,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GsThreads</mi>
-<mtext>The total number of geometry shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$GsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -2895,19 +2447,11 @@
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000000000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequency" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequency" underscore_name="avg_gpu_core_frequency" units="hz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>1000000000</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuTime</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuMaxFrequency</mi></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory reads from Render Color Cache (Render Color Cache misses)." equation="B 3 READ" mdapi_group="GTI/Color Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiRccMemoryReads" semantic_type="event" symbol_name="GtiRccMemoryReads" underscore_name="gti_rcc_memory_reads" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -2922,11 +2466,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$PsThreads</mi>
-<mtext>The total number of fragment shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$PsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which evaluation shaders were processed actively on the EUs." equation="A 12 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TES EU Active" semantic_type="duration" symbol_name="DsEuActive" underscore_name="ds_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -2947,11 +2487,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which vertex shaders were stalled on the EUs." equation="A 3 READ $VsThreads UDIV" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="VS AVG Stall per Thread" semantic_type="event" symbol_name="VsEuStallPerThread" underscore_name="vs_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -2962,11 +2498,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$VsThreads</mi>
-<mtext>The total number of vertex shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$VsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which control shaders were stalled on the EUs." equation="A 8 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TCS EU Stall" semantic_type="duration" symbol_name="HsEuStall" underscore_name="hs_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -2987,11 +2519,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the GPU has being processing GPU commands." equation="A 41 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame" name="GPU Busy" semantic_type="duration" symbol_name="GpuBusy" underscore_name="gpu_busy" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3004,11 +2532,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which fragment shaders were processed actively on the EUs." equation="A 27 READ $PsThreads UDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="FS AVG Active per Thread" semantic_type="event" symbol_name="PsEuActivePerThread" underscore_name="ps_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3019,11 +2543,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$PsThreads</mi>
-<mtext>The total number of fragment shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$PsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory reads from Command Streamer." equation="B 0 READ" mdapi_group="GTI/3D Pipe/Command Streamer" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiCmdStreamerMemoryReads" semantic_type="event" symbol_name="GtiCmdStreamerMemoryReads" underscore_name="gti_cmd_streamer_memory_reads" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3055,11 +2575,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which fragment shaders were processed actively on the EUs." equation="A 27 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="FS EU Active" semantic_type="duration" symbol_name="PsEuActive" underscore_name="ps_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3081,11 +2597,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which evaluation shaders were stalled on the EUs." equation="A 13 READ $DsThreads UDIV" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="TES AVG Stall per Thread" semantic_type="event" symbol_name="DsEuStallPerThread" underscore_name="ds_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3096,11 +2608,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$DsThreads</mi>
-<mtext>The total number of evaluation shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$DsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which geometry shaders were processed actively on the EUs." equation="A 22 READ $GsThreads UDIV" max_equation="100" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="GS AVG Active per Thread" semantic_type="event" symbol_name="GsEuActivePerThread" underscore_name="gs_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -3110,11 +2618,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GsThreads</mi>
-<mtext>The total number of geometry shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$GsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory reads from Hierarchical Depth Cache." equation="B 5 READ" mdapi_group="GTI/Depth Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiHiDepthMemoryReads" semantic_type="event" symbol_name="GtiHiDepthMemoryReads" underscore_name="gti_hi_depth_memory_reads" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3135,11 +2639,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$HsThreads</mi>
-<mtext>The total number of control shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$HsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which control shaders were processed actively on the EUs." equation="A 7 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TCS EU Active" semantic_type="duration" symbol_name="HsEuActive" underscore_name="hs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -3160,11 +2660,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of samples or pixels dropped in fragment shaders." equation="A 36 READ" mdapi_group="3D Pipe/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Overview Frame Batch Draw" name="Samples Killed in FS" semantic_type="event" symbol_name="SamplesKilledInPs" underscore_name="samples_killed_in_ps" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3177,11 +2673,7 @@
 <mi>A39</mi>
 <mtext>placeholder</mtext>
 </maction>
-<mo>-</mo>
-<maction actiontype="tooltip">
-<mi>$SamplesKilledInPs</mi>
-<mtext>The total number of samples or pixels dropped in fragment shaders.</mtext>
-</maction></mathml_EQ></counter>
+<mo>-</mo><mi>$SamplesKilledInPs</mi></mathml_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which control shaders were processed actively on the EUs." equation="A 7 READ $HsThreads UDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="TCS AVG Active per Thread" semantic_type="event" symbol_name="HsEuActivePerThread" underscore_name="hs_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
@@ -3190,11 +2682,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$HsThreads</mi>
-<mtext>The total number of control shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$HsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which fragment shaders were stalled on the EUs." equation="A 28 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="FS EU Stall" semantic_type="duration" symbol_name="PsEuStall" underscore_name="ps_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3216,11 +2704,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the Execution Units were stalled." equation="A 1 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier2 Overview System Frame Batch Draw" name="EU Stall" semantic_type="duration" symbol_name="EuStall" underscore_name="eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3242,11 +2726,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory reads from Multisampling Color Cache (Multisampling Color Cache misses)." equation="B 4 READ" mdapi_group="GTI/Color Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiMscMemoryReads" semantic_type="event" symbol_name="GtiMscMemoryReads" underscore_name="gti_msc_memory_reads" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3278,11 +2758,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which compute shaders were processed actively on the EUs." equation="A 17 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="CS EU Active" semantic_type="duration" symbol_name="CsEuActive" underscore_name="cs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3304,11 +2780,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which compute shaders were stalled on the EUs." equation="A 18 READ $CsThreads UDIV" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="CS AVG Stall per Thread" semantic_type="event" symbol_name="CsEuStallPerThread" underscore_name="cs_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3319,11 +2791,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$CsThreads</mi>
-<mtext>The total number of compute shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$CsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory reads from Vertex Fetch." equation="B 1 READ" mdapi_group="GTI/3D Pipe/Vertex Fetch" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiVfMemoryReads" semantic_type="event" symbol_name="GtiVfMemoryReads" underscore_name="gti_vf_memory_reads" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -3348,11 +2816,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$VsThreads</mi>
-<mtext>The total number of vertex shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$VsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory reads from Resource Streamer." equation="B 2 READ" mdapi_group="GTI/3D Pipe/Resource Streamer" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiRsMemoryReads" semantic_type="event" symbol_name="GtiRsMemoryReads" underscore_name="gti_rs_memory_reads" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3379,11 +2843,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of samples or pixels written to all render targets." equation="A 40 READ" mdapi_group="3D Pipe/Output Merger" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Samples Written" semantic_type="event" symbol_name="SamplesWritten" underscore_name="samples_written" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3415,14 +2875,10 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
-    <register_config id="0">
+    <register_config type="NOA">
         <register address="0x000253A4" type="NOA" value="0x34300000" />
         <register address="0x00025440" type="NOA" value="0x2D800000" />
         <register address="0x00025444" type="NOA" value="0x00000008" />
@@ -3442,7 +2898,7 @@
         <register address="0x0002541C" type="NOA" value="0x00000000" />
         <register address="0x00025428" type="NOA" value="0x00000000" />
     </register_config>
-    <register_config id="1">
+    <register_config type="OA">
         <register address="0x00002724" type="OA" value="0xF0800000" /> 
         <register address="0x00002720" type="OA" value="0x00000000" /> 
         <register address="0x00002714" type="OA" value="0xF0800000" /> 
@@ -3499,11 +2955,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which evaluation shaders were stalled on the EUs." equation="A 13 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TES EU Stall" semantic_type="duration" symbol_name="DsEuStall" underscore_name="ds_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3525,11 +2977,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on post-FS alpha test." equation="A 37 READ" mdapi_group="3D Pipe/Output Merger" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Alpha Test Fails" semantic_type="event" symbol_name="AlphaTestFails" underscore_name="alpha_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3550,11 +2998,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$DsThreads</mi>
-<mtext>The total number of evaluation shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$DsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of geometry shader hardware threads dispatched." equation="A 25 READ" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="GS Threads Dispatched" semantic_type="event" symbol_name="GsThreads" underscore_name="gs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3581,11 +3025,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of vertex shader hardware threads dispatched." equation="A 5 READ" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="VS Threads Dispatched" semantic_type="event" symbol_name="VsThreads" underscore_name="vs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3616,11 +3056,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$CsThreads</mi>
-<mtext>The total number of compute shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$CsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory writes from Command Streamer." equation="B 0 READ" mdapi_group="GTI/3D Pipe/Command Streamer" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiCmdStreamerMemoryWrites" semantic_type="event" symbol_name="GtiCmdStreamerMemoryWrites" underscore_name="gti_cmd_streamer_memory_writes" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3636,11 +3072,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GsThreads</mi>
-<mtext>The total number of geometry shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$GsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory writes from L3 (L3 invalidations)." equation="C 4 READ" mdapi_group="GTI/L3" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiL3Writes" semantic_type="event" symbol_name="GtiL3Writes" underscore_name="gti_l3_writes" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -3666,19 +3098,11 @@
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000000000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequency" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequency" underscore_name="avg_gpu_core_frequency" units="hz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>1000000000</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuTime</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuMaxFrequency</mi></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which fragment shaders were stalled on the EUs." equation="A 28 READ $PsThreads UDIV" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="FS AVG Stall per Thread" semantic_type="event" symbol_name="PsEuStallPerThread" underscore_name="ps_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -3688,11 +3112,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$PsThreads</mi>
-<mtext>The total number of fragment shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$PsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory writes from Render Color Cache (Render Color Cache invalidations)." equation="B 3 READ" mdapi_group="GTI/Color Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiRccMemoryWrites" semantic_type="event" symbol_name="GtiRccMemoryWrites" underscore_name="gti_rcc_memory_writes" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -3718,11 +3138,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which vertex shaders were stalled on the EUs." equation="A 3 READ $VsThreads UDIV" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="VS AVG Stall per Thread" semantic_type="event" symbol_name="VsEuStallPerThread" underscore_name="vs_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3733,11 +3149,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$VsThreads</mi>
-<mtext>The total number of vertex shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$VsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which control shaders were stalled on the EUs." equation="A 8 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TCS EU Stall" semantic_type="duration" symbol_name="HsEuStall" underscore_name="hs_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -3758,11 +3170,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the GPU has being processing GPU commands." equation="A 41 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame" name="GPU Busy" semantic_type="duration" symbol_name="GpuBusy" underscore_name="gpu_busy" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3775,11 +3183,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which fragment shaders were processed actively on the EUs." equation="A 27 READ $PsThreads UDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="FS AVG Active per Thread" semantic_type="event" symbol_name="PsEuActivePerThread" underscore_name="ps_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3790,11 +3194,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$PsThreads</mi>
-<mtext>The total number of fragment shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$PsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on early depth test." equation="A 35 READ" mdapi_group="3D Pipe/Rasterizer/Early Depth Test" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="Early Depth Test Fails" semantic_type="event" symbol_name="EarlyDepthTestFails" underscore_name="early_depth_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3828,11 +3228,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which fragment shaders were processed actively on the EUs." equation="A 27 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="FS EU Active" semantic_type="duration" symbol_name="PsEuActive" underscore_name="ps_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3854,11 +3250,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory writes from Stencil Cache." equation="B 6 READ" mdapi_group="GTI/Depth Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiStcMemoryWrites" semantic_type="event" symbol_name="GtiStcMemoryWrites" underscore_name="gti_stc_memory_writes" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3874,11 +3266,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$DsThreads</mi>
-<mtext>The total number of evaluation shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$DsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which geometry shaders were processed actively on the EUs." equation="A 22 READ $GsThreads UDIV" max_equation="100" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="GS AVG Active per Thread" semantic_type="event" symbol_name="GsEuActivePerThread" underscore_name="gs_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -3888,11 +3276,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GsThreads</mi>
-<mtext>The total number of geometry shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$GsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of control shader hardware threads dispatched." equation="A 10 READ" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="TCS Threads Dispatched" semantic_type="event" symbol_name="HsThreads" underscore_name="hs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3908,11 +3292,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$HsThreads</mi>
-<mtext>The total number of control shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$HsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which control shaders were processed actively on the EUs." equation="A 7 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TCS EU Active" semantic_type="duration" symbol_name="HsEuActive" underscore_name="hs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -3933,11 +3313,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of samples or pixels dropped in fragment shaders." equation="A 36 READ" mdapi_group="3D Pipe/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Overview Frame Batch Draw" name="Samples Killed in FS" semantic_type="event" symbol_name="SamplesKilledInPs" underscore_name="samples_killed_in_ps" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3950,11 +3326,7 @@
 <mi>A39</mi>
 <mtext>placeholder</mtext>
 </maction>
-<mo>-</mo>
-<maction actiontype="tooltip">
-<mi>$SamplesKilledInPs</mi>
-<mtext>The total number of samples or pixels dropped in fragment shaders.</mtext>
-</maction></mathml_EQ></counter>
+<mo>-</mo><mi>$SamplesKilledInPs</mi></mathml_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which control shaders were processed actively on the EUs." equation="A 7 READ $HsThreads UDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="TCS AVG Active per Thread" semantic_type="event" symbol_name="HsEuActivePerThread" underscore_name="hs_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
@@ -3963,11 +3335,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$HsThreads</mi>
-<mtext>The total number of control shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$HsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which fragment shaders were stalled on the EUs." equation="A 28 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="FS EU Stall" semantic_type="duration" symbol_name="PsEuStall" underscore_name="ps_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -3989,11 +3357,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the Execution Units were stalled." equation="A 1 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier2 Overview System Frame Batch Draw" name="EU Stall" semantic_type="duration" symbol_name="EuStall" underscore_name="eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4015,11 +3379,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on early hierarchical depth test." equation="A 33 READ" mdapi_group="3D Pipe/Rasterizer/Hi-Depth Test" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="Early Hi-Depth Test Fails" semantic_type="event" symbol_name="HiDepthTestFails" underscore_name="hi_depth_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4046,11 +3406,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which compute shaders were processed actively on the EUs." equation="A 17 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="CS EU Active" semantic_type="duration" symbol_name="CsEuActive" underscore_name="cs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4072,11 +3428,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which compute shaders were stalled on the EUs." equation="A 18 READ $CsThreads UDIV" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="CS AVG Stall per Thread" semantic_type="event" symbol_name="CsEuStallPerThread" underscore_name="cs_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4087,11 +3439,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$CsThreads</mi>
-<mtext>The total number of compute shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$CsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on post-FS stencil test." equation="A 38 READ" mdapi_group="3D Pipe/Output Merger" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="Late Stencil Test Fails" semantic_type="event" symbol_name="PostPsStencilTestFails" underscore_name="post_ps_stencil_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -4111,11 +3459,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$VsThreads</mi>
-<mtext>The total number of vertex shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$VsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GTI memory writes from Render Depth Cache." equation="B 7 READ" mdapi_group="GTI/Depth Cache" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Draw" name="GtiRczMemoryWrites" semantic_type="event" symbol_name="GtiRczMemoryWrites" underscore_name="gti_rcz_memory_writes" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4142,11 +3486,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of samples or pixels written to all render targets." equation="A 40 READ" mdapi_group="3D Pipe/Output Merger" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Samples Written" semantic_type="event" symbol_name="SamplesWritten" underscore_name="samples_written" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4178,14 +3518,10 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
-    <register_config id="0">
+    <register_config type="NOA">
         <register address="0x000253A4" type="NOA" value="0x34300000" />
         <register address="0x00025440" type="NOA" value="0x01500000" />
         <register address="0x00025444" type="NOA" value="0x00000120" />
@@ -4205,7 +3541,7 @@
         <register address="0x0002541C" type="NOA" value="0x00000000" />
         <register address="0x00025428" type="NOA" value="0x00000000" />
     </register_config>
-    <register_config id="1">
+    <register_config type="OA">
         <register address="0x00002724" type="OA" value="0xF0800000" /> 
         <register address="0x00002720" type="OA" value="0x00000000" /> 
         <register address="0x00002714" type="OA" value="0xF0800000" /> 
@@ -4262,11 +3598,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which evaluation shaders were stalled on the EUs." equation="A 13 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TES EU Stall" semantic_type="duration" symbol_name="DsEuStall" underscore_name="ds_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4288,11 +3620,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter availability="$SubsliceMask 0x8 AND" data_type="uint64" description="Number of sampler L2 cache misses (ss3)" equation="C 1 READ C 0 READ UADD" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Frame Batch Draw" name="Sampler L2 cache misses (ss3)" semantic_type="event" symbol_name="Sampler3L2CacheMisses" underscore_name="sampler3_l2_cache_misses" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4323,11 +3651,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$DsThreads</mi>
-<mtext>The total number of evaluation shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$DsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of geometry shader hardware threads dispatched." equation="A 25 READ" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="GS Threads Dispatched" semantic_type="event" symbol_name="GsThreads" underscore_name="gs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4354,11 +3678,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which compute shaders were processed actively on the EUs." equation="A 17 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="CS EU Active" semantic_type="duration" symbol_name="CsEuActive" underscore_name="cs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4380,11 +3700,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which vertex shaders were processed actively on the EUs." equation="A 2 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="VS EU Active" semantic_type="duration" symbol_name="VsEuActive" underscore_name="vs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4406,11 +3722,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which control shaders were processed actively on the EUs." equation="A 7 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TCS EU Active" semantic_type="duration" symbol_name="HsEuActive" underscore_name="hs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4432,11 +3744,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which evaluation shaders were processed actively on the EUs." equation="A 12 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Evaluation Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TES EU Active" semantic_type="duration" symbol_name="DsEuActive" underscore_name="ds_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4458,11 +3766,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which geometry shaders were processed actively on the EUs." equation="A 22 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="GS EU Active" semantic_type="duration" symbol_name="GsEuActive" underscore_name="gs_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4484,11 +3788,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which fragment shaders were processed actively on the EUs." equation="A 27 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="FS EU Active" semantic_type="duration" symbol_name="PsEuActive" underscore_name="ps_eu_active" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4510,11 +3810,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which compute shaders were stalled on the EUs." equation="A 18 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Compute Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="CS EU Stall" semantic_type="duration" symbol_name="CsEuStall" underscore_name="cs_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4536,11 +3832,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the Execution Units were stalled." equation="A 1 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier2 Overview System Frame Batch Draw" name="EU Stall" semantic_type="duration" symbol_name="EuStall" underscore_name="eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4562,11 +3854,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which vertex shaders were stalled on the EUs." equation="A 3 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="VS EU Stall" semantic_type="duration" symbol_name="VsEuStall" underscore_name="vs_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4588,11 +3876,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which control shaders were stalled on the EUs." equation="A 8 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="TCS EU Stall" semantic_type="duration" symbol_name="HsEuStall" underscore_name="hs_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4614,11 +3898,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which fragment shaders were stalled on the EUs." equation="A 28 READ $EuCoresTotalCount UDIV 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="FS EU Stall" semantic_type="duration" symbol_name="PsEuStall" underscore_name="ps_eu_stall" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4640,11 +3920,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="Time elapsed on the GPU during the measurement." equation="GPU_TIME 0 READ 1000000000 UMUL $GpuTimestampFrequency UDIV" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="GPU Time Elapsed" semantic_type="duration" symbol_name="GpuTime" underscore_name="gpu_time" units="ns"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -4751,17 +4027,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -4872,17 +4140,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -4983,17 +4243,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -5015,11 +4267,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$CsThreads</mi>
-<mtext>The total number of compute shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$CsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="Number of sampler L2 cache misses" equation="C 7 READ C 6 READ UADD C 5 READ UADD C 4 READ UADD C 3 READ UADD C 2 READ UADD C 1 READ UADD C 0 READ UADD" mdapi_group="Sampler" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Overview Frame Batch Draw" name="Sampler L2 cache misses" semantic_type="event" symbol_name="SamplerL2CacheMisses" underscore_name="sampler_l2_cache_misses" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -5070,11 +4318,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GsThreads</mi>
-<mtext>The total number of geometry shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$GsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter availability="$SubsliceMask 0x4 AND" data_type="uint64" description="Number of sampler L2 cache misses (ss2)" equation="C 3 READ C 2 READ UADD" mdapi_group="Sampler/Sampler Cache" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Frame Batch Draw" name="Sampler L2 cache misses (ss2)" semantic_type="event" symbol_name="Sampler2L2CacheMisses" underscore_name="sampler2_l2_cache_misses" units="messages"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -5088,32 +4332,16 @@
 </maction></mathml_EQ></counter>
     <counter data_type="uint64" description="Average GPU Core Frequency in the measurement." equation="$GpuCoreClocks 1000000000 UMUL $GpuTime UDIV" max_equation="$GpuMaxFrequency" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="AVG GPU Core Frequency" semantic_type="event" symbol_name="AvgGpuCoreFrequency" underscore_name="avg_gpu_core_frequency" units="hz"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <mn>1000000000</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuTime</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo><mi>$GpuMaxFrequency</mi></mathml_MAX_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the Execution Units were idle." equation="100 $EuActive $EuStall FADD FSUB" max_equation="100" mdapi_group="EU Array" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier2 Overview System Frame Batch Draw" name="EU Idle" semantic_type="duration" symbol_name="EuIdle" underscore_name="eu_idle" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mn>100</mn>
-<mo>-</mo>
-<maction actiontype="tooltip">
-<mi>$EuActive</mi>
-<mtext>The percentage of time in which the Execution Units were actively processing.</mtext>
-</maction>
-<mo>+</mo>
-<maction actiontype="tooltip">
-<mi>$EuStall</mi>
-<mtext>The percentage of time in which the Execution Units were stalled.</mtext>
-</maction></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<mo>-</mo><mi>$EuActive</mi>
+<mo>+</mo><mi>$EuStall</mi></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which fragment shaders were stalled on the EUs." equation="A 28 READ $PsThreads UDIV" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="FS AVG Stall per Thread" semantic_type="event" symbol_name="PsEuStallPerThread" underscore_name="ps_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -5123,11 +4351,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$PsThreads</mi>
-<mtext>The total number of fragment shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$PsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which vertex shaders were stalled on the EUs." equation="A 3 READ $VsThreads UDIV" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="VS AVG Stall per Thread" semantic_type="event" symbol_name="VsEuStallPerThread" underscore_name="vs_eu_stall_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -5137,11 +4361,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$VsThreads</mi>
-<mtext>The total number of vertex shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$VsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="float" description="The percentage of time in which the GPU has being processing GPU commands." equation="A 41 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Overview System Frame" name="GPU Busy" semantic_type="duration" symbol_name="GpuBusy" underscore_name="gpu_busy" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -5153,11 +4373,7 @@
 <mo>*</mo>
 <mn>100</mn>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction></mrow>
+<mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which fragment shaders were processed actively on the EUs." equation="A 27 READ $PsThreads UDIV" max_equation="100" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="FS AVG Active per Thread" semantic_type="event" symbol_name="PsEuActivePerThread" underscore_name="ps_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -5168,11 +4384,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$PsThreads</mi>
-<mtext>The total number of fragment shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$PsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on early depth test." equation="A 35 READ" mdapi_group="3D Pipe/Rasterizer/Early Depth Test" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="Early Depth Test Fails" semantic_type="event" symbol_name="EarlyDepthTestFails" underscore_name="early_depth_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -5272,17 +4484,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -5299,11 +4503,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$DsThreads</mi>
-<mtext>The total number of evaluation shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$DsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which geometry shaders were processed actively on the EUs." equation="A 22 READ $GsThreads UDIV" max_equation="100" mdapi_group="EU Array/Geometry Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="GS AVG Active per Thread" semantic_type="event" symbol_name="GsEuActivePerThread" underscore_name="gs_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
@@ -5313,11 +4513,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GsThreads</mi>
-<mtext>The total number of geometry shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$GsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of control shader hardware threads dispatched." equation="A 10 READ" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="TCS Threads Dispatched" semantic_type="event" symbol_name="HsThreads" underscore_name="hs_threads" units="threads"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -5333,11 +4529,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$HsThreads</mi>
-<mtext>The total number of control shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$HsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of samples or pixels dropped in fragment shaders." equation="A 36 READ" mdapi_group="3D Pipe/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier4 Overview Frame Batch Draw" name="Samples Killed in FS" semantic_type="event" symbol_name="SamplesKilledInPs" underscore_name="samples_killed_in_ps" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -5349,11 +4541,7 @@
 <mi>A39</mi>
 <mtext>placeholder</mtext>
 </maction>
-<mo>-</mo>
-<maction actiontype="tooltip">
-<mi>$SamplesKilledInPs</mi>
-<mtext>The total number of samples or pixels dropped in fragment shaders.</mtext>
-</maction></mathml_EQ></counter>
+<mo>-</mo><mi>$SamplesKilledInPs</mi></mathml_EQ></counter>
     <counter data_type="uint64" description="The average number of cycles per hardware thread run in which control shaders were processed actively on the EUs." equation="A 7 READ $HsThreads UDIV" max_equation="100" mdapi_group="EU Array/Control Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4 OCL IO BB" mdapi_usage_flags="Tier4 Frame Batch Draw" name="TCS AVG Active per Thread" semantic_type="event" symbol_name="HsEuActivePerThread" underscore_name="hs_eu_active_per_thread" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
@@ -5362,11 +4550,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$HsThreads</mi>
-<mtext>The total number of control shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$HsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="Total Fragment Shader GPU duration." equation="A 27 READ  A 0 READ UMUL  A 2 READ  A 7 READ UADD  A 12 READ UADD  A 17 READ UADD  A 22 READ UADD  A 27 READ UADD UDIV  A 28 READ  A 1 READ UMUL  A 3 READ  A 8 READ UADD  A 13 READ UADD  A 18 READ UADD  A 23 READ UADD  A 28 READ UADD UDIV UADD $GpuTime UMUL $GpuCoreClocks $EuCoresTotalCount UMUL 1000 UMUL UDIV" mdapi_group="EU Array/Fragment Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="FS Duration" semantic_type="duration" symbol_name="PsDuration" underscore_name="ps_duration" units="us"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -5461,17 +4645,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -5503,11 +4679,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$CsThreads</mi>
-<mtext>The total number of compute shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$CsThreads</mi></mrow>
 </mfrac></mathml_EQ></counter>
     <counter data_type="uint64" description="The total number of pixels dropped on post-FS stencil test." equation="A 38 READ" mdapi_group="3D Pipe/Output Merger" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL IO BB" mdapi_usage_flags="Tier3 Frame Batch Draw" name="Late Stencil Test Fails" semantic_type="event" symbol_name="PostPsStencilTestFails" underscore_name="post_ps_stencil_test_fails" units="pixels"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -5532,11 +4704,7 @@
 <mtext>placeholder</mtext>
 </maction>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$VsThreads</mi>
-<mtext>The total number of vertex shader hardware threads dispatched.</mtext>
-</maction></mrow>
+<mrow><mi>$VsThreads</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="Total Vertex Shader GPU duration." equation="A 2 READ  A 0 READ UMUL  A 2 READ  A 7 READ UADD  A 12 READ UADD  A 17 READ UADD  A 22 READ UADD  A 27 READ UADD UDIV  A 3 READ  A 1 READ UMUL  A 3 READ  A 8 READ UADD  A 13 READ UADD  A 18 READ UADD  A 23 READ UADD  A 28 READ UADD UDIV UADD $GpuTime UMUL $GpuCoreClocks $EuCoresTotalCount UMUL 1000 UMUL UDIV" mdapi_group="EU Array/Vertex Shader" mdapi_hw_unit_type="gpu" mdapi_supported_apis="OGL4" mdapi_usage_flags="Tier1 Overview System Frame Batch Draw" name="VS Duration" semantic_type="duration" symbol_name="VsDuration" underscore_name="vs_duration" units="us"><mathml_EQ><mi>EQ</mi><mo> = </mo>
@@ -5631,17 +4799,9 @@
 </maction></mrow>
 </mfrac>
 <mtext>)</mtext>
-<mo>*</mo>
-<maction actiontype="tooltip">
-<mi>$GpuTime</mi>
-<mtext>Time elapsed on the GPU during the measurement.</mtext>
-</maction>
+<mo>*</mo><mi>$GpuTime</mi>
 </mrow>
-<mrow>
-<maction actiontype="tooltip">
-<mi>$GpuCoreClocks</mi>
-<mtext>The total number of GPU core clocks elapsed during the measurement.</mtext>
-</maction>
+<mrow><mi>$GpuCoreClocks</mi>
 <mo>*</mo>
 <maction actiontype="tooltip">
 <mi>$EuCoresTotalCount</mi>
@@ -5655,7 +4815,7 @@
 <mi>A40</mi>
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
-    <register_config id="0">
+    <register_config type="NOA">
         <register address="0x0002EB9C" type="NOA" value="0x01906400" />
         <register address="0x0002FB9C" type="NOA" value="0x01906400" />
         <register address="0x000253A4" type="NOA" value="0x00000000" />
@@ -5697,7 +4857,7 @@
         <register address="0x0002541C" type="NOA" value="0x00000000" />
         <register address="0x00025428" type="NOA" value="0x0004A54A" />
     </register_config>
-    <register_config id="1">
+    <register_config type="OA">
         <register address="0x00002740" type="OA" value="0x00000000" /> 
         <register address="0x00002744" type="OA" value="0x00800000" /> 
         <register address="0x00002710" type="OA" value="0x00000000" /> 
