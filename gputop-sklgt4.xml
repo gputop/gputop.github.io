@@ -483,6 +483,8 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
+    <counter data_type="float" description="The percentage of time in which samplers have been slowing down the pipe when processing EU requests." equation="$Sampler0Bottleneck" high_watermark="15" low_watermark="5" max_equation="100" mdapi_group="Sampler" mdapi_hw_unit_type="slice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Indicate System Frame Batch Draw" name="Samplers Bottleneck" semantic_type="duration" symbol_name="SamplerBottleneck" underscore_name="sampler_bottleneck" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo><mi>$Sampler0Bottleneck</mi></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
+<mn>100</mn></mathml_MAX_EQ></counter>
     <counter data_type="uint64" description="The total number of GPU memory bytes transferred between GTI and HDC, when HDC is doing TLB lookups." equation="C 5 READ 64 UMUL" max_equation="$GpuCoreClocks 64 UMUL $EuSlicesTotalCount UMUL" mdapi_group="GTI/L3" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier2 Frame Batch Draw" name="GTI HDC TLB Lookup Throughput" semantic_type="throughput" symbol_name="GtiHdcLookupsThroughput" underscore_name="gti_hdc_lookups_throughput" units="bytes"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>C5</mi>
