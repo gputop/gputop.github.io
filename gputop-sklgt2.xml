@@ -8586,7 +8586,7 @@
     </register_config>
   </set>
 
-  <set chipset="SKLGT2" hw_config_guid="aa7a3fb9-22fb-43ff-a32d-0ab6c13bbd16" mdapi_supported_apis="OGL4 OCL IO BB" name="Compute Metrics Extra Gen9" symbol_name="ComputeExtra" underscore_name="compute_extra">
+  <set chipset="SKLGT2" hw_config_guid="41a24047-7484-4ead-ae37-de907e5ff2b2" mdapi_supported_apis="OGL4 OCL IO BB" name="Compute Metrics Extra Gen9" symbol_name="ComputeExtra" underscore_name="compute_extra">
     <counter data_type="uint64" description="The total number of GPU core clocks elapsed during the measurement." equation="GPU_CLOCK 0 READ" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Frame Batch Draw" name="GPU Core Clocks" semantic_type="event" symbol_name="GpuCoreClocks" underscore_name="gpu_core_clocks" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>GPU_CLOCK0</mi>
@@ -8729,7 +8729,7 @@
     </register_config>
   </set>
 
-  <set chipset="SKLGT2" hw_config_guid="398a4268-ef6f-4ffc-b55f-3c7b5363ce61" mdapi_supported_apis="MEDIA IO BB" name="Media Vme Pipe Gen9" symbol_name="VMEPipe" underscore_name="vme_pipe">
+  <set chipset="SKLGT2" hw_config_guid="95910492-943f-44bd-9461-390240f243fd" mdapi_supported_apis="MEDIA IO BB" name="Media Vme Pipe Gen9" symbol_name="VMEPipe" underscore_name="vme_pipe">
     <counter data_type="uint64" description="The total number of GPU core clocks elapsed during the measurement." equation="GPU_CLOCK 0 READ" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Frame Batch Draw" name="GPU Core Clocks" semantic_type="event" symbol_name="GpuCoreClocks" underscore_name="gpu_core_clocks" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
 <mi>GPU_CLOCK0</mi>
