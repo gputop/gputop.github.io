@@ -569,6 +569,7 @@
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x166C00F0" />
         <register address="0x00009888" type="NOA" value="0x12120280" />
         <register address="0x00009888" type="NOA" value="0x12320280" />
@@ -1130,6 +1131,7 @@
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x104F00E0" />
         <register address="0x00009888" type="NOA" value="0x124F1C00" />
         <register address="0x00009888" type="NOA" value="0x39900340" />
@@ -1640,6 +1642,7 @@
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x0C2E001F" />
         <register address="0x00009888" type="NOA" value="0x0A2F0000" />
         <register address="0x00009888" type="NOA" value="0x10186800" />
@@ -2056,6 +2059,7 @@
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x19800343" />
         <register address="0x00009888" type="NOA" value="0x39900340" />
         <register address="0x00009888" type="NOA" value="0x3F901000" />
@@ -2444,6 +2448,7 @@
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x19800343" />
         <register address="0x00009888" type="NOA" value="0x39900340" />
         <register address="0x00009888" type="NOA" value="0x3F900000" />
@@ -2915,6 +2920,7 @@
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x104F00E0" />
         <register address="0x00009888" type="NOA" value="0x141C0160" />
         <register address="0x00009888" type="NOA" value="0x161C0015" />
@@ -3706,6 +3712,7 @@
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x166C03B0" />
         <register address="0x00009888" type="NOA" value="0x1593001E" />
         <register address="0x00009888" type="NOA" value="0x3F900C00" />
@@ -4257,6 +4264,7 @@
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x104F0232" />
         <register address="0x00009888" type="NOA" value="0x124F4640" />
         <register address="0x00009888" type="NOA" value="0x11834400" />
@@ -4776,6 +4784,7 @@
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x12643400" />
         <register address="0x00009888" type="NOA" value="0x12653400" />
         <register address="0x00009888" type="NOA" value="0x106C6800" />
@@ -5357,6 +5366,7 @@
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x102D7800" />
         <register address="0x00009888" type="NOA" value="0x122D79E0" />
         <register address="0x00009888" type="NOA" value="0x0C2F0004" />
@@ -5903,6 +5913,7 @@
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x121300A0" />
         <register address="0x00009888" type="NOA" value="0x141600AB" />
         <register address="0x00009888" type="NOA" value="0x123300A0" />
@@ -6503,6 +6514,7 @@
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x141A0000" />
         <register address="0x00009888" type="NOA" value="0x143A0000" />
         <register address="0x00009888" type="NOA" value="0x145A0000" />
@@ -7102,6 +7114,7 @@
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x141A026B" />
         <register address="0x00009888" type="NOA" value="0x143A0173" />
         <register address="0x00009888" type="NOA" value="0x145A026B" />
@@ -7271,6 +7284,7 @@
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x141A001F" />
         <register address="0x00009888" type="NOA" value="0x143A001F" />
         <register address="0x00009888" type="NOA" value="0x145A001F" />
@@ -7399,6 +7413,7 @@
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
     <register_config type="NOA">
+        <register address="0x00009840" type="NOA" value="0x00000080" />
         <register address="0x00009888" type="NOA" value="0x19800000" />
         <register address="0x00009888" type="NOA" value="0x07800063" />
         <register address="0x00009888" type="NOA" value="0x11800000" />
