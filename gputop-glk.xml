@@ -1,4 +1,4 @@
-<metrics merge_md5="" version="1493336461">
+<metrics merge_md5="" version="1508420700">
   <set chipset="GLK" hw_config_guid="d72df5c7-5b4a-4274-a43f-00b0fd51fc68" mdapi_supported_apis="OGL OCL IO BB" name="Render Metrics Basic Gen9" symbol_name="RenderBasic" underscore_name="render_basic">
     <counter data_type="uint64" description="The total number of GPU core clocks elapsed during the measurement." equation="GPU_CLOCK 0 READ" mdapi_group="GPU" mdapi_hw_unit_type="gpu" mdapi_supported_apis="" mdapi_usage_flags="Tier1 Frame Batch Draw" name="GPU Core Clocks" semantic_type="event" symbol_name="GpuCoreClocks" underscore_name="gpu_core_clocks" units="cycles"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <maction actiontype="tooltip">
@@ -6170,7 +6170,7 @@
 <mi>A6</mi>
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
-    <counter availability="$SubsliceMask 0x4 AND" data_type="float" description="The percentage of time in which non-PS thread is ready for dispatch on slice0 subslice2 thread dispatcher" equation="B 4 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Non-PS Thread Ready For Dispatch on Slice0 Subslice2 Thread Dispatcher" semantic_type="duration" symbol_name="NonPSThread02ReadyForDispatch" underscore_name="non_ps_thread02_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x4 AND" data_type="float" description="The percentage of time in which non-PS thread is ready for dispatch on slice0 subslice2 thread dispatcher" equation="B 4 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="NonPS Thread Ready For Dispatch on Slice0 Subslice2" semantic_type="duration" symbol_name="NonPSThread02ReadyForDispatch" underscore_name="non_ps_thread02_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6229,7 +6229,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter availability="$SubsliceMask 0x1 AND" data_type="float" description="The percentage of time in which non-PS thread is ready for dispatch on slice0 subslice0 thread dispatcher" equation="B 2 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Non-PS Thread Ready For Dispatch on Slice0 Subslice0 Thread Dispatcher" semantic_type="duration" symbol_name="NonPSThread00ReadyForDispatch" underscore_name="non_ps_thread00_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x1 AND" data_type="float" description="The percentage of time in which non-PS thread is ready for dispatch on slice0 subslice0 thread dispatcher" equation="B 2 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="NonPS Thread Ready For Dispatch on Slice0 Subslice0" semantic_type="duration" symbol_name="NonPSThread00ReadyForDispatch" underscore_name="non_ps_thread00_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6336,7 +6336,7 @@
 <mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
-    <counter availability="$SubsliceMask 0x1 AND" data_type="float" description="The percentage of time in which PS thread is ready for dispatch on slice0 subslice0 thread dispatcher" equation="B 1 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="PS Thread Ready For Dispatch on Slice0 Subslice0 Thread Dispatcher" semantic_type="duration" symbol_name="PSThread00ReadyForDispatch" underscore_name="ps_thread00_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x1 AND" data_type="float" description="The percentage of time in which PS thread is ready for dispatch on slice0 subslice0 thread dispatcher" equation="B 1 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="PS Thread Ready For Dispatch on Slice0 Subslice0" semantic_type="duration" symbol_name="PSThread00ReadyForDispatch" underscore_name="ps_thread00_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6426,7 +6426,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter availability="$SubsliceMask 0x2 AND" data_type="float" description="The percentage of time in which PS thread is ready for dispatch on slice0 subslice1 thread dispatcher" equation="B 5 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="PS Thread Ready For Dispatch on Slice0 Subslice1 Thread Dispatcher" semantic_type="duration" symbol_name="PSThread01ReadyForDispatch" underscore_name="ps_thread01_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x2 AND" data_type="float" description="The percentage of time in which PS thread is ready for dispatch on slice0 subslice1 thread dispatcher" equation="B 5 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="PS Thread Ready For Dispatch on Slice0 Subslice1" semantic_type="duration" symbol_name="PSThread01ReadyForDispatch" underscore_name="ps_thread01_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6449,7 +6449,7 @@
 <mi>A2</mi>
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
-    <counter availability="$SubsliceMask 0x4 AND" data_type="float" description="The percentage of time in which PS thread is ready for dispatch on slice0 subslice2 thread dispatcher" equation="B 3 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="PS Thread Ready For Dispatch on Slice0 Subslice2 Thread Dispatcher" semantic_type="duration" symbol_name="PSThread02ReadyForDispatch" underscore_name="ps_thread02_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x4 AND" data_type="float" description="The percentage of time in which PS thread is ready for dispatch on slice0 subslice2 thread dispatcher" equation="B 3 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="PS Thread Ready For Dispatch on Slice0 Subslice2" semantic_type="duration" symbol_name="PSThread02ReadyForDispatch" underscore_name="ps_thread02_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6500,7 +6500,7 @@
 <mi>A34</mi>
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
-    <counter availability="$SubsliceMask 0x2 AND" data_type="float" description="The percentage of time in which non-PS thread is ready for dispatch on slice0 subslice1 thread dispatcher" equation="B 0 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Non-PS Thread Ready For Dispatch on Slice0 Subslice1 Thread Dispatcher" semantic_type="duration" symbol_name="NonPSThread01ReadyForDispatch" underscore_name="non_ps_thread01_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x2 AND" data_type="float" description="The percentage of time in which non-PS thread is ready for dispatch on slice0 subslice1 thread dispatcher" equation="B 0 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="NonPS Thread Ready For Dispatch on Slice0 Subslice1" semantic_type="duration" symbol_name="NonPSThread01ReadyForDispatch" underscore_name="non_ps_thread01_ready_for_dispatch" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6789,7 +6789,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter availability="$SubsliceMask 0x2 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice1 thread dispatcher port 0" equation="C 7 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice1 Thread Dispatcher Port 0" semantic_type="duration" symbol_name="ThreadHeader01ReadyPort0" underscore_name="thread_header01_ready_port0" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x2 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice1 thread dispatcher port 0" equation="C 7 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice1 Port 0" semantic_type="duration" symbol_name="ThreadHeader01ReadyPort0" underscore_name="thread_header01_ready_port0" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6802,7 +6802,7 @@
 <mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
-    <counter availability="$SubsliceMask 0x2 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice1 thread dispatcher port 1" equation="C 2 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice1 Thread Dispatcher Port 0" semantic_type="duration" symbol_name="ThreadHeader01ReadyPort1" underscore_name="thread_header01_ready_port1" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x2 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice1 thread dispatcher port 1" equation="C 2 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice1 Port 1" semantic_type="duration" symbol_name="ThreadHeader01ReadyPort1" underscore_name="thread_header01_ready_port1" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6936,7 +6936,7 @@
 <mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
-    <counter availability="$SubsliceMask 0x4 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice2 thread dispatcher port 1" equation="C 4 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice2 Thread Dispatcher Port 1" semantic_type="duration" symbol_name="ThreadHeader02ReadyPort1" underscore_name="thread_header02_ready_port1" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x4 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice2 thread dispatcher port 1" equation="C 4 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice2 Port 1" semantic_type="duration" symbol_name="ThreadHeader02ReadyPort1" underscore_name="thread_header02_ready_port1" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -6949,7 +6949,7 @@
 <mrow><mi>$GpuCoreClocks</mi></mrow>
 </mfrac></mathml_EQ><mathml_MAX_EQ><mi>MAX_EQ</mi><mo> = </mo>
 <mn>100</mn></mathml_MAX_EQ></counter>
-    <counter availability="$SubsliceMask 0x4 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice2 thread dispatcher port 0" equation="C 3 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice2 Thread Dispatcher Port 0" semantic_type="duration" symbol_name="ThreadHeader02ReadyPort0" underscore_name="thread_header02_ready_port0" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x4 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice2 thread dispatcher port 0" equation="C 3 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice2 Port 0" semantic_type="duration" symbol_name="ThreadHeader02ReadyPort0" underscore_name="thread_header02_ready_port0" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -7082,7 +7082,7 @@
 </maction>
 <mo>*</mo>
 <mn>4</mn></mathml_EQ></counter>
-    <counter availability="$SubsliceMask 0x1 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice0 thread dispatcher port 0" equation="C 5 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice0 Thread Dispatcher Port 0" semantic_type="duration" symbol_name="ThreadHeader00ReadyPort0" underscore_name="thread_header00_ready_port0" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x1 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice0 thread dispatcher port 0" equation="C 5 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice0 Port 0" semantic_type="duration" symbol_name="ThreadHeader00ReadyPort0" underscore_name="thread_header00_ready_port0" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
@@ -7100,7 +7100,7 @@
 <mi>A34</mi>
 <mtext>placeholder</mtext>
 </maction></mathml_EQ></counter>
-    <counter availability="$SubsliceMask 0x1 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice0 thread dispatcher port 1" equation="C 6 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice0 Thread Dispatcher Port 1" semantic_type="duration" symbol_name="ThreadHeader00ReadyPort1" underscore_name="thread_header00_ready_port1" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
+    <counter availability="$SubsliceMask 0x1 AND" data_type="float" description="The percentage of time in which thread header is ready on slice0 subslice0 thread dispatcher port 1" equation="C 6 READ 100 UMUL $GpuCoreClocks FDIV" max_equation="100" mdapi_group="GPU/Thread Dispatcher" mdapi_hw_unit_type="subslice" mdapi_supported_apis="" mdapi_usage_flags="Tier3 Overview Frame Batch Draw" name="Thread Header Ready on Slice0 Subslice0 Port 1" semantic_type="duration" symbol_name="ThreadHeader00ReadyPort1" underscore_name="thread_header00_ready_port1" units="percent"><mathml_EQ><mi>EQ</mi><mo> = </mo>
 <mfrac>
 <mrow>
 <maction actiontype="tooltip">
